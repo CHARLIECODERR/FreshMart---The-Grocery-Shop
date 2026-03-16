@@ -45,7 +45,7 @@ const Offers = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="card p-8 border-l-4 border-l-blue-500 flex flex-col justify-center bg-white hover:shadow-lg transition-shadow">
             <h3 className="text-2xl font-bold text-gray-900 mb-2">Free Delivery</h3>
-            <p className="text-gray-500 mb-6">Use code <span className="font-mono bg-gray-100 px-2 py-1 rounded text-gray-800 font-bold">FREEDEL</span> on orders over $50.</p>
+            <p className="text-gray-500 mb-6">Use code <span className="font-mono bg-gray-100 px-2 py-1 rounded text-gray-800 font-bold">FREEDEL</span> on orders over ₹500.</p>
             <div className="mt-auto">
               <Link to="/shop" className="text-blue-600 font-medium hover:underline inline-flex items-center">
                 Start Shopping <ArrowRight size={16} className="ml-1" />
