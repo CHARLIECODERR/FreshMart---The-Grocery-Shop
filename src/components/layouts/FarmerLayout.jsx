@@ -153,19 +153,19 @@ const FarmerLayout = () => {
           </Link>
         </div>
 
-        <div className="px-6 mb-8 mt-4">
-          <div className="bg-white/5 rounded-[2rem] p-5 flex items-center gap-4 border border-white/10 shadow-inner group/user">
-            <div className="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400 border border-slate-700 shadow-sm shrink-0 group-hover/user:border-emerald-500/50 transition-colors">
+        <Link to="/farmer/profile" className="px-6 mb-8 mt-4 block group/usercard">
+          <div className="bg-white/5 rounded-[2rem] p-5 flex items-center gap-4 border border-white/10 shadow-inner group-hover/usercard:bg-white/10 group-hover/usercard:border-emerald-500/30 transition-all cursor-pointer">
+            <div className="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400 border border-slate-700 shadow-sm shrink-0 group-hover/usercard:border-emerald-500/50 transition-colors">
               <User size={24} />
             </div>
             <div className="min-w-0 overflow-hidden">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] leading-none mb-1.5">Authorized</p>
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] leading-none mb-1.5">Authorized Store</p>
               <p className="text-sm font-bold text-white truncate max-w-full" title={currentUser?.displayName || 'Farmer'}>
                 {currentUser?.displayName || 'Farmer Profile'}
               </p>
             </div>
           </div>
-        </div>
+        </Link>
 
         <nav className="flex-1 px-4 space-y-1.5 mt-2">
           {menuItems.map((item) => (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
   ShoppingCart, 
@@ -8,17 +8,22 @@ import {
   X, 
   Search, 
   Store,
-  Heart
+  Heart,
+  LogOut
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '../store/useCartStore';
 import { useWishlistStore } from '../store/useWishlistStore';
+import LogoutConfirmModal from './LogoutConfirmModal';
+import toast from 'react-hot-toast';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { currentUser, role } = useAuth();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const { currentUser, role, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const cartCount = useCartStore((state) => state.getItemCount());
   const wishlistCount = useWishlistStore((state) => state.items.length);
 
@@ -33,6 +38,17 @@ const Header = () => {
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
+
+  const handleLogout = async () => {
+    try {
+      setShowLogoutModal(false);
+      await logout();
+      toast.success('Logged out successfully');
+      navigate('/');
+    } catch (error) {
+      toast.error('Failed to logout');
+    }
+  };
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -53,6 +69,11 @@ const Header = () => {
         isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-3' : 'bg-white py-5'
       }`}
     >
+      <LogoutConfirmModal 
+        isOpen={showLogoutModal}
+        onConfirm={handleLogout}
+        onCancel={() => setShowLogoutModal(false)}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
@@ -81,10 +102,19 @@ const Header = () => {
               {cartCount > 0 && <span className="absolute top-0 right-0 w-4 h-4 bg-primary-600 text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white">{cartCount}</span>}
             </Link>
             {currentUser ? (
-              <Link to={role === 'admin' ? '/admin' : role === 'farmer' ? '/farmer' : '/account'} className="hidden sm:flex items-center gap-2 pl-2 pr-4 py-1.5 border border-gray-200 rounded-full hover:border-gray-300 transition-colors">
-                <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-600"><User size={16} /></div>
-                <span className="text-sm font-medium text-gray-700 max-w-[100px] truncate">{currentUser.displayName || 'Account'}</span>
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link to={role === 'admin' ? '/admin' : role === 'farmer' ? '/farmer' : '/account'} className="hidden sm:flex items-center gap-2 pl-2 pr-4 py-1.5 border border-gray-200 rounded-full hover:border-gray-300 transition-colors">
+                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-600"><User size={16} /></div>
+                  <span className="text-sm font-medium text-gray-700 max-w-[100px] truncate">{currentUser.displayName || 'Account'}</span>
+                </Link>
+                <button 
+                  onClick={() => setShowLogoutModal(true)}
+                  className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all"
+                  title="Logout"
+                >
+                  <LogOut size={20} />
+                </button>
+              </div>
             ) : (
               <Link to="/login" className="hidden sm:inline-flex btn-primary !py-2 !px-5 text-sm">Sign In</Link>
             )}
