@@ -7,7 +7,10 @@ import {
   addDoc, 
   updateDoc, 
   deleteDoc,
-  serverTimestamp
+  serverTimestamp,
+  query,
+  where,
+  getDocs
 } from 'firebase/firestore';
 
 export const getDocument = async (collectionName, docId) => {
@@ -18,6 +21,13 @@ export const getDocument = async (collectionName, docId) => {
     return { id: docSnap.id, ...docSnap.data() };
   }
   return null;
+};
+
+export const queryDocuments = async (collectionName, field, operator, value) => {
+  const colRef = collection(db, collectionName);
+  const q = query(colRef, where(field, operator, value));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
 export const addDocument = async (collectionName, data) => {

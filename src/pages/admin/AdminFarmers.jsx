@@ -7,6 +7,7 @@ import {
   Store, 
   MapPin, 
   Truck,
+  Phone,
   CheckCircle2,
   XCircle,
   AlertTriangle,
@@ -16,12 +17,15 @@ import {
   Briefcase
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import useDebounce from '../../hooks/useDebounce';
 
 const AdminFarmers = () => {
   const [farmers, setFarmers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('All');
+  const [expandedId, setExpandedId] = useState(null);
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   useEffect(() => {
     fetchFarmers();
@@ -49,9 +53,11 @@ const AdminFarmers = () => {
     }
   };
 
+  const toggleExpand = (id) => setExpandedId(expandedId === id ? null : id);
+
   const filteredFarmers = farmers.filter(f => {
-    const matchesSearch = f.displayName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         f.businessName?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = f.displayName?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+                         f.businessName?.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
     const matchesFilter = filter === 'All' || f.status === filter;
     return matchesSearch && matchesFilter;
   });
@@ -126,7 +132,19 @@ const AdminFarmers = () => {
                 <div className="p-8">
                    <div className="flex items-start justify-between mb-8">
                       <div className="w-20 h-20 rounded-3xl bg-emerald-500 text-white flex items-center justify-center text-4xl font-black border-4 border-white shadow-2xl overflow-hidden">
-                         {farmer.photoURL ? <img src={farmer.photoURL} alt="" className="w-full h-full object-cover" /> : farmer.displayName?.charAt(0)}
+                         {farmer.photoURL ? (
+                            <img 
+                              src={farmer.photoURL} 
+                              alt="" 
+                              className="w-full h-full object-cover" 
+                              loading="lazy"
+                              decoding="async"
+                              crossOrigin="anonymous"
+                              referrerPolicy="no-referrer"
+                            />
+                          ) : (
+                            farmer.displayName?.charAt(0)
+                          )}
                       </div>
                       <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${
                         farmer.status === 'active' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 
@@ -162,12 +180,6 @@ const AdminFarmers = () => {
                          </div>
                          <span>{farmer.contactPhone || 'No Phone'}</span>
                       </div>
-                      <div className="flex items-center gap-3 text-slate-500 text-xs font-medium">
-                         <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400">
-                           <Briefcase size={14} />
-                         </div>
-                         <span>{farmer.farmCategory || 'General'} Producer</span>
-                      </div>
                    </div>
                 </div>
 
@@ -194,10 +206,32 @@ const AdminFarmers = () => {
                          Re-activate
                       </button>
                    )}
-                   <button className="p-4 bg-white text-slate-400 hover:text-slate-900 rounded-2xl shadow-sm hover:shadow transition-all">
+                   <button 
+                     onClick={() => toggleExpand(farmer.id)}
+                     className={`p-4 bg-white text-slate-400 hover:text-slate-900 rounded-2xl shadow-sm hover:shadow transition-all ${expandedId === farmer.id ? 'rotate-90 bg-emerald-50 text-emerald-600' : ''}`}
+                   >
                       <ChevronRight size={18} />
                    </button>
                 </div>
+
+                {expandedId === farmer.id && (
+                  <div className="px-8 pb-8 bg-slate-50 animate-in slide-in-from-top duration-300">
+                    <div className="p-6 bg-white rounded-2xl border border-slate-100 space-y-4">
+                      <div>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Company Detail</p>
+                        <p className="text-sm font-bold text-slate-900">{farmer.farmCategory || 'General'} Producer</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Email</p>
+                        <p className="text-sm font-bold text-slate-900">{farmer.email || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">UID</p>
+                        <p className="text-[10px] font-bold text-slate-500 break-all">{farmer.id}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
              </div>
            ))}
         </div>

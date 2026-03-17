@@ -4,7 +4,6 @@ import AppRoutes from './routes/AppRoutes';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 import AnnouncementBar from './components/AnnouncementBar';
-import FloatingBackButton from './components/FloatingBackButton';
 
 const App = () => {
   return (
@@ -12,7 +11,6 @@ const App = () => {
       <AuthProvider>
         <Toaster position="top-right" />
         <AnnouncementBar />
-        <FloatingBackButton />
         <AppRoutes />
       </AuthProvider>
     </Router>
@@ -20,3 +18,4 @@ const App = () => {
 };
 
 export default App;
+

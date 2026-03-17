@@ -3,6 +3,7 @@ import { Loader2, Search, Filter, X } from 'lucide-react';
 import { getActiveProducts } from '../../services/productService';
 import { getActiveCategories } from '../../services/categoryService';
 import ProductCard from '../../components/product/ProductCard';
+import useDebounce from '../../hooks/useDebounce';
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
@@ -13,6 +14,7 @@ const Shop = () => {
   // Filters
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,8 +38,8 @@ const Shop = () => {
   }, []);
 
   const filteredProducts = products.filter(p => {
-    const matchesSearch = p.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          p.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = p.name?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) || 
+                          p.description?.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || p.categorySlug === selectedCategory;
     
     return matchesSearch && matchesCategory;

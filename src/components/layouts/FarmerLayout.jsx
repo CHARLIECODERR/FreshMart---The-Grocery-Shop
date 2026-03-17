@@ -16,12 +16,14 @@ import {
   User
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import LogoutConfirmModal from '../LogoutConfirmModal';
 
 const FarmerLayout = () => {
   const { currentUser, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const menuItems = [
     { name: 'Dashboard', path: '/farmer', icon: LayoutDashboard },
@@ -29,9 +31,11 @@ const FarmerLayout = () => {
     { name: 'Orders', path: '/farmer/orders', icon: ShoppingBag },
   ];
 
-  const handleLogout = async () => {
+  const handleLogoutClick = () => setShowLogoutModal(true);
+
+  const handleLogoutConfirm = async () => {
     try {
-      // Navigate first to avoid unauthorized flash
+      setShowLogoutModal(false);
       navigate('/login', { replace: true });
       await logout();
       toast.success('Logged out successfully');
@@ -44,6 +48,11 @@ const FarmerLayout = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col lg:flex-row">
+      <LogoutConfirmModal
+        isOpen={showLogoutModal}
+        onConfirm={handleLogoutConfirm}
+        onCancel={() => setShowLogoutModal(false)}
+      />
       {/* Mobile Header */}
       <header className="lg:hidden bg-white border-b px-4 py-4 flex items-center justify-between sticky top-0 z-40">
         <Link to="/" className="flex items-center gap-2">
@@ -117,7 +126,7 @@ const FarmerLayout = () => {
 
               <div className="p-4 border-t">
                 <button 
-                  onClick={handleLogout}
+                  onClick={handleLogoutClick}
                   className="w-full flex items-center gap-3 px-6 py-4 rounded-2xl text-sm font-bold text-red-500 hover:bg-red-50 transition-all border border-transparent hover:border-red-100"
                 >
                   <LogOut size={20} /> Sign Out Account
@@ -168,7 +177,7 @@ const FarmerLayout = () => {
 
         <div className="p-6 mt-auto border-t bg-slate-50/30">
           <button 
-            onClick={handleLogout}
+            onClick={handleLogoutClick}
             className="w-full flex items-center justify-center gap-2 px-4 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-red-500 hover:bg-red-50 hover:text-red-600 transition-all border-2 border-transparent hover:border-red-100"
           >
             <LogOut size={16} /> Logout Account

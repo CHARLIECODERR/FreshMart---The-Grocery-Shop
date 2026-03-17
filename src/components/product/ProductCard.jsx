@@ -42,6 +42,10 @@ const ProductCard = ({ product }) => {
             src={imageUrl} 
             alt={name} 
             className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${isOutOfStock ? 'opacity-50 grayscale' : ''}`}
+            loading="lazy"
+            decoding="async"
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
           />
         ) : (
           <div className="text-gray-400">No Image</div>

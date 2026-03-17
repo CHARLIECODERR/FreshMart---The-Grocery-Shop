@@ -9,7 +9,15 @@ export const getActiveCoupons = async () => {
   try {
     const q = query(collection(db, 'coupons'), where('isActive', '==', true));
     const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    
+    return snapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() }))
+      .filter(coupon => {
+        if (!coupon.expiry) return true;
+        return coupon.expiry >= today;
+      });
   } catch (error) {
     console.error("Error fetching coupons:", error);
     return [];
@@ -33,9 +41,8 @@ export const validateCoupon = async (code) => {
     
     // Check expiry if it exists
     if (coupon.expiry) {
-      const today = new Date();
-      const expiryDate = new Date(coupon.expiry);
-      if (today > expiryDate) return null;
+      const today = new Date().toISOString().split('T')[0];
+      if (today > coupon.expiry) return null;
     }
     
     return coupon;

@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase/config';
+import LogoutConfirmModal from '../../components/LogoutConfirmModal';
 
 const Account = () => {
   const { currentUser, userData, role, logout } = useAuth();
@@ -12,6 +13,7 @@ const Account = () => {
 
   const [isApplying, setIsApplying] = useState(false);
   const [showApplyForm, setShowApplyForm] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [formData, setFormData] = useState({ 
     businessName: '', 
     businessAddress: '',
@@ -49,8 +51,11 @@ const Account = () => {
     }
   };
 
-  const handleLogout = async () => {
+  const handleLogoutClick = () => setShowLogoutModal(true);
+
+  const handleLogoutConfirm = async () => {
     try {
+      setShowLogoutModal(false);
       await logout();
       toast.success('Logged out successfully');
       navigate('/login');
@@ -68,6 +73,11 @@ const Account = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <LogoutConfirmModal
+        isOpen={showLogoutModal}
+        onConfirm={handleLogoutConfirm}
+        onCancel={() => setShowLogoutModal(false)}
+      />
       <div className="mb-10">
         <h1 className="text-3xl font-black text-gray-900 mb-2">My Account</h1>
         <p className="text-gray-500 font-medium">Manage your profile and orders</p>
@@ -99,7 +109,7 @@ const Account = () => {
                 <span>Joined March 2026</span>
               </div>
             </div>
-            <button onClick={handleLogout} className="mt-10 w-full flex items-center justify-center gap-2 text-red-500 font-black text-sm hover:bg-red-50 py-3 rounded-2xl transition-colors border border-red-50">
+            <button onClick={handleLogoutClick} className="mt-10 w-full flex items-center justify-center gap-2 text-red-500 font-black text-sm hover:bg-red-50 py-3 rounded-2xl transition-colors border border-red-50">
               <LogOut size={18} /> Logout
             </button>
           </div>

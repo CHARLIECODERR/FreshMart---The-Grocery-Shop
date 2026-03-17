@@ -14,12 +14,14 @@ import {
   PackageSearch
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import useDebounce from '../../hooks/useDebounce';
 
 const FarmerProducts = () => {
   const { currentUser } = useAuth();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   useEffect(() => {
     if (currentUser) {
@@ -51,7 +53,7 @@ const FarmerProducts = () => {
   };
 
   const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(searchTerm.toLowerCase())
+    p.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
   );
 
   return (
@@ -119,7 +121,23 @@ const FarmerProducts = () => {
                   <tr key={product.id} className="hover:bg-emerald-50/20 transition-colors">
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-4">
-                        <img src={product.imageUrl} alt="" className="w-12 h-12 rounded-xl object-cover border border-gray-100" />
+                       <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-100 border border-slate-100 shrink-0">
+                          {product.imageUrl ? (
+                            <img 
+                              src={product.imageUrl} 
+                              alt={product.name} 
+                              className="w-full h-full object-cover" 
+                              loading="lazy"
+                              decoding="async"
+                              crossOrigin="anonymous"
+                              referrerPolicy="no-referrer"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-slate-300">
+                              <Package size={24} />
+                            </div>
+                          )}
+                       </div>
                         <div>
                           <p className="font-bold text-gray-900">{product.name}</p>
                           <p className="text-xs text-gray-400">ID: {product.id.slice(-6).toUpperCase()}</p>

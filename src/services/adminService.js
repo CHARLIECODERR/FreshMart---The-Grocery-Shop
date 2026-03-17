@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where, orderBy, limit, doc, updateDoc, serverTimestamp, addDoc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy, limit, doc, updateDoc, setDoc, serverTimestamp, addDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 export const getAdminStats = async () => {
@@ -162,14 +162,16 @@ export const getGlobalSettings = async () => {
 
 export const updateGlobalSetting = async (settingId, data) => {
   try {
+    console.log(`[AdminService] Attempting to update setting: ${settingId}`, data);
     const settingRef = doc(db, 'settings', settingId);
-    await updateDoc(settingRef, {
+    await setDoc(settingRef, {
       ...data,
       updatedAt: serverTimestamp()
-    });
+    }, { merge: true });
+    console.log(`[AdminService] Successfully updated: ${settingId}`);
     return true;
   } catch (error) {
-    console.error("Error updating global setting:", error);
+    console.error(`[AdminService] Error updating ${settingId}:`, error);
     throw error;
   }
 };
@@ -198,3 +200,103 @@ export const addCoupon = async (couponData) => {
   }
 };
 
+export const updateCoupon = async (couponId, couponData) => {
+  try {
+    const couponRef = doc(db, 'coupons', couponId);
+    await updateDoc(couponRef, {
+      ...couponData,
+      updatedAt: serverTimestamp()
+    });
+    return true;
+  } catch (error) {
+    console.error("Error updating coupon:", error);
+    throw error;
+  }
+};
+
+export const deleteCoupon = async (couponId) => {
+  try {
+    await deleteDoc(doc(db, 'coupons', couponId));
+    return true;
+  } catch (error) {
+    console.error("Error deleting coupon:", error);
+    throw error;
+  }
+};
+
+// Product Management
+export const getAllProducts = async () => {
+  try {
+    const snapshot = await getDocs(collection(db, 'products'));
+    return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    throw error;
+  }
+};
+
+export const deleteProduct = async (productId) => {
+  try {
+    await deleteDoc(doc(db, 'products', productId));
+    return true;
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    throw error;
+  }
+};
+
+export const toggleProductVisibility = async (productId, isActive) => {
+  try {
+    await updateDoc(doc(db, 'products', productId), { isActive, updatedAt: serverTimestamp() });
+    return true;
+  } catch (error) {
+    console.error("Error toggling product:", error);
+    throw error;
+  }
+};
+
+// Category CRUD
+export const addCategory = async (data) => {
+  try {
+    const docRef = await addDoc(collection(db, 'categories'), { ...data, createdAt: serverTimestamp() });
+    return { id: docRef.id, ...data };
+  } catch (error) {
+    console.error("Error adding category:", error);
+    throw error;
+  }
+};
+
+export const updateCategory = async (id, data) => {
+  try {
+    await updateDoc(doc(db, 'categories', id), { ...data, updatedAt: serverTimestamp() });
+    return true;
+  } catch (error) {
+    console.error("Error updating category:", error);
+    throw error;
+  }
+};
+
+export const deleteCategory = async (id) => {
+  try {
+    await deleteDoc(doc(db, 'categories', id));
+    return true;
+  } catch (error) {
+    console.error("Error deleting category:", error);
+    throw error;
+  }
+};
+
+// Get product count per category
+export const getProductCountByCategory = async () => {
+  try {
+    const snapshot = await getDocs(collection(db, 'products'));
+    const counts = {};
+    snapshot.docs.forEach(d => {
+      const cat = d.data().category;
+      if (cat) counts[cat] = (counts[cat] || 0) + 1;
+    });
+    return counts;
+  } catch (error) {
+    return {};
+  }
+};

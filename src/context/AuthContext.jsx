@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase/config';
-import { getDocument, setDocument } from '../firebase/firestore';
+import { getDocument, setDocument, queryDocuments, deleteDocument } from '../firebase/firestore';
 import { signUp, logIn, logOut, resetPassword, logInWithGoogle } from '../firebase/auth';
 
 const AuthContext = createContext();
@@ -25,8 +25,21 @@ export const AuthProvider = ({ children }) => {
           if (doc) {
             setUserData(doc);
           } else {
-            // Fallback for an authenticated user with no doc (e.g. from tests)
-            setUserData({ role: 'customer' });
+            // Check if user exists by email (for Google linkage)
+            const docs = await queryDocuments('users', 'email', '==', user.email);
+            if (docs.length > 0) {
+              const existingUser = docs[0];
+              // Update existing document to use new Auth UID
+              const migratedData = { ...existingUser, uid: user.uid };
+              await setDocument('users', user.uid, migratedData);
+              // Delete old document if it was under a different ID (often uid was docId)
+              if (existingUser.id !== user.uid) {
+                await deleteDocument('users', existingUser.id);
+              }
+              setUserData(migratedData);
+            } else {
+              setUserData({ role: 'customer' });
+            }
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -63,19 +76,34 @@ export const AuthProvider = ({ children }) => {
 
   const loginWithGoogle = async () => {
     const user = await logInWithGoogle();
-    // Check if user document exists, if not create it
+    
+    // Check if user document exists for this UID
     let userDoc = await getDocument('users', user.uid);
+    
     if (!userDoc) {
-      userDoc = {
-        uid: user.uid,
-        name: user.displayName || 'User',
-        email: user.email,
-        role: 'customer',
-        isActive: true,
-        createdAt: new Date().toISOString()
-      };
-      await setDocument('users', user.uid, userDoc);
+      // Check if user document exists for this EMAIL
+      const docs = await queryDocuments('users', 'email', '==', user.email);
+      if (docs.length > 0) {
+        const existingUser = docs[0];
+        userDoc = { ...existingUser, uid: user.uid };
+        await setDocument('users', user.uid, userDoc);
+        if (existingUser.id !== user.uid) {
+          await deleteDocument('users', existingUser.id);
+        }
+      } else {
+        // Create new
+        userDoc = {
+          uid: user.uid,
+          name: user.displayName || 'User',
+          email: user.email,
+          role: 'customer',
+          isActive: true,
+          createdAt: new Date().toISOString()
+        };
+        await setDocument('users', user.uid, userDoc);
+      }
     }
+    
     setUserData(userDoc);
     return { user, userData: userDoc };
   };
