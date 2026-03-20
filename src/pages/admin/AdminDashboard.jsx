@@ -19,6 +19,10 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -51,6 +55,25 @@ const AdminDashboard = () => {
 
   return (
     <div className="p-6 lg:p-10 space-y-10 animate-in fade-in duration-500">
+      {/* PRINT STYLES */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media screen {
+          .printable-only { display: none !important; }
+        }
+        @media print {
+          .no-print { display: none !important; }
+          .printable-only { display: block !important; }
+          body { background: white !important; }
+          .printable-report { 
+            width: 100%;
+            color: black !important;
+            padding: 40px;
+          }
+        }
+      `}} />
+
+      {/* NO PRINT CONTENT */}
+      <div className="no-print space-y-10">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
@@ -157,7 +180,10 @@ const AdminDashboard = () => {
               </div>
            </div>
 
-           <button className="relative z-10 w-full bg-white text-slate-900 py-5 rounded-2xl font-black mt-12 text-sm hover:bg-emerald-50 transition-all shadow-xl shadow-slate-950/20 active:scale-95">
+           <button 
+             onClick={handlePrint}
+             className="relative z-10 w-full bg-white text-slate-900 py-5 rounded-2xl font-black mt-12 text-sm hover:bg-emerald-50 transition-all shadow-xl shadow-slate-950/20 active:scale-95"
+           >
               Generate PDF Report
            </button>
 
@@ -244,6 +270,61 @@ const AdminDashboard = () => {
                Load Additional Records
             </Link>
          </div>
+      </div>
+      </div>
+
+      {/* PRINTABLE ONLY CONTENT */}
+      <div className="printable-only">
+        <div className="printable-report font-sans bg-white">
+           <div className="flex justify-between items-start mb-12 border-b-4 border-slate-900 pb-8">
+              <div>
+                 <h1 className="text-5xl font-black text-slate-900 mb-2 font-black">F<span className="text-emerald-600 italic font-black">M</span>RT</h1>
+                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Platform Performance Report</p>
+              </div>
+              <div className="text-right">
+                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Generated On</p>
+                 <p className="text-xl font-black text-slate-900 tracking-tighter">{new Date().toLocaleString()}</p>
+              </div>
+           </div>
+
+           <div className="grid grid-cols-4 gap-8 mb-12">
+              {statCards.map((card, i) => (
+                <div key={i} className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{card.label}</p>
+                   <p className="text-2xl font-black text-slate-900 tracking-tighter">{card.value}</p>
+                </div>
+              ))}
+           </div>
+
+           <h3 className="text-xl font-black text-slate-900 mb-6 uppercase tracking-widest border-b-2 border-slate-100 pb-2">Recent Platform Activity</h3>
+           <table className="w-full text-left border-collapse mb-12">
+              <thead>
+                 <tr className="border-b-2 border-slate-900">
+                    <th className="py-4 text-[10px] font-black text-slate-900 uppercase tracking-widest">Customer</th>
+                    <th className="py-4 text-[10px] font-black text-slate-900 uppercase tracking-widest">Status</th>
+                    <th className="py-4 text-[10px] font-black text-slate-900 uppercase tracking-widest">Date</th>
+                    <th className="py-4 text-right text-[10px] font-black text-slate-900 uppercase tracking-widest">Amount</th>
+                 </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                 {stats?.recentOrders?.map((order, idx) => (
+                    <tr key={idx}>
+                       <td className="py-4">
+                          <p className="text-sm font-bold">{order.userName || 'Guest User'}</p>
+                          <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">REF: #{order.id.slice(-6).toUpperCase()}</p>
+                       </td>
+                       <td className="py-4 text-[10px] font-black uppercase tracking-widest">{order.status}</td>
+                       <td className="py-4 text-sm text-slate-500">{order.createdAt?.toDate ? order.createdAt.toDate().toLocaleDateString() : 'Recent'}</td>
+                       <td className="py-4 text-right text-lg font-black text-slate-900">₹{order.total}</td>
+                    </tr>
+                 ))}
+              </tbody>
+           </table>
+
+           <div className="mt-20 pt-12 border-t border-slate-100 text-center">
+              <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.5em]">Authored by FreshMart Administrative Intelligence</p>
+           </div>
+        </div>
       </div>
     </div>
   );

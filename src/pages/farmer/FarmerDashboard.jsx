@@ -30,6 +30,7 @@ const FarmerDashboard = () => {
     growth: '+0%',
     yieldData: []
   });
+  const [fullOrders, setFullOrders] = useState([]);
   const [recentOrders, setRecentOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showInsightLog, setShowInsightLog] = useState(false);
@@ -42,6 +43,7 @@ const FarmerDashboard = () => {
         if (currentUser) {
           const productData = await getFarmerProducts(currentUser.uid);
           const orderData = await getFarmerOrders(currentUser.uid);
+          setFullOrders(orderData);
           
           const totalEarnings = orderData.reduce((sum, order) => sum + (order.myTotal || 0), 0);
           const uniqueCustomers = new Set(orderData.map(order => order.userId)).size;
@@ -92,7 +94,47 @@ const FarmerDashboard = () => {
   }, [currentUser]);
 
   const handleExport = () => {
-    toast.success("Harvest Analytics Exported as CSV");
+    try {
+      if (fullOrders.length === 0) {
+        toast.error("No data available to export");
+        return;
+      }
+
+      // Define CSV headers
+      const headers = ["Order ID", "Customer", "Date", "Status", "Total Amount (₹)", "Items"];
+      
+      // Map data to rows
+      const rows = fullOrders.map(order => [
+        order.id,
+        order.userName || "N/A",
+        order.createdAt?.toDate ? order.createdAt.toDate().toLocaleDateString() : "N/A",
+        order.status,
+        order.myTotal || 0,
+        order.myItems?.map(item => `${item.name} (x${item.quantity})`).join("; ") || ""
+      ]);
+
+      // Combine headers and rows
+      const csvContent = [
+        headers.join(","),
+        ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+      ].join("\n");
+
+      // Create blob and download
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `harvest_analytics_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success("Harvest Analytics Exported as CSV");
+    } catch (error) {
+      console.error("Export error:", error);
+      toast.error("Failed to export analytics");
+    }
   };
 
   if (loading) {

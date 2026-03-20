@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import { ShoppingCart, Heart, Eye } from 'lucide-react';
 import { useCartStore } from '../../store/useCartStore';
 import { useWishlistStore } from '../../store/useWishlistStore';
+import StarRating from '../common/StarRating';
 
 const ProductCard = ({ product }) => {
-  const { id, name, price, originalPrice, mrp, imageUrl, category, stock, unit, discount } = product;
+  const { id, name, price, originalPrice, mrp, category, stock, unit, discount } = product;
+  const imageUrl = product.imageUrl || product.image || product.prodImage || product.thumbnail;
   const addItem = useCartStore((state) => state.addItem);
   const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
   const isInWishlist = useWishlistStore((state) => state.isInWishlist(id));
@@ -37,21 +39,26 @@ const ProductCard = ({ product }) => {
     <div className="card bg-white p-4 group flex flex-col h-full transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl relative w-full border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:border-emerald-100">
       {/* Image & Quick Actions */}
       <div className="relative aspect-square rounded-xl bg-gray-50 mb-4 overflow-hidden flex items-center justify-center">
-        {imageUrl ? (
-          <img 
-            src={imageUrl} 
-            alt={name} 
-            className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${isOutOfStock ? 'opacity-50 grayscale' : ''}`}
-            loading="lazy"
-            decoding="async"
-            crossOrigin="anonymous"
-            referrerPolicy="no-referrer"
-          />
-        ) : (
-          <div className="text-gray-400">No Image</div>
-        )}
+        <Link 
+          to={`/product/${id}`}
+          className="w-full h-full block"
+        >
+          {imageUrl ? (
+            <img 
+              src={imageUrl} 
+              alt={name} 
+              className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ${isOutOfStock ? 'opacity-50 grayscale' : ''}`}
+              loading="lazy"
+              decoding="async"
+              crossOrigin="anonymous"
+              referrerPolicy="no-referrer"
+            />
+          ) : (
+            <div className="text-gray-400">No Image</div>
+          )}
+        </Link>
 
-        {/* Action icons */}
+        {/* Action icons - Now OUTSIDE the main Link */}
         <div className="absolute top-2 right-2 flex flex-col gap-2 translate-x-10 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
           <button 
             onClick={handleToggleWishlist}
@@ -85,6 +92,14 @@ const ProductCard = ({ product }) => {
         <div className="flex justify-between items-start mb-2">
           <span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-black">{category}</span>
           {unit && <span className="text-[10px] text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg font-black uppercase tracking-tighter shadow-sm border border-emerald-100">{unit}</span>}
+        </div>
+        
+        {/* Rating display */}
+        <div className="flex items-center gap-2 mb-2">
+          <StarRating rating={product.averageRating || 0} size={12} />
+          {product.reviewCount > 0 && (
+            <span className="text-[10px] text-slate-400 font-bold">({product.reviewCount})</span>
+          )}
         </div>
         
         <Link to={`/product/${id}`} className="font-bold text-slate-900 mb-3 line-clamp-2 hover:text-emerald-600 transition-colors flex-1 text-sm sm:text-base leading-tight tracking-tight">

@@ -14,6 +14,8 @@ export const getActiveProducts = async (options = {}) => {
 
     if (options.categorySlug) {
       q = query(q, where('categorySlug', '==', options.categorySlug));
+    } else if (options.category) {
+      q = query(q, where('category', '==', options.category));
     }
 
     // Default sort by creation date or order, adjust as needed based on your indexes

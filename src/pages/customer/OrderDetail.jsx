@@ -4,6 +4,8 @@ import { db } from '../../firebase/config';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { cancelOrder } from '../../services/orderService';
 import { getUserProfile } from '../../services/userService';
+import { useAuth } from '../../context/AuthContext';
+import ReviewForm from '../../components/review/ReviewForm';
 import { toast } from 'react-hot-toast';
 import { 
   ArrowLeft, 
@@ -28,6 +30,9 @@ const OrderDetail = () => {
   const [loading, setLoading] = useState(true);
   const [farmers, setFarmers] = useState({});
   const [cancelling, setCancelling] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     if (!orderId) return;
@@ -81,11 +86,27 @@ const OrderDetail = () => {
   };
 
   if (loading) {
-// ... existing loading block
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
+        <Loader2 className="animate-spin text-emerald-500" size={48} />
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Retrieving Order Status...</p>
+      </div>
+    );
   }
 
   if (!order) {
-// ... existing not found block
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-20 text-center">
+        <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-300">
+          <AlertCircle size={40} />
+        </div>
+        <h2 className="text-2xl font-black text-gray-900 mb-2">Order Not Found</h2>
+        <p className="text-gray-500 mb-8 font-medium">We couldn't find the details for this order. It might have been removed or the ID is incorrect.</p>
+        <Link to="/account/orders" className="btn-primary inline-flex items-center gap-2">
+          <ArrowLeft size={18} /> Back to My Orders
+        </Link>
+      </div>
+    );
   }
 
   const steps = [
@@ -183,7 +204,24 @@ const OrderDetail = () => {
                         <p className="font-bold text-gray-900 text-lg line-clamp-1">{item.name}</p>
                         <p className="text-sm text-gray-500 font-medium">{item.quantity} x ₹{item.price}</p>
                       </div>
-                      <p className="font-black text-gray-900 text-lg">₹{item.price * item.quantity}</p>
+                      <div className="flex flex-col items-end gap-2">
+                        <p className="font-black text-gray-900 text-lg">₹{item.price * item.quantity}</p>
+                        {order.status === 'Delivered' && (
+                          <button 
+                            onClick={() => {
+                              setSelectedProduct({
+                                id: item.productId || item.id, // Fallback to item.id if productId is missing
+                                name: item.name,
+                                farmerId: item.farmerId
+                              });
+                              setIsReviewModalOpen(true);
+                            }}
+                            className="text-[10px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-100 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
+                          >
+                            Rate Product
+                          </button>
+                        )}
+                      </div>
                     </div>
                     
                     {/* Seller Info */}
@@ -292,6 +330,20 @@ const OrderDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Review Modal */}
+      {selectedProduct && (
+        <ReviewForm
+          isOpen={isReviewModalOpen}
+          onClose={() => {
+            setIsReviewModalOpen(false);
+            setSelectedProduct(null);
+          }}
+          product={selectedProduct}
+          userId={currentUser?.uid}
+          userName={currentUser?.displayName || "Valued Customer"}
+        />
+      )}
     </div>
   );
 };

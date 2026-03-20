@@ -27,6 +27,10 @@ const FarmerEarnings = () => {
   const [activeTab, setActiveTab] = useState('Overview');
   const [showPayoutModal, setShowPayoutModal] = useState(false);
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   useEffect(() => {
     const fetchEarningsData = async () => {
       try {
@@ -104,6 +108,25 @@ const FarmerEarnings = () => {
 
   return (
     <div className="p-4 lg:p-10 space-y-12 animate-in fade-in duration-700 max-w-[1600px] mx-auto">
+      {/* PRINT STYLES */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media screen {
+          .printable-only { display: none !important; }
+        }
+        @media print {
+          .no-print { display: none !important; }
+          .printable-only { display: block !important; }
+          body { background: white !important; }
+          .printable-ledger { 
+            width: 100%;
+            color: black !important;
+            padding: 40px;
+          }
+        }
+      `}} />
+
+      {/* NO PRINT CONTENT */}
+      <div className="no-print space-y-12">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
         <div>
@@ -111,7 +134,10 @@ const FarmerEarnings = () => {
           <p className="text-slate-500 font-medium mt-1">Direct farm profits and transaction monitoring</p>
         </div>
         <div className="flex items-center gap-4">
-          <button className="px-6 py-4 bg-white border border-slate-200 text-slate-600 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:border-slate-900 transition-all flex items-center gap-2">
+          <button 
+            onClick={handlePrint}
+            className="px-6 py-4 bg-white border border-slate-200 text-slate-600 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:border-slate-900 transition-all flex items-center gap-2"
+          >
             <Download size={16} /> Ledger PDF
           </button>
           <button 
@@ -333,6 +359,66 @@ const FarmerEarnings = () => {
           </div>
         )}
       </AnimatePresence>
+      </div>
+
+      {/* PRINTABLE ONLY CONTENT */}
+      <div className="printable-only">
+        <div className="printable-ledger font-sans bg-white">
+           <div className="flex justify-between items-start mb-12 border-b-4 border-slate-900 pb-8">
+              <div>
+                 <h1 className="text-5xl font-black text-slate-900 mb-2 font-black">H<span className="text-emerald-600 italic font-black">V</span>ST</h1>
+                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Official Financial Ledger</p>
+              </div>
+              <div className="text-right">
+                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Generated On</p>
+                 <p className="text-xl font-black text-slate-900 tracking-tighter">{new Date().toLocaleString()}</p>
+              </div>
+           </div>
+
+           <div className="grid grid-cols-3 gap-8 mb-12">
+              <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Harvest Value</p>
+                 <p className="text-2xl font-black text-slate-900 tracking-tighter">₹{totalRevenue.toLocaleString()}</p>
+              </div>
+              <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Cleared Funds</p>
+                 <p className="text-2xl font-black text-slate-900 tracking-tighter">₹{clearedRevenue.toLocaleString()}</p>
+              </div>
+              <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Pending Logistics</p>
+                 <p className="text-2xl font-black text-slate-900 tracking-tighter">₹{pendingRevenue.toLocaleString()}</p>
+              </div>
+           </div>
+
+           <h3 className="text-xl font-black text-slate-900 mb-6 uppercase tracking-widest border-b-2 border-slate-100 pb-2">Transaction Migration History</h3>
+           <table className="w-full text-left border-collapse mb-12">
+              <thead>
+                 <tr className="border-b-2 border-slate-900">
+                    <th className="py-4 text-[10px] font-black text-slate-900 uppercase tracking-widest">Type</th>
+                    <th className="py-4 text-[10px] font-black text-slate-900 uppercase tracking-widest">Reference</th>
+                    <th className="py-4 text-[10px] font-black text-slate-900 uppercase tracking-widest">Date</th>
+                    <th className="py-4 text-right text-[10px] font-black text-slate-900 uppercase tracking-widest">Amount</th>
+                    <th className="py-4 text-right text-[10px] font-black uppercase tracking-widest">State</th>
+                 </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                 {orders.map((order, idx) => (
+                    <tr key={idx}>
+                       <td className="py-4 text-sm font-bold">Order Credit</td>
+                       <td className="py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">#LOG-{order.id.slice(-6).toUpperCase()}</td>
+                       <td className="py-4 text-sm text-slate-500">{order.createdAt?.toDate ? order.createdAt.toDate().toLocaleDateString() : 'Recent'}</td>
+                       <td className="py-4 text-right text-lg font-black text-slate-900">₹{order.myTotal}</td>
+                       <td className="py-4 text-right text-[10px] font-black uppercase tracking-widest">{order.status}</td>
+                    </tr>
+                 ))}
+              </tbody>
+           </table>
+
+           <div className="mt-20 pt-12 border-t border-slate-100 text-center">
+              <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.5em]">Authored by FreshMart Financial Network</p>
+           </div>
+        </div>
+      </div>
     </div>
   );
 };

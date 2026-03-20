@@ -135,8 +135,15 @@ const FarmerProfile = () => {
               
               <div className="pt-8 border-t border-slate-50 grid grid-cols-2 gap-4">
                  <div className="text-center">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Joined</p>
-                    <p className="text-sm font-black text-slate-900 italic">MAR 2026</p>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Rating</p>
+                    <div className="flex flex-col items-center">
+                      <p className="text-sm font-black text-emerald-600 italic">
+                        {userData?.averageRating ? userData.averageRating.toFixed(1) : '5.0'} ★
+                      </p>
+                      <p className="text-[8px] text-slate-400 font-bold uppercase">
+                        {userData?.reviewCount || 0} reviews
+                      </p>
+                    </div>
                  </div>
                  <div className="text-center">
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Rank</p>
