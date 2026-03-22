@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Heart, Eye } from 'lucide-react';
 import { useCartStore } from '../../store/useCartStore';
 import { useWishlistStore } from '../../store/useWishlistStore';
 import StarRating from '../common/StarRating';
 
-const ProductCard = ({ product }) => {
+const ProductCard = memo(({ product }) => {
   const { id, name, price, originalPrice, mrp, category, stock, unit, discount } = product;
   const imageUrl = product.imageUrl || product.image || product.prodImage || product.thumbnail;
   const addItem = useCartStore((state) => state.addItem);
@@ -135,6 +135,6 @@ const ProductCard = ({ product }) => {
       </div>
     </div>
   );
-};
+});
 
 export default ProductCard;

@@ -50,6 +50,7 @@ const Cart = lazy(() => import('../pages/customer/Cart'));
 const Checkout = lazy(() => import('../pages/customer/Checkout'));
 const OrderSuccess = lazy(() => import('../pages/customer/OrderSuccess'));
 const OrderDetail = lazy(() => import('../pages/customer/OrderDetail'));
+const UserSettings = lazy(() => import('../pages/customer/UserSettings'));
 
 // Lazy Loaded Farmer Pages
 const FarmerDashboard = lazy(() => import('../pages/farmer/FarmerDashboard'));
@@ -100,6 +101,7 @@ const AppRoutes = () => {
             <Route path="/checkout" element={<CustomerRoute><Checkout /></CustomerRoute>} />
             <Route path="/order-success/:orderId" element={<CustomerRoute><OrderSuccess /></CustomerRoute>} />
             <Route path="/account/orders/:orderId" element={<CustomerRoute><OrderDetail /></CustomerRoute>} />
+            <Route path="/account/settings" element={<CustomerRoute><UserSettings /></CustomerRoute>} />
           </Route>
 
           {/* Auth Routes */}

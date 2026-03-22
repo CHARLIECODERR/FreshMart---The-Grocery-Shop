@@ -16,6 +16,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '../store/useCartStore';
 import { useWishlistStore } from '../store/useWishlistStore';
 import LogoutConfirmModal from './LogoutConfirmModal';
+import NotificationCenter from './NotificationCenter';
 import toast from 'react-hot-toast';
 import { useSettings } from '../hooks/useSettings';
 
@@ -101,6 +102,7 @@ const Header = () => {
             ))}
           </nav>
           <div className="flex items-center gap-2 sm:gap-4">
+            {currentUser && <NotificationCenter />}
             <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors hidden sm:block"><Search size={20} /></button>
             <Link to="/account/wishlist" className="p-2 text-gray-600 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors hidden sm:block relative">
               <Heart size={20} />
@@ -131,6 +133,123 @@ const Header = () => {
           </div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] md:hidden"
+            />
+            
+            {/* Drawer */}
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed inset-y-0 left-0 w-[280px] bg-white z-[70] md:hidden shadow-2xl flex flex-col"
+            >
+              <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+                <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-emerald-50 rounded-lg p-1">
+                    <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+                  </div>
+                  <span className="font-bold text-lg text-slate-900">{storeName}</span>
+                </Link>
+                <button 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-1">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    to={link.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`block px-4 py-3 rounded-xl text-base font-medium transition-colors ${
+                      isActive(link.path) 
+                        ? 'bg-emerald-50 text-emerald-700' 
+                        : 'text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+                
+                <div className="pt-4 mt-4 border-t border-gray-100 px-4">
+                  <Link 
+                    to="/account/wishlist" 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-3 py-3 text-gray-600 hover:text-emerald-600 transition-colors"
+                  >
+                    <Heart size={20} />
+                    <span className="font-medium">Wishlist</span>
+                    {wishlistCount > 0 && (
+                      <span className="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                        {wishlistCount}
+                      </span>
+                    )}
+                  </Link>
+                </div>
+              </nav>
+
+              <div className="p-4 border-t border-gray-100 bg-gray-50/50">
+                {currentUser ? (
+                  <div className="space-y-3">
+                    <Link 
+                      to={role === 'admin' ? '/admin' : role === 'farmer' ? '/farmer' : '/account'}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-2xl hover:border-emerald-200 transition-colors shadow-sm"
+                    >
+                      <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-700 flex-shrink-0">
+                        <User size={20} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-gray-900 truncate">
+                          {currentUser.displayName || 'My Account'}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate capitalize">{role}</p>
+                      </div>
+                    </Link>
+                    <button 
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        setShowLogoutModal(true);
+                      }}
+                      className="w-full flex items-center justify-center gap-2 py-3.5 text-red-600 font-bold bg-red-50 hover:bg-red-100 rounded-2xl transition-all"
+                    >
+                      <LogOut size={18} />
+                      Sign Out
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <Link 
+                      to="/login"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="w-full flex items-center justify-center py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-lg shadow-emerald-200 transition-all text-lg"
+                    >
+                      Sign In
+                    </Link>
+                    <p className="text-center text-sm text-gray-500">
+                      Don't have an account? <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)} className="text-emerald-600 font-bold hover:underline">Sign Up</Link>
+                    </p>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

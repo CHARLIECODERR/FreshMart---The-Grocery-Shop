@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Loader2, Search, Filter, X } from 'lucide-react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { Search, Filter, X } from 'lucide-react';
+import { FixedSizeGrid as Grid } from 'react-window';
 import { getActiveProducts } from '../../services/productService';
 import { getActiveCategories } from '../../services/categoryService';
 import ProductCard from '../../components/product/ProductCard';
+import { ProductCardSkeleton } from '../../components/common/Skeleton';
 import useDebounce from '../../hooks/useDebounce';
 
 const Shop = () => {
@@ -10,11 +12,27 @@ const Shop = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  // Filters
+  const [columnCount, setColumnCount] = useState(4);
+  const [gridWidth, setGridWidth] = useState(window.innerWidth > 1280 ? 1280 : window.innerWidth - 64);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      let cols = 1;
+      if (width >= 1024) cols = 4;
+      else if (width >= 768) cols = 2;
+      setColumnCount(cols);
+      setGridWidth(Math.min(1280, width - (width > 640 ? 64 : 32)));
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,23 +45,36 @@ const Shop = () => {
         setProducts(fetchedProducts);
         setCategories(fetchedCategories);
       } catch (err) {
-        console.error("Error fetching shop data:", err);
-        setError("Failed to load products. Please try again later.");
+        setError("Failed to load products.");
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
-  const filteredProducts = products.filter(p => {
-    const matchesSearch = p.name?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) || 
-                          p.description?.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || p.categorySlug === selectedCategory;
-    
-    return matchesSearch && matchesCategory;
-  });
+  const filteredProducts = useMemo(() => {
+    return products.filter(p => {
+      const matchesSearch = p.name?.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === 'all' || p.categorySlug === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [products, debouncedSearchTerm, selectedCategory]);
+
+  const Cell = useCallback(({ columnIndex, rowIndex, style }) => {
+    const index = rowIndex * columnCount + columnIndex;
+    const product = filteredProducts[index];
+    if (!product) return null;
+
+    return (
+      <div style={{ ...style, padding: '12px' }}>
+        <ProductCard product={product} />
+      </div>
+    );
+  }, [filteredProducts, columnCount]);
+
+  const rowCount = Math.ceil(filteredProducts.length / columnCount);
+  const columnWidth = gridWidth / columnCount;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -85,19 +116,28 @@ const Shop = () => {
       </div>
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20">
-          <Loader2 className="animate-spin text-primary-500 mb-4" size={40} />
-          <p className="text-gray-500">Loading fresh products...</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[...Array(8)].map((_, i) => (
+            <ProductCardSkeleton key={i} />
+          ))}
         </div>
       ) : error ? (
         <div className="bg-red-50 text-red-600 p-6 rounded-2xl text-center border border-red-100 my-10">
           <p className="text-lg font-medium">{error}</p>
         </div>
       ) : filteredProducts.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        <div className="flex justify-center -mx-3">
+          <Grid
+            columnCount={columnCount}
+            columnWidth={columnWidth}
+            height={800} // Dynamic height or fixed
+            rowCount={rowCount}
+            rowHeight={500} // Approx height of ProductCard
+            width={gridWidth}
+            className="no-scrollbar"
+          >
+            {Cell}
+          </Grid>
         </div>
       ) : (
         <div className="text-center py-20 bg-gray-50 rounded-3xl border border-gray-100 px-6">
