@@ -152,9 +152,12 @@ const FarmerProducts = () => {
                        </span>
                     </td>
                     <td className="px-10 py-6">
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-lg font-black text-slate-900">₹{product.price}</span>
-                        <span className="text-[10px] text-slate-400 font-black uppercase tracking-tighter">/ {product.unit}</span>
+                      <div className="flex flex-col">
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-lg font-black text-slate-900">₹{product.price}</span>
+                          <span className="text-[10px] text-slate-400 font-black uppercase tracking-tighter">/ {product.unit}</span>
+                        </div>
+                        <span className="text-[8px] text-emerald-600 font-black uppercase tracking-widest leading-none mt-1 italic">Incl. 5% GST</span>
                       </div>
                     </td>
                     <td className="px-10 py-6">
