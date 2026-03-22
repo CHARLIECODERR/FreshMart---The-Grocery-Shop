@@ -486,6 +486,10 @@ const Checkout = () => {
                   {shipping === 0 ? 'FREE' : `₹${shipping}`}
                 </span>
               </div>
+              <div className="flex justify-between text-emerald-600/70 text-[10px] font-black uppercase tracking-widest pt-2">
+                <span>Included Tax (GST 5%)</span>
+                <span>₹{(total * 5 / 105).toFixed(2)}</span>
+              </div>
               <div className="pt-4 border-t border-gray-50 flex justify-between">
                 <span className="text-base font-black text-gray-900 uppercase">Total Amount</span>
                 <span className="text-2xl font-black text-emerald-600">₹{total}</span>

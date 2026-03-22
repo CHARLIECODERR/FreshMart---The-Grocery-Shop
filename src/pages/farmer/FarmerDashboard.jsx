@@ -46,6 +46,7 @@ const FarmerDashboard = () => {
           setFullOrders(orderData);
           
           const totalEarnings = orderData.reduce((sum, order) => sum + (order.myTotal || 0), 0);
+          const totalTax = totalEarnings * 0.05; // 5% GST calculation
           const uniqueCustomers = new Set(orderData.map(order => order.userId)).size;
           const deliveredCount = orderData.filter(order => order.status === 'Delivered').length;
 
@@ -53,6 +54,7 @@ const FarmerDashboard = () => {
             products: productData.length,
             orders: orderData.length,
             earnings: totalEarnings,
+            tax: totalTax,
             customers: uniqueCustomers,
             delivered: deliveredCount,
             growth: orderData.length > 0 ? '+15.4%' : '+0%',
@@ -170,8 +172,8 @@ const FarmerDashboard = () => {
 
   const statCards = [
     { label: 'Harvest Catalog', value: stats.products, icon: Package, color: 'text-blue-600', bg: 'bg-blue-50', trend: '+12%', isUp: true },
-    { label: 'Logistics Logs', value: stats.orders, icon: ShoppingBag, color: 'text-emerald-600', bg: 'bg-emerald-50', trend: stats.growth, isUp: true },
-    { label: 'Net Proceeds', value: `₹${stats.earnings.toLocaleString()}`, icon: TrendingUp, color: 'text-orange-600', bg: 'bg-orange-50', trend: '+18.2%', isUp: true },
+    { label: 'Harvest Logs', value: stats.orders, icon: ShoppingBag, color: 'text-emerald-600', bg: 'bg-emerald-50', trend: stats.growth, isUp: true },
+    { label: 'Net Proceeds', value: `₹${stats.earnings.toLocaleString()}`, icon: TrendingUp, color: 'text-orange-600', bg: 'bg-orange-50', trend: `GST: ₹${Math.round(stats.tax || 0)}`, isUp: true },
     { label: 'Direct Reach', value: stats.customers, icon: Users, color: 'text-purple-600', bg: 'bg-purple-50', trend: '+5.1%', isUp: true },
   ];
 

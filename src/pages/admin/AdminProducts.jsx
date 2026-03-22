@@ -132,10 +132,10 @@ const AdminProducts = () => {
                 <div className="flex-1 flex items-center gap-4 min-w-0">
                   <div className="w-14 h-14 rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 shrink-0">
                     {product.imageUrl ? (
-                      <img 
-                        src={product.imageUrl} 
-                        alt={product.name} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                      <img
+                        src={product.imageUrl}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
                         decoding="async"
                         crossOrigin="anonymous"
@@ -159,7 +159,7 @@ const AdminProducts = () => {
                       {product.category || 'General'}
                     </span>
                   </div>
-                  
+
                   <div className="lg:w-32 flex flex-col lg:block">
                     <span className="lg:hidden text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Producer</span>
                     <span className="text-xs font-bold text-slate-600 truncate block">
@@ -174,42 +174,39 @@ const AdminProducts = () => {
 
                   <div className="lg:w-24 flex flex-col lg:block">
                     <span className="lg:hidden text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">In Stock</span>
-                    <span className={`text-[10px] font-black px-2 py-1 rounded-lg w-fit ${
-                      (product.stock || 0) < 10 ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600'
-                    }`}>
+                    <span className={`text-[10px] font-black px-2 py-1 rounded-lg w-fit ${(product.stock || 0) < 10 ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600'
+                      }`}>
                       {product.stock ?? 0} units
                     </span>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between lg:justify-end gap-3 mt-4 lg:mt-0 pt-4 lg:pt-0 border-t border-slate-50 lg:border-none">
-                   <div className="lg:w-32">
-                      <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border ${
-                        product.isActive !== false ? 'bg-emerald-50 text-emerald-600 border-emerald-100 shadow-sm shadow-emerald-50' : 'bg-slate-50 text-slate-500 border-slate-200'
+                  <div className="lg:w-32">
+                    <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border ${product.isActive !== false ? 'bg-emerald-50 text-emerald-600 border-emerald-100 shadow-sm shadow-emerald-50' : 'bg-slate-50 text-slate-500 border-slate-200'
                       }`}>
-                        {product.isActive !== false ? 'Published' : 'Hidden'}
-                      </span>
-                   </div>
+                      {product.isActive !== false ? 'Published' : 'Hidden'}
+                    </span>
+                  </div>
 
-                   <div className="flex items-center gap-2 lg:w-28 lg:justify-end">
-                      <button
-                        onClick={() => handleToggleVisibility(product)}
-                        className={`p-2.5 rounded-xl transition-all ${
-                          product.isActive !== false ? 'bg-slate-100 text-slate-500 hover:bg-orange-50 hover:text-orange-500' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'
+                  <div className="flex items-center gap-2 lg:w-28 lg:justify-end">
+                    <button
+                      onClick={() => handleToggleVisibility(product)}
+                      className={`p-2.5 rounded-xl transition-all ${product.isActive !== false ? 'bg-slate-100 text-slate-500 hover:bg-orange-50 hover:text-orange-500' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'
                         }`}
-                        title={product.isActive !== false ? 'Hide Product' : 'Publish Product'}
-                      >
-                        {product.isActive !== false ? <EyeOff size={16} /> : <Eye size={16} />}
-                      </button>
-                      <button
-                        onClick={() => handleDelete(product)}
-                        disabled={deletingId === product.id}
-                        className="p-2.5 rounded-xl bg-red-50 text-red-500 hover:bg-red-100 transition-all disabled:opacity-50"
-                        title="Delete Product"
-                      >
-                        {deletingId === product.id ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
-                      </button>
-                   </div>
+                      title={product.isActive !== false ? 'Hide Product' : 'Publish Product'}
+                    >
+                      {product.isActive !== false ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                    <button
+                      onClick={() => handleDelete(product)}
+                      disabled={deletingId === product.id}
+                      className="p-2.5 rounded-xl bg-red-50 text-red-500 hover:bg-red-100 transition-all disabled:opacity-50"
+                      title="Delete Product"
+                    >
+                      {deletingId === product.id ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

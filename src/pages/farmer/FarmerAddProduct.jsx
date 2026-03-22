@@ -34,7 +34,13 @@ const FarmerAddProduct = () => {
     category: 'Vegetables',
     unit: 'kg',
     imageUrl: '',
-    isFeatured: false
+    isFeatured: false,
+    nutritionalInfo: '',
+    benefits: '',
+    storageTips: '',
+    origin: '',
+    season: '',
+    shelfLife: ''
   });
 
   const handleChange = (e) => {
@@ -216,6 +222,82 @@ const FarmerAddProduct = () => {
                 </p>
               </div>
             )}
+          </div>
+
+          <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm space-y-6">
+            <h3 className="text-lg font-black text-gray-900 pb-4 border-b border-gray-50 flex items-center gap-2">
+              <Info size={20} className="text-emerald-500" />
+              Detailed Information
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-black text-gray-400 uppercase tracking-widest pl-1">Origin / Source</label>
+                <input 
+                  type="text" name="origin"
+                  placeholder="e.g. Nagpur, Maharashtra"
+                  className="input-field w-full"
+                  value={formData.origin}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-black text-gray-400 uppercase tracking-widest pl-1">Best Season</label>
+                <input 
+                  type="text" name="season"
+                  placeholder="e.g. Winter (Oct - Feb)"
+                  className="input-field w-full"
+                  value={formData.season}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-black text-gray-400 uppercase tracking-widest pl-1">Shelf Life</label>
+                <input 
+                  type="text" name="shelfLife"
+                  placeholder="e.g. 3-5 days"
+                  className="input-field w-full"
+                  value={formData.shelfLife}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-black text-gray-400 uppercase tracking-widest pl-1">Nutritional Info (per 100g)</label>
+              <textarea 
+                name="nutritionalInfo"
+                rows="3"
+                placeholder="e.g. Energy: 52 kcal, Vitamin C: 15%, Fiber: 2.4g"
+                className="input-field resize-none h-24 w-full"
+                value={formData.nutritionalInfo}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-black text-gray-400 uppercase tracking-widest pl-1">Health Benefits</label>
+              <textarea 
+                name="benefits"
+                rows="3"
+                placeholder="List some health benefits of this produce..."
+                className="input-field resize-none h-24 w-full"
+                value={formData.benefits}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-black text-gray-400 uppercase tracking-widest pl-1">Storage Tips</label>
+              <textarea 
+                name="storageTips"
+                rows="3"
+                placeholder="How should customers store this to keep it fresh?"
+                className="input-field resize-none h-24 w-full"
+                value={formData.storageTips}
+                onChange={handleChange}
+              />
+            </div>
           </div>
         </div>
 

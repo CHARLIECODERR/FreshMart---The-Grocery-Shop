@@ -116,6 +116,7 @@ const ProductCard = ({ product }) => {
             <span className="text-xl font-black text-slate-900 leading-none">
               ₹{price}
             </span>
+            <span className="text-[9px] text-slate-400 font-bold tracking-tighter mt-1 italic leading-none">Incl. 5% GST</span>
           </div>
           {displayOriginalPrice > price && (
             <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-md mb-0.5">

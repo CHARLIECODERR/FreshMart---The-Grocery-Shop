@@ -15,7 +15,12 @@ import {
   User,
   Phone,
   MessageCircle,
-  ArrowRight
+  ArrowRight,
+  AlertCircle,
+  Leaf,
+  Info,
+  Calendar,
+  MapPin
 } from 'lucide-react';
 import ProductCard from '../../components/product/ProductCard';
 import { motion } from 'framer-motion';
@@ -376,29 +381,85 @@ const ProductDetails = () => {
                     </div>
                     <div className="flex items-center justify-between py-3 border-b border-gray-50">
                       <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Shelf Life</span>
-                      <span className="text-sm font-bold text-gray-900">3-5 Days</span>
+                      <span className="text-sm font-bold text-gray-900">{product.shelfLife || '3-5 Days'}</span>
                     </div>
+                    {product.origin && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-50">
+                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Origin</span>
+                        <div className="flex items-center gap-1.5">
+                          <MapPin size={12} className="text-emerald-500" />
+                          <span className="text-sm font-bold text-gray-900">{product.origin}</span>
+                        </div>
+                      </div>
+                    )}
+                    {product.season && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-50">
+                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Best Season</span>
+                        <div className="flex items-center gap-1.5">
+                          <Calendar size={12} className="text-amber-500" />
+                          <span className="text-sm font-bold text-gray-900">{product.season}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
-                <div className="bg-gray-50 rounded-[2rem] p-8 border border-gray-100 flex flex-col justify-center gap-6">
-                   <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-gray-100 flex items-center justify-center shrink-0">
-                         <RefreshCw className="text-emerald-500" size={24} />
+
+                <div className="space-y-8 flex flex-col justify-center">
+                  {product.nutritionalInfo && (
+                    <div className="bg-emerald-50/50 rounded-3xl p-6 border border-emerald-100">
+                      <h4 className="flex items-center gap-2 text-xs font-black text-emerald-700 uppercase tracking-widest mb-4">
+                        <Info size={16} /> Nutritional Facts
+                      </h4>
+                      <p className="text-sm font-medium text-emerald-800/80 leading-relaxed whitespace-pre-line">
+                        {product.nutritionalInfo}
+                      </p>
+                    </div>
+                  )}
+
+                  {product.benefits && (
+                    <div className="bg-blue-50/50 rounded-3xl p-6 border border-blue-100">
+                      <h4 className="flex items-center gap-2 text-xs font-black text-blue-700 uppercase tracking-widest mb-4">
+                        <Leaf size={16} /> Health Benefits
+                      </h4>
+                      <p className="text-sm font-medium text-blue-800/80 leading-relaxed whitespace-pre-line">
+                        {product.benefits}
+                      </p>
+                    </div>
+                  )}
+
+                  {product.storageTips && (
+                    <div className="bg-slate-50 rounded-3xl p-6 border border-slate-200">
+                      <h4 className="flex items-center gap-2 text-xs font-black text-slate-700 uppercase tracking-widest mb-4">
+                        <RefreshCw size={16} /> Storage Tips
+                      </h4>
+                      <p className="text-sm font-medium text-slate-600 leading-relaxed whitespace-pre-line">
+                        {product.storageTips}
+                      </p>
+                    </div>
+                  )}
+
+                  {!product.nutritionalInfo && !product.benefits && !product.storageTips && (
+                    <div className="bg-gray-50 rounded-[2rem] p-8 border border-gray-100 flex flex-col justify-center gap-6">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-gray-100 flex items-center justify-center shrink-0">
+                            <RefreshCw className="text-emerald-500" size={24} />
+                        </div>
+                        <div>
+                            <p className="font-black text-gray-900 text-xs uppercase tracking-widest mb-1">Sustainable Growth</p>
+                            <p className="text-[10px] text-gray-500 font-medium">100% Organic methods focused on long-term soil health.</p>
+                        </div>
                       </div>
-                      <div>
-                         <p className="font-black text-gray-900 text-xs uppercase tracking-widest mb-1">Sustainable Growth</p>
-                         <p className="text-[10px] text-gray-500 font-medium">100% Organic methods focused on long-term soil health.</p>
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-gray-100 flex items-center justify-center shrink-0">
+                            <ShieldCheck className="text-blue-500" size={24} />
+                        </div>
+                        <div>
+                            <p className="font-black text-gray-900 text-xs uppercase tracking-widest mb-1">Quality Guaranteed</p>
+                            <p className="text-[10px] text-gray-500 font-medium">Rigorous quality checks before every dispatch.</p>
+                        </div>
                       </div>
-                   </div>
-                   <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-gray-100 flex items-center justify-center shrink-0">
-                         <ShieldCheck className="text-blue-500" size={24} />
-                      </div>
-                      <div>
-                         <p className="font-black text-gray-900 text-xs uppercase tracking-widest mb-1">Quality Guaranteed</p>
-                         <p className="text-[10px] text-gray-500 font-medium">Rigorous quality checks before every dispatch.</p>
-                      </div>
-                   </div>
+                    </div>
+                  )}
                 </div>
               </div>
           )}
