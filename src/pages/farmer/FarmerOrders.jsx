@@ -86,13 +86,68 @@ const FarmerOrders = () => {
           .printable-only { display: none !important; }
         }
         @media print {
+          @page {
+            margin: 2cm;
+            size: portrait;
+          }
           .no-print { display: none !important; }
-          .printable-only { display: block !important; }
-          body { background: white !important; }
+          .printable-only { 
+            display: block !important; 
+            width: 100% !important;
+          }
+          body { 
+            background: #fff !important; 
+            margin: 0 !important;
+            padding: 0 !important;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+            color: #000 !important;
+            -webkit-print-color-adjust: exact;
+          }
           .printable-invoice { 
-            width: 100%;
-            color: black !important;
-            padding: 20px;
+            width: 100% !important;
+            max-width: 650px !important;
+            margin: 0 auto !important;
+            padding: 2rem !important;
+            background: #fff !important;
+            border: 1px solid #eee !important;
+          }
+          .receipt-header {
+            text-align: center !important;
+            margin-bottom: 2rem !important;
+            border-bottom: 2px solid #111 !important;
+            padding-bottom: 1.5rem !important;
+          }
+          .receipt-section-title {
+            font-size: 10px !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.1em !important;
+            color: #666 !important;
+            margin-bottom: 0.5rem !important;
+          }
+          .receipt-table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin: 1.5rem 0 !important;
+          }
+          .receipt-table th {
+            text-align: left !important;
+            border-bottom: 1px solid #111 !important;
+            padding: 8px 4px !important;
+            font-size: 11px !important;
+            font-weight: 900 !important;
+            text-transform: uppercase !important;
+          }
+          .receipt-table td {
+            padding: 10px 4px !important;
+            border-bottom: 1px solid #eee !important;
+            font-size: 13px !important;
+          }
+          .receipt-total-box {
+            margin-top: 2rem !important;
+            padding-top: 1rem !important;
+            border-top: 2px solid #111 !important;
+            text-align: right !important;
           }
         }
       `}} />
@@ -264,92 +319,87 @@ const FarmerOrders = () => {
       {/* HIDDEN INVOICE (RENDERED ONLY FOR PRINTING) */}
       {printingOrder && (
         <div className="printable-only">
-          <div className="printable-invoice font-sans border-2 border-slate-900 p-16 rounded-[3rem] bg-white relative overflow-hidden">
-             {/* Invoice Watermark/Design */}
-             <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full -mr-32 -mt-32" />
-             
-             <div className="flex justify-between items-start mb-16 relative">
+          <div className="printable-invoice">
+             {/* Header */}
+             <div className="receipt-header">
+                <h1 className="text-4xl font-black tracking-tighter text-slate-900 mb-1">FRESHMART</h1>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Premium Farm-to-Table Logistics</p>
+                <div className="mt-4 flex justify-center gap-4 text-[10px] font-bold text-slate-400">
+                   <span>www.freshmart.com</span>
+                   <span>•</span>
+                   <span>Support: +91 98765 43210</span>
+                </div>
+             </div>
+
+             {/* Transaction Info */}
+             <div className="grid grid-cols-2 gap-8 mb-8">
                 <div>
-                   <h1 className="text-5xl font-black text-slate-900 mb-2">H<span className="text-emerald-600 italic">V</span>ST</h1>
-                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Official Fulfillment Logistics</p>
+                   <h4 className="receipt-section-title">Invoice Details</h4>
+                   <p className="text-sm font-black text-slate-900 mb-0.5">Order ID: #{printingOrder.id.slice(-10).toUpperCase()}</p>
+                   <p className="text-xs font-bold text-slate-500">Date: {new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
+                   <p className="text-xs font-bold text-slate-500">Time: {new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</p>
                 </div>
                 <div className="text-right">
-                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Logistics Reference</p>
-                   <p className="text-2xl font-black text-slate-900 tracking-tighter">#{printingOrder.id.toUpperCase()}</p>
-                   <p className="text-xs font-bold text-slate-500 mt-2">Timestamp: {new Date().toLocaleString()}</p>
+                   <h4 className="receipt-section-title">Bill To</h4>
+                   <p className="text-sm font-black text-slate-900 mb-1 uppercase">{printingOrder.userName}</p>
+                   <p className="text-xs font-bold text-slate-500 leading-relaxed whitespace-pre-wrap">
+                      {printingOrder.shippingAddress?.street}, {printingOrder.shippingAddress?.city}<br/>
+                      {printingOrder.shippingAddress?.state} - {printingOrder.shippingAddress?.pincode}
+                   </p>
                 </div>
              </div>
 
-             <div className="grid grid-cols-2 gap-20 mb-20">
-                <div>
-                   <h4 className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-4 py-1.5 rounded-full uppercase tracking-widest mb-6 w-fit">Delivery Target</h4>
-                   <p className="font-black text-2xl text-slate-900 mb-3">{printingOrder.userName}</p>
-                   <div className="space-y-1 text-sm text-slate-500 font-medium leading-relaxed">
-                      <p>{printingOrder.shippingAddress?.street}</p>
-                      <p>{printingOrder.shippingAddress?.city}, {printingOrder.shippingAddress?.state}</p>
-                      <p className="font-black text-slate-900 pt-2 text-base">INDIA - {printingOrder.shippingAddress?.pincode}</p>
-                   </div>
-                   <div className="mt-8 flex items-center gap-3 text-sm font-black text-slate-900 bg-slate-50 px-6 py-3 rounded-2xl border border-slate-100 w-fit">
-                      <Phone size={16} className="text-emerald-500" /> +91 {printingOrder.shippingAddress?.phone}
-                   </div>
-                </div>
-                <div className="text-right flex flex-col items-end">
-                   <h4 className="text-[10px) font-black text-emerald-600 bg-emerald-50 px-4 py-1.5 rounded-full uppercase tracking-widest mb-6 w-fit">Order Flow</h4>
-                   <div className="space-y-4">
-                      <div>
-                         <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Payment State</p>
-                         <p className="text-sm font-black text-slate-900 uppercase italic">SUCCESS ({printingOrder.paymentMethod})</p>
-                      </div>
-                      <div>
-                         <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Logistics Status</p>
-                         <p className="text-sm font-black text-emerald-600 uppercase tracking-widest">{printingOrder.status}</p>
-                      </div>
-                   </div>
-                </div>
-             </div>
-
-             <table className="w-full text-left border-collapse mb-16">
+             {/* Items Table */}
+             <table className="receipt-table">
                 <thead>
-                   <tr className="border-b-4 border-slate-900">
-                      <th className="py-8 text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Product Harvest Detail</th>
-                      <th className="py-8 text-center text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Yield Qty</th>
-                      <th className="py-8 text-right text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Unit Value</th>
-                      <th className="py-8 text-right text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Net Total</th>
+                   <tr>
+                      <th style={{ width: '50%' }}>Item Description</th>
+                      <th style={{ textAlign: 'center' }}>Qty</th>
+                      <th style={{ textAlign: 'right' }}>Price</th>
+                      <th style={{ textAlign: 'right' }}>Total</th>
                    </tr>
                 </thead>
-                <tbody className="divide-y-2 divide-slate-100">
+                <tbody>
                    {printingOrder.myItems?.map((item, idx) => (
-                      <tr key={idx} className="group">
-                         <td className="py-8">
-                            <p className="font-black text-slate-900 text-lg leading-tight">{item.name}</p>
-                            <p className="text-[9px] text-emerald-600 font-black uppercase tracking-widest mt-1">Verified Fresh Market Harvest</p>
-                         </td>
-                         <td className="py-8 text-center text-base text-slate-900 font-black">{item.quantity}</td>
-                         <td className="py-8 text-right text-sm text-slate-500 font-bold italic">₹{item.price}</td>
-                         <td className="py-8 text-right text-xl font-black text-slate-900">₹{item.price * item.quantity}</td>
+                      <tr key={idx}>
+                         <td className="font-bold text-slate-900">{item.name}</td>
+                         <td style={{ textAlign: 'center' }} className="font-bold text-slate-900">{item.quantity}</td>
+                         <td style={{ textAlign: 'right' }} className="text-slate-500 font-medium italic">₹{item.price}</td>
+                         <td style={{ textAlign: 'right' }} className="font-black text-slate-900">₹{item.price * item.quantity}</td>
                       </tr>
                    ))}
                 </tbody>
              </table>
 
-             <div className="flex justify-between items-center bg-slate-900 text-white rounded-[3rem] p-12 shadow-2xl relative overflow-hidden">
-                <div className="relative z-10">
-                   <p className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.3em] mb-3">Notice to Courier</p>
-                   <p className="text-xs text-slate-400 max-w-sm font-medium italic leading-relaxed">
-                      Handle with extreme care. Perishable farm goods inside. 
-                      Standard logistics protocol #009-X applied for this transaction.
-                   </p>
+             {/* Financial Summary */}
+             <div className="flex justify-end">
+                <div className="w-56 space-y-2">
+                   <div className="flex justify-between text-xs font-bold text-slate-500">
+                      <span>Subtotal</span>
+                      <span>₹{printingOrder.myTotal}.00</span>
+                   </div>
+                   <div className="flex justify-between text-xs font-bold text-slate-500">
+                      <span>Tax (0%)</span>
+                      <span>₹0.00</span>
+                   </div>
+                   <div className="receipt-total-box flex justify-between items-baseline">
+                      <span className="text-xs font-black uppercase tracking-widest text-slate-900">Grand Total</span>
+                      <span className="text-3xl font-black tracking-tighter text-emerald-600">₹{printingOrder.myTotal}</span>
+                   </div>
                 </div>
-                <div className="text-right relative z-10">
-                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Total Yield Value</p>
-                   <p className="text-6xl font-black text-emerald-400 tracking-tighter">₹{printingOrder.myTotal}</p>
-                </div>
-                <div className="absolute top-0 left-0 w-full h-full bg-emerald-500/5 -rotate-12 translate-y-1/2 scale-150" />
              </div>
 
-             <div className="mt-20 text-center">
-                <div className="w-full h-px bg-slate-100 mb-10"></div>
-                <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.5em]">Authored by FreshMart Logistics Network</p>
+             {/* Footer */}
+             <div className="mt-16 text-center border-t border-slate-100 pt-8">
+                <h3 className="text-sm font-black text-slate-900 mb-2 uppercase tracking-tight">Thank you for your business!</h3>
+                <p className="text-[10px] text-slate-400 font-medium max-w-sm mx-auto leading-relaxed">
+                   This is a computer-generated invoice. No signature is required. All farm products are verified fresh and locally sourced.
+                </p>
+                <div className="mt-8 flex items-center justify-center gap-2">
+                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                   <p className="text-[9px] font-black text-slate-300 uppercase tracking-[0.4em]">Official Fulfillment Record</p>
+                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                </div>
              </div>
           </div>
         </div>

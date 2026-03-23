@@ -82,8 +82,7 @@ const AdminCategories = () => {
       { name: 'Vegetables', slug: 'vegetables', imageUrl: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=500&q=80', order: 2, isActive: true },
       { name: 'Dairy & Eggs', slug: 'dairy-eggs', imageUrl: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=500&q=80', order: 3, isActive: true },
       { name: 'Meat & Poultry', slug: 'meat-poultry', imageUrl: 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=500&q=80', order: 4, isActive: true },
-      { name: 'Bakery', slug: 'bakery', imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=500&q=80', order: 5, isActive: true },
-      { name: 'Organic', slug: 'organic', imageUrl: 'https://images.unsplash.com/photo-1595855761358-0ceec0e8a719?auto=format&fit=crop&w=500&q=80', order: 6, isActive: true }
+      { name: 'Bakery', slug: 'bakery', imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=500&q=80', order: 5, isActive: true }
     ];
 
     try {

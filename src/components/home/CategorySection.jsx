@@ -36,8 +36,7 @@ const CategorySection = () => {
     { id: '2', name: 'Vegetables', slug: 'vegetables', imageUrl: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=500&q=80', color: 'bg-green-50', accent: 'text-emerald-600' },
     { id: '3', name: 'Dairy & Eggs', slug: 'dairy-eggs', imageUrl: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=500&q=80', color: 'bg-blue-50', accent: 'text-blue-600' },
     { id: '4', name: 'Meat & Poultry', slug: 'meat-poultry', imageUrl: 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=500&q=80', color: 'bg-red-50', accent: 'text-rose-600' },
-    { id: '5', name: 'Bakery', slug: 'bakery', imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=500&q=80', color: 'bg-amber-50', accent: 'text-amber-600' },
-    { id: '6', name: 'Organic Items', slug: 'organic', imageUrl: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=500&q=80', color: 'bg-emerald-50', accent: 'text-emerald-700' }
+    { id: '5', name: 'Bakery', slug: 'bakery', imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=500&q=80', color: 'bg-amber-50', accent: 'text-amber-600' }
   ];
 
   return (
@@ -52,7 +51,7 @@ const CategorySection = () => {
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-6 sm:gap-8 justify-center items-center">
         {displayCategories.map((cat, idx) => (
           <motion.div
             key={cat.id}
