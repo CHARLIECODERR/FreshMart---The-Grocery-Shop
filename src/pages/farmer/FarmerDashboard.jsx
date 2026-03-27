@@ -18,8 +18,10 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const FarmerDashboard = () => {
+  const { t } = useTranslation();
   const { currentUser, userData } = useAuth();
   const [stats, setStats] = useState({
     products: 0,
@@ -141,7 +143,7 @@ const FarmerDashboard = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] gap-6">
         <Loader2 className="animate-spin text-emerald-500" size={56} />
-        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.5em]">Synchronizing Farm Intelligence...</p>
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.5em]">{t('farmer.loading')}</p>
       </div>
     );
   }
@@ -169,10 +171,10 @@ const FarmerDashboard = () => {
   const performanceIndex = ((orderEfficiency + (stats.products * 10) + (revenueIndex)) / 3).toFixed(1);
 
   const statCards = [
-    { label: 'Harvest Catalog', value: stats.products, icon: Package, color: 'text-blue-600', bg: 'bg-blue-50', trend: '+12%', isUp: true },
-    { label: 'Logistics Logs', value: stats.orders, icon: ShoppingBag, color: 'text-emerald-600', bg: 'bg-emerald-50', trend: stats.growth, isUp: true },
-    { label: 'Net Proceeds', value: `₹${stats.earnings.toLocaleString()}`, icon: TrendingUp, color: 'text-orange-600', bg: 'bg-orange-50', trend: '+18.2%', isUp: true },
-    { label: 'Direct Reach', value: stats.customers, icon: Users, color: 'text-purple-600', bg: 'bg-purple-50', trend: '+5.1%', isUp: true },
+    { label: t('farmer.total_orders'), value: stats.orders, icon: ShoppingBag, color: 'text-emerald-600', bg: 'bg-emerald-50', trend: stats.growth, isUp: true },
+    { label: t('farmer.total_earnings'), value: `₹${stats.earnings.toLocaleString()}`, icon: TrendingUp, color: 'text-orange-600', bg: 'bg-orange-50', trend: '+18.2%', isUp: true },
+    { label: t('farmer.active_products'), value: stats.products, icon: Package, color: 'text-blue-600', bg: 'bg-blue-50', trend: '+12%', isUp: true },
+    { label: t('farmer.direct_reach'), value: stats.customers, icon: Users, color: 'text-purple-600', bg: 'bg-purple-50', trend: '+5.1%', isUp: true },
   ];
 
   return (
@@ -191,7 +193,7 @@ const FarmerDashboard = () => {
                 onClick={e => e.stopPropagation()}
               >
                 <div className="flex items-center justify-between mb-10">
-                   <h3 className="text-2xl font-black text-slate-900">Insight Logs</h3>
+                   <h3 className="text-2xl font-black text-slate-900">{t('farmer.insight_logs')}</h3>
                    <button onClick={() => setShowInsightLog(false)} className="p-2 hover:bg-slate-50 rounded-xl transition-colors"><X size={24} /></button>
                 </div>
                 
@@ -222,8 +224,8 @@ const FarmerDashboard = () => {
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
         <div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Dashboard Overview</h1>
-          <p className="text-slate-500 font-medium mt-1">Real-time harvest analytics and logistics control</p>
+          <h1 className="text-4xl font-black text-slate-900 tracking-tight">{t('farmer.dashboard')}</h1>
+          <p className="text-slate-500 font-medium mt-1">{t('farmer.welcome')} {userData?.fullName}</p>
         </div>
         <div className="flex items-center gap-4">
           <button 
@@ -344,10 +346,10 @@ const FarmerDashboard = () => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr>
-                  <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Entity</th>
-                  <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Reference</th>
-                  <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Yield Total</th>
-                  <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Channel Status</th>
+                  <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('farmer.entity')}</th>
+                  <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">{t('farmer.reference')}</th>
+                  <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('farmer.yield_total')}</th>
+                  <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">{t('farmer.channel_status')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">

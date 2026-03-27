@@ -1,38 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   RefreshCw, 
-  ShieldCheck, 
-  User, 
-  Phone, 
-  MessageCircle, 
-  Loader2 
+  ShieldCheck,
+  User,
+  Phone,
+  MessageCircle,
+  Loader2,
+  Star,
+  Check,
+  Globe,
+  ThumbsUp,
+  MessageSquare
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import StarRating from '../../common/StarRating';
 import ReviewList from '../../review/ReviewList';
 
-const ProductTabs = ({ 
-  activeTab, 
-  setActiveTab, 
-  product, 
-  farmer, 
-  reviews, 
-  reviewsLoading 
+const ProductTabs = ({
+  product,
+  farmer,
+  reviews = [],
+  reviewsLoading
 }) => {
+  const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState('details');
+
+  const tabs = [
+    { id: 'details', label: t('product_details.tab_details') },
+    { id: 'farmer', label: t('product_details.tab_farmer') },
+    { id: 'reviews', label: t('product_details.tab_reviews', { count: reviews.length }) },
+  ];
+
   return (
     <div className="mb-12">
       <div className="flex border-b border-gray-100 mb-10 overflow-x-auto no-scrollbar">
-        {['details', 'farmer', 'reviews'].map((tab) => (
+        {tabs.map((tabItem) => (
           <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
+            key={tabItem.id}
+            onClick={() => setActiveTab(tabItem.id)}
             className={`pb-4 px-8 text-xs font-black uppercase tracking-[0.2em] transition-all relative shrink-0 ${
-              activeTab === tab ? 'text-primary-600' : 'text-gray-400 hover:text-gray-900'
+              activeTab === tabItem.id ? 'text-primary-600' : 'text-gray-400 hover:text-gray-900'
             }`}
           >
-            {tab === 'details' ? 'Harvest Details' : tab === 'farmer' ? 'About Farmer' : `Reviews (${reviews.length})`}
-            {activeTab === tab && (
-              <motion.div 
+            {tabItem.label}
+            {activeTab === tabItem.id && (
+              <motion.div
                 layoutId="activeTab"
                 className="absolute bottom-0 left-0 w-full h-1 bg-primary-600 rounded-full"
               />
@@ -45,46 +58,56 @@ const ProductTabs = ({
         {activeTab === 'details' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
             <div className="space-y-6">
-              <h3 className="text-xl font-black text-gray-900 border-l-4 border-emerald-500 pl-4 mb-6">Produce Info</h3>
-                <p className="text-gray-600 leading-relaxed font-medium">
-                  {product.description || "Our harvest is nurtured with organic care, ensuring every bite is packed with nature's pure essence."}
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                <Globe className="mr-3 text-primary-600" size={24} />
+                {t('product_details.produce_info')}
+              </h3>
+
+              <div className="space-y-6">
+                <p className="text-gray-600 leading-relaxed text-lg italic bg-white p-6 rounded-2xl border-l-4 border-primary-500 shadow-sm">
+                  "{product.description || t("product_details.default_description")}"
                 </p>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between py-3 border-b border-gray-50">
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Category</span>
-                    <span className="text-sm font-bold text-gray-900">{product.category || 'Organic'}</span>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                    <span className="block text-xs font-bold text-gray-400 uppercase tracking-tighter mb-1">{t('product_details.field_category')}</span>
+                    <span className="text-gray-900 font-bold capitalize">
+                      {t(`categories.${(product.category || 'Organic').toLowerCase().replace(/ & /g, '_').replace(/ /g, '_')}`, { defaultValue: product.category || 'Organic' })}
+                    </span>
                   </div>
-                  <div className="flex items-center justify-between py-3 border-b border-gray-50">
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Unit Weight</span>
-                    <span className="text-sm font-bold text-gray-900">{product.unit || '1 Unit'}</span>
+                  <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                    <span className="block text-xs font-bold text-gray-400 uppercase tracking-tighter mb-1">{t('product_details.field_unit')}</span>
+                    <span className="text-gray-900 font-bold">{product.unitValue || '500g'}</span>
                   </div>
-                  <div className="flex items-center justify-between py-3 border-b border-gray-50">
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Shelf Life</span>
-                    <span className="text-sm font-bold text-gray-900">3-5 Days</span>
+                  <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                    <span className="block text-xs font-bold text-gray-400 uppercase tracking-tighter mb-1">{t('product_details.field_shelf_life')}</span>
+                    <span className="text-gray-900 font-bold">{t('product_details.shelf_life_val')}</span>
                   </div>
                 </div>
               </div>
-              <div className="bg-gray-50 rounded-[2rem] p-8 border border-gray-100 flex flex-col justify-center gap-6">
-                 <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-gray-100 flex items-center justify-center shrink-0">
-                       <RefreshCw className="text-emerald-500" size={24} />
-                    </div>
-                    <div>
-                       <p className="font-black text-gray-900 text-xs uppercase tracking-widest mb-1">Sustainable Growth</p>
-                       <p className="text-[10px] text-gray-500 font-medium">100% Organic methods focused on long-term soil health.</p>
-                    </div>
-                 </div>
-                 <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-gray-100 flex items-center justify-center shrink-0">
-                       <ShieldCheck className="text-blue-500" size={24} />
-                    </div>
-                    <div>
-                       <p className="font-black text-gray-900 text-xs uppercase tracking-widest mb-1">Quality Guaranteed</p>
-                       <p className="text-[10px] text-gray-500 font-medium">Rigorous quality checks before every dispatch.</p>
-                    </div>
-                 </div>
+            </div>
+            <div className="space-y-4">
+              <div className="card p-6 border-primary-100 hover:border-primary-300 transition-colors">
+                <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center text-primary-600 mb-4">
+                  <Check size={24} />
+                </div>
+                <h4 className="text-lg font-bold text-gray-900 mb-2">{t('product_details.stats_sustainable')}</h4>
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  {t('product_details.stats_sustainable_desc')}
+                </p>
+              </div>
+
+              <div className="card p-6 border-blue-100 hover:border-blue-300 transition-colors">
+                <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-4">
+                  <Star size={24} />
+                </div>
+                <h4 className="text-lg font-bold text-gray-900 mb-2">{t('product_details.stats_quality')}</h4>
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  {t('product_details.stats_quality_desc')}
+                </p>
               </div>
             </div>
+          </div>
         )}
 
         {activeTab === 'farmer' && farmer && (
@@ -128,9 +151,9 @@ const ProductTabs = ({
         {activeTab === 'reviews' && (
           <div className="max-w-4xl mx-auto">
             {reviewsLoading ? (
-              <div className="flex flex-col items-center justify-center py-20 gap-4">
-                <Loader2 className="animate-spin text-emerald-500" size={40} />
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">Cataloging Harvest Feedback...</p>
+              <div className="py-20 text-center">
+                <Loader2 className="animate-spin text-primary-500 mx-auto mb-4" size={32} />
+                <p className="text-gray-500 font-medium">{t('product_details.loading_feedback')}</p>
               </div>
             ) : (
               <ReviewList reviews={reviews} />

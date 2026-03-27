@@ -12,6 +12,11 @@ export const getAdminStats = async () => {
 
     const orders = ordersSnap.docs.map(doc => doc.data());
     const totalRevenue = orders.reduce((acc, curr) => acc + (curr.total || 0), 0);
+
+    const qSupply = query(collection(db, 'supplyOffers'), where('status', '==', 'accepted'));
+    const supplySnap = await getDocs(qSupply);
+    const supplyOffers = supplySnap.docs.map(doc => doc.data());
+    const totalWholesalePayout = supplyOffers.reduce((acc, curr) => acc + ((curr.price || 0) * (curr.stock || 0)), 0);
     
     return {
       totalUsers: usersSnap.size,
@@ -19,9 +24,14 @@ export const getAdminStats = async () => {
       totalProducts: productsSnap.size,
       totalOrders: ordersSnap.size,
       totalRevenue: totalRevenue.toFixed(2),
+      totalWholesalePayout: totalWholesalePayout.toFixed(2),
       recentOrders: ordersSnap.docs
         .map(doc => ({ id: doc.id, ...doc.data() }))
         .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0))
+        .slice(0, 5),
+      recentWholesale: supplySnap.docs
+        .map(doc => ({ id: doc.id, ...doc.data() }))
+        .sort((a, b) => (b.approvedAt?.seconds || b.createdAt?.seconds || 0) - (a.approvedAt?.seconds || a.createdAt?.seconds || 0))
         .slice(0, 5)
     };
   } catch (error) {
@@ -251,6 +261,48 @@ export const toggleProductVisibility = async (productId, isActive) => {
     return true;
   } catch (error) {
     console.error("Error toggling product:", error);
+    throw error;
+  }
+};
+
+// Approve a farmer's supply offer — marks as accepted/purchased
+export const approveSupplyOffer = async (offerId) => {
+  try {
+    await updateDoc(doc(db, 'supplyOffers', offerId), {
+      status: 'accepted',
+      approvedAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    });
+    // Optional: Record this in a 'supplyOrders' collection for the farmer's history ledger
+    return true;
+  } catch (error) {
+    console.error("Error approving supply offer:", error);
+    throw error;
+  }
+};
+
+// Reject a farmer's supply offer
+export const rejectSupplyOffer = async (offerId) => {
+  try {
+    await updateDoc(doc(db, 'supplyOffers', offerId), {
+      status: 'rejected',
+      updatedAt: serverTimestamp()
+    });
+    return true;
+  } catch (error) {
+    console.error("Error rejecting supply offer:", error);
+    throw error;
+  }
+};
+
+// Get all supply offers
+export const getAllSupplyOffers = async () => {
+  try {
+    const q = query(collection(db, 'supplyOffers'), orderBy('createdAt', 'desc'));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch (error) {
+    console.error("Error fetching supply offers:", error);
     throw error;
   }
 };

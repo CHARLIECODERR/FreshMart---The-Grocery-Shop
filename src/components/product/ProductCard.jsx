@@ -1,11 +1,13 @@
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Heart, Eye } from 'lucide-react';
+import { Heart, Eye, ShoppingCart } from 'lucide-react';
 import { useCartStore } from '../../store/useCartStore';
 import { useWishlistStore } from '../../store/useWishlistStore';
 import StarRating from '../common/StarRating';
+import { useTranslation } from 'react-i18next';
 
 const ProductCard = memo(({ product }) => {
+  const { t } = useTranslation();
   const { id, name, price, originalPrice, mrp, category, stock, unit, discount } = product;
   const imageUrl = product.imageUrl || product.image || product.prodImage || product.thumbnail;
   const addItem = useCartStore((state) => state.addItem);
@@ -18,8 +20,18 @@ const ProductCard = memo(({ product }) => {
   let discountBadge = discount;
   if (!discountBadge && displayOriginalPrice > price) {
     const percent = Math.round(((displayOriginalPrice - price) / displayOriginalPrice) * 100);
-    discountBadge = `${percent}% OFF`;
+    discountBadge = `${percent}% ${t('home.hero.guaranteed').includes('%') ? '' : 'OFF'}`; // Simplified, better yet, just use localized "OFF" if needed
+    // Actually, let's just make it simpler
+    discountBadge = `${percent}%`;
   }
+
+  // Category Translation Mapping
+  const getLocalizedCategory = (catName) => {
+    if (!catName) return "";
+    const key = catName.toLowerCase().replace(/ & /g, '_').replace(/ /g, '_');
+    const translated = t(`categories.${key}`, { defaultValue: catName });
+    return translated;
+  };
 
   const isOutOfStock = stock === 0;
 
@@ -54,7 +66,7 @@ const ProductCard = memo(({ product }) => {
               referrerPolicy="no-referrer"
             />
           ) : (
-            <div className="text-gray-400">No Image</div>
+            <div className="text-gray-400">{t('product.no_image')}</div>
           )}
         </Link>
 
@@ -63,11 +75,11 @@ const ProductCard = memo(({ product }) => {
           <button 
             onClick={handleToggleWishlist}
             className={`w-8 h-8 rounded-full shadow flex items-center justify-center transition-colors ${isInWishlist ? 'bg-red-500 text-white' : 'bg-white text-gray-600 hover:text-red-500'}`} 
-            title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+            title={isInWishlist ? t('product.wishlist_remove') : t('product.wishlist_add')}
           >
             <Heart size={16} fill={isInWishlist ? "currentColor" : "none"} />
           </button>
-          <Link to={`/product/${id}`} className="w-8 h-8 rounded-full bg-white shadow flex items-center justify-center text-gray-600 hover:text-primary-600 transition-colors" title="Quick View">
+          <Link to={`/product/${id}`} className="w-8 h-8 rounded-full bg-white shadow flex items-center justify-center text-gray-600 hover:text-primary-600 transition-colors" title={t('product.quick_view')}>
             <Eye size={16} />
           </Link>
         </div>
@@ -81,7 +93,7 @@ const ProductCard = memo(({ product }) => {
           )}
           {isOutOfStock && (
             <span className="bg-slate-900 text-white text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest opacity-90">
-              Sold Out
+              {t('product.sold_out')}
             </span>
           )}
         </div>
@@ -90,7 +102,7 @@ const ProductCard = memo(({ product }) => {
       {/* Product Details */}
       <div className="flex flex-col flex-1">
         <div className="flex justify-between items-start mb-2">
-          <span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-black">{category}</span>
+          <span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-black">{getLocalizedCategory(category)}</span>
           {unit && <span className="text-[10px] text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg font-black uppercase tracking-tighter shadow-sm border border-emerald-100">{unit}</span>}
         </div>
         
@@ -119,7 +131,7 @@ const ProductCard = memo(({ product }) => {
           </div>
           {displayOriginalPrice > price && (
             <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-md mb-0.5">
-              SAVE ₹{Math.round(displayOriginalPrice - price)}
+              {t('product.save')} ₹{Math.round(displayOriginalPrice - price)}
             </span>
           )}
         </div>
@@ -130,7 +142,7 @@ const ProductCard = memo(({ product }) => {
           disabled={isOutOfStock}
         >
           <ShoppingCart size={16} className="mr-2" />
-          {isOutOfStock ? 'Sold Out' : 'Add to Cart'}
+          {isOutOfStock ? t('product.sold_out') : t('product.add_to_cart')}
         </button>
       </div>
     </div>

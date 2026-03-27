@@ -1,0 +1,347 @@
+{
+  "farmer": {
+    "dashboard": "ખેડૂત ડેશબોર્ડ",
+    "total_orders": "કુલ ઓર્ડર",
+    "active_products": "સક્રિય ઉત્પાદનો",
+    "total_earnings": "કુલ કમાણી",
+    "recent_activity": "તાજેતરની પ્રવૃત્તિ",
+    "add_product": "નવું ઉત્પાદન ઉમેરો",
+    "view_all": "બધું જુઓ",
+    "loading": "લોડ થઈ રહ્યું છે...",
+    "no_data": "કોઈ ડેટા ઉપલબ્ધ નથી",
+    "welcome": "સ્વાગત છે,",
+    "insight_logs": "ઇનસાઇટ લોગ્સ",
+    "entity": "એન્ટિટી",
+    "reference": "સંદર્ભ",
+    "yield_total": "કુલ ઉપજ",
+    "channel_status": "ચેનલ સ્થિતિ",
+    "authorized_store": "અધિકૃત સ્ટોર",
+    "farmer_access": "ખેડૂત પ્રવેશ",
+    "farmer_profile": "ખેડૂત પ્રોફાઇલ",
+    "logout_session": "સત્ર સમાપ્ત કરો",
+    "logout_access": "એક્સેસ લોગઆઉટ",
+    "back_to_home": "હોમ જે પર પાછા જાઓ",
+    "navigation": {
+      "dashboard": "ડેશબોર્ડ",
+      "products": "ઉત્પાદનો",
+      "orders": "ઓર્ડર"
+    },
+    "logout_modal": {
+      "title": "લોગઆઉટ",
+      "desc": "શું તમે ખરેખર લોગઆઉટ કરવા માંગો છો?",
+      "stay": "ના, થોભો",
+      "confirm": "હા, લોગઆઉટ"
+    },
+    "notifications": {
+      "title": "સૂચનાઓ",
+      "unread_alerts": "ન વંચાયેલ એલર્ટ્સ",
+      "mark_all_read": "બધા વાંચેલા તરીકે ચિહ્નિત કરો",
+      "empty": "તમારી સૂચનાઓ ખાલી છે.",
+      "view_history": "ઇતિહાસ જુઓ",
+      "just_now": "હમણાં જ"
+    },
+    "products": {
+      "title": "ફાર્મ ઇન્વેન્ટરી",
+      "subtitle": "તમારા સક્રિય ઉત્પાદનોનું સંચાલન કરો",
+      "search_placeholder": "તમારા ઉત્પાદનો શોધો...",
+      "filter": "ફિલ્ટર",
+      "no_products": "કોઈ ઉત્પાદનો મળ્યા નથી",
+      "add_first": "પહેલું ઉત્પાદન ઉમેરો",
+      "table": {
+        "detail": "હાર्वेस्ट વિગત",
+        "category": "શ્રેણી",
+        "pricing": "કિંમત",
+        "inventory": "ઇન્વેન્ટરી",
+        "status": "સ્થિતિ",
+        "actions": "પગલાં"
+      },
+      "stock": {
+        "low": "ઓછો સ્ટોક",
+        "optimal": "પર્યાપ્ત"
+      },
+      "actions": {
+        "edit": "વિગતો સુધારો",
+        "view": "લાઇવ જુઓ",
+        "delete": "ઉત્પાદન દૂર કરો"
+      }
+    },
+    "orders": {
+      "title": "લોજિસ્ટિક્સ મેનેજમેન્ટ",
+      "subtitle": "તમારા ખેતરના ઓર્ડર ટ્રેક કરો",
+      "tabs": {
+        "all": "બધા",
+        "placed": "ઓર્ડર મળ્યો",
+        "shipped": "મોકલાયો",
+        "delivered": "પહોંચાડાયો"
+      },
+      "empty": "નવા ઓર્ડરની રાહ જોવી",
+      "empty_desc": "જ્યારે ગ્રાહકો તમારી પેદાશ ખરીદશે, ત્યારે તે અહીં દેખાશે.",
+      "receipt": {
+        "title": "ઇન્વોઇસ વિગતો",
+        "invoice_details": "ઇન્વોઇસ વિગતો",
+        "bill_to": "બિલ ટુ",
+        "order_id": "ઓર્ડર આઈડી",
+        "date": "તારીખ",
+        "time": "સમય",
+        "item": "આઇટમ વિગત",
+        "item_description": "આઇટમ વિગત",
+        "qty": "જથ્થો",
+        "price": "કિંમત",
+        "total": "કુલ",
+        "subtotal": "સબટોટલ",
+        "tax": "ટેક્સ (0%)",
+        "grand_total": "કુલ રકમ",
+        "print": "પ્રિન્ટ કરો",
+        "slogan": "પ્રીમિયમ ફાર્મ-ટુ-ટેબલ",
+        "support": "સપોર્ટ",
+        "thank_you": "આભાર!"
+      },
+      "update_status": {
+        "placed": "પહોંચાડાયો",
+        "shipped": "મોકલાયો",
+        "delivered": "પહોંચાડાયો",
+        "cancelled": "રદ કર્યો"
+      }
+    },
+    "inventory": {
+      "title": "સ્ટોક ઇન્ટેલિજન્સ",
+      "subtitle": "રિયલ-ટાઇમ સ્ટોક મોનિટરિંગ",
+      "low_stock": "ઓછો સ્ટોક",
+      "search": "સ્ટોક શોધો...",
+      "table": {
+        "asset": "પેદાશ",
+        "quantum": "જથ્થો",
+        "health": "સ્વાસ્થ્ય"
+      },
+      "status": {
+        "out": "સ્ટોક આઉટ",
+        "soon": "જલદી ભરો",
+        "healthy": "તંદુરસ્ત"
+      }
+    }
+  },
+  "nav": {
+    "home": "હોમ",
+    "shop": "શોપ",
+    "categories": "કેટેગરીઝ",
+    "offers": "ઓફર્સ",
+    "about": "અમારા વિશે"
+  },
+  "home": {
+    "hero": {
+      "badge": "ભારતની #1 તાજી કરિયાણાની ડિલિવરી",
+      "title_1": "સીધા ખેતરમાંથી",
+      "title_2": "તમારા રસોડા સુધી",
+      "subtitle": "ભારતની શ્રેષ્ઠ સ્થાનિક પેદાશોના અસલી સ્વાદનો અનુભવ કરો. હાથથી પસંદ કરેલ, રસાયણમુક્ત અને 2 કલાકમાં ડિલિવરી.",
+      "shop_now": "અત્યારે જ ખરીદવો",
+      "explore": "શ્રેણીઓ જુઓ",
+      "happy_families": "10k+ ખુશ પરિવારો",
+      "freshness": "તાજગી",
+      "guaranteed": "100% ગેરંટી",
+      "tomatoes": "તાજા ટામેટાં"
+    },
+    "benefits": {
+      "swift": { "title": "ઝડપી લોજિસ્ટિક્સ", "desc": "24 કલાકમાં સીધા તમારા ઘર સુધી સેવા." },
+      "organic": { "title": "સંપૂર્ણપણે ઓર્ગેનિક", "desc": "દરેક લણણી પર શૂન્ય-જંતુનાશક પ્રમાણપત્ર." },
+      "trust": { "title": "સુરક્ષિત ટ્રસ્ટ", "desc": "દરેક વ્યવહાર માટે સુરક્ષિત એન્ક્રિપ્શન." },
+      "returns": { "title": "તાજા રિટર્ન", "desc": "તાજગીની ગેરંટી, કોઈ પ્રશ્ન વિના." }
+    },
+    "category": {
+      "badge": "શ્રેષ્ઠ પસંદગી",
+      "title": "કુદરત દ્વારા નિર્મિત",
+      "view_all": "બધું જુઓ",
+      "explore_all": "બધી શ્રેણીઓ",
+      "loading": "લોડ થઈ રહ્યું છે..."
+    },
+    "featured": {
+      "title": "ખાસ ઉત્પાદનો",
+      "subtitle": "તમારા માટે ખાસ પસંદ કરેલ ઓર્ગેનિક ઉત્પાદનો",
+      "view_all": "બધું જુઓ",
+      "no_products": "અત્યારે કોઈ ખાસ ડીલ્સ ઉપલબ્ધ નથી.",
+      "browse_all": "બધા ઉત્પાદનો જુઓ"
+    }
+  },
+  "product": {
+    "add_to_cart": "કાર્ટમાં ઉમેરો",
+    "sold_out": "વેચાઈ ગયું",
+    "wishlist_add": "વિશલિસ્ટમાં ઉમેરો",
+    "wishlist_remove": "વિશલિસ્ટમાંથી દૂર કરો",
+    "quick_view": "ઝડપી જુઓ",
+    "save": "બચત",
+    "no_image": "કોઈ ચિત્ર નથી"
+  },
+  "categories": {
+    "fruits": "તાજા ફળો",
+    "fresh_fruits": "તાજા ફળો",
+    "vegetables": "શાકભાજી",
+    "dairy": "ડેરી અને ઇંડા",
+    "dairy_eggs": "ડેરી અને ઇંડા",
+    "meat": "માંસ અને મરઘા",
+    "meat_poultry": "માંસ અને મરઘા",
+    "bakery": "બેકરી",
+    "organic": "ઓર્ગેનિક"
+  },
+  "auth": {
+    "sign_in": "સાઇન ઇન",
+    "sign_up": "સાઇન અપ",
+    "sign_out": "સાઇન આઉટ",
+    "dont_have_account": "ખાતું નથી?",
+    "my_account": "મારું એકાઉન્ટ"
+  },
+  "common": {
+    "wishlist": "વિશલિસ્ટ",
+    "cart": "કાર્ટ",
+    "search": "શોધો"
+  },
+  "shop": {
+    "title": "બધી પ્રોડક્ટ્સ",
+    "showing": "{{count}} પ્રોડક્ટ્સ બતાવી રહ્યા છીએ",
+    "search_placeholder": "શોધો...",
+    "all_categories": "બધી શ્રેણીઓ",
+    "error": "લોડ કરવામાં નિષ્ફળ.",
+    "no_results_title": "કંઈ મળ્યું નથી",
+    "no_results_desc": "તમારા ફિલ્ટર મુજબ કોઈ પ્રોડક્ટ મળી નથી.",
+    "clear_filters": "ફિલ્ટર્સ સાફ કરો"
+  },
+  "categories_page": {
+    "title": "બધી શ્રેણીઓ",
+    "subtitle": "તાજી પેદાશો અને કરિયાણાની અમારી વિસ્તૃત પસંદગી બ્રાઉઝ કરો.",
+    "fallback_desc": "{{name}} શ્રેણી"
+  },
+  "category_details": {
+    "back_to_categories": "શ્રેણીઓ પર પાછા",
+    "empty_desc": "{{name}} શ્રેણી",
+    "no_products": "કોઈ પ્રોડક્ટ નથી",
+    "no_products_desc": "આ શ્રેણીમાં અત્યારે કોઈ પ્રોડક્ટ નથી.",
+    "continue_shopping": "ખરીદી ચાલુ રાખો"
+  },
+  "product_details": {
+    "not_found_title": "મળી નથી",
+    "not_found_desc": "આ પ્રોડક્ટ ઉપલબ્ધ નથી.",
+    "back_to_shop": "શોપ પર પાછા",
+    "breadcrumb_home": "હોમ",
+    "breadcrumb_shop": "શોપ",
+    "no_ratings": "રેટિંગ નથી",
+    "reviews_count": "({{count}} સમીક્ષાઓ)",
+    "sold_by": "{{name}} દ્વારા",
+    "verified_farmer": "ખેડૂત",
+    "per_unit": "દીઠ {{unit}}",
+    "add_to_bag": "બેગમાં ઉમેરો",
+    "safety_title": "સુરક્ષા",
+    "safety_desc": "જંતુનાશક મુક્ત",
+    "cold_chain_title": "કોલ્ડ ચેઇન",
+    "cold_chain_desc": "ખેતરથી ઘર સુધી",
+    "tab_details": "વિગતો",
+    "tab_farmer": "ખેડૂત",
+    "tab_reviews": "સમીક્ષાઓ ({{count}})",
+    "produce_info": "માહિતી",
+    "field_category": "શ્રેણી",
+    "field_unit": "એકમ",
+    "field_shelf_life": "શેલ્ફ લાઇફ",
+    "shelf_life_val": "3-5 દિવસ",
+    "stats_sustainable": "ટકાઉ",
+    "stats_sustainable_desc": "ઓર્ગેનિક પદ્ધતિઓ.",
+    "stats_quality": "ગુણવત્તા",
+    "stats_quality_desc": "સખત તપાસ.",
+    "merchant_badge": "વેપારી",
+    "contact_farmer": "સંપર્ક કરો",
+    "send_message": "સંદેશ",
+    "loading_feedback": "લોડ થઈ રહ્યું છે...",
+    "related_badge": "ભલામણો",
+    "related_title": "આ પણ જુઓ!",
+    "related_link": "બધું જુઓ"
+  },
+  "about": {
+    "hero": {
+      "badge": "અમારી વાર્તા",
+      "title_1": "શુદ્ધ",
+      "title_2": "પ્રકૃતિ",
+      "subtitle": "અમે ખેતરથી સીધી તમારા રસોડામાં તાજગી લાવી રહ્યા છીએ.",
+      "cta": "જુઓ",
+      "journey_btn": "યાત્રા"
+    },
+    "journey": {
+      "step": "તબક્કો {{current}} / {{total}}",
+      "next": "આગળ",
+      "start": "શરૂ કરો",
+      "steps": {
+        "sowing": {
+          "title": "વાવણી",
+          "desc": "બીજથી શરૂઆત."
+        },
+        "harvest": {
+          "title": "લણણી",
+          "desc": "તાજગી."
+        },
+        "curation": {
+          "title": "ક્યુરેશન",
+          "desc": "ગુણવત્તા."
+        },
+        "arrival": {
+          "title": "આગમન",
+          "desc": "પહોંચાડવામાં આવી."
+        }
+      }
+    },
+    "stats": {
+      "farmers": "ખેડૂતો",
+      "families": "પરિવારો",
+      "organic": "ઓર્ગેનિક",
+      "delivery": "ડિલિવરી"
+    },
+    "story": {
+      "badge": "શરૂઆત",
+      "title": "તાજગી.",
+      "desc_1": "FreshMart ની શરૂઆત.",
+      "desc_2": "સીધું બજાર.",
+      "award_title": "એવોર્ડ",
+      "award_subtitle": "2024"
+    },
+    "values": {
+      "badge": "મૂલ્યો",
+      "title": "હેતુ.",
+      "subtitle": "ટકાઉ અને પારદર્શક.",
+      "organic": { "title": "ઓર્ગેનિક", "desc": "જંતુનાશક મુક્ત." },
+      "farmer": { "title": "ખેડૂત", "desc": "ન્યાયી વેપાર." },
+      "guaranteed": { "title": "ગેરંટી", "desc": "ગુણવત્તા તપાસ." },
+      "delivery": { "title": "ડિલિવરી", "desc": "ટકાઉ પેકેજિંગ." }
+    }
+  },
+  "offers": {
+    "title": "ખાસ ઓફર્સ",
+    "subtitle": "તાજી ડીલ્સ.",
+    "loading": "લોડ થઈ રહ્યું છે...",
+    "empty_title": "કોઈ ઓફર નથી",
+    "empty_desc": "ટૂંક સમયમાં આવશે!",
+    "shop_all": "બધું ખરીદો",
+    "active_badge": "સક્રિય",
+    "expires": "સમાપ્તિ: {{date}}",
+    "default_desc": "{{discount}}% ડિસ્કાઉન્ટ મેળવો.",
+    "coupon_code": "કૂપન કોડ",
+    "shop_deal": "ખરીદો",
+    "help": "મદદ?",
+    "support": "સપોર્ટ",
+    "how_it_works": "રીત",
+    "copy_success": "કોડ {{code}} કોપી થયો!"
+  },
+  "footer": {
+    "description": "તમારા પડોશની તાજી ખેતપેદાશ સીધા તમારા ઘરના આંગણે પહોંચાડવામાં આવે છે. અમે સ્થાનિક ખેડૂતોને જાગૃત ગ્રાહકો સાથે જોડીએ છીએ.",
+    "quick_links": "ઝડપી લિંક્સ",
+    "about_us": "અમારા વિશે",
+    "shop_all": "બધું ખરીદો",
+    "categories": "શ્રેણીઓ",
+    "special_offers": "ખાસ ઓફર્સ",
+    "become_farmer": "ખેડૂત બનો",
+    "customer_service": "ગ્રાહક સેવા",
+    "my_account": "મારું ખાતું",
+    "track_order": "ઓર્ડર ટ્રેક કરો",
+    "contact_support": "સપોર્ટનો સંપર્ક કરો",
+    "faqs": "વારંવાર પૂછાતા પ્રશ્નો",
+    "privacy_policy": "ગોપનીયતા નીતિ",
+    "contact_us": "અમારો સંપર્ક કરો",
+    "all_rights": "બધા હકો સુરક્ષિત.",
+    "secure_delivery": "સુરક્ષિત ડિલિવરી",
+    "quality_guaranteed": "ગુણવત્તાની ખાતરી",
+    "farm_fresh": "ખેતરમાંથી તાજું"
+  }
+}

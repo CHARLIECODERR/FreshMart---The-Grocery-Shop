@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { uploadToCloudinary } from '../../services/productService';
-import { createSupplyOffer } from '../../services/supplyService';
+import { createProduct, uploadToCloudinary } from '../../services/productService';
+import { getCategories } from '../../services/adminService';
 import { 
   ArrowLeft, 
   Image as ImageIcon, 
@@ -15,28 +14,46 @@ import {
   Upload
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { serverTimestamp } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 
-const categories = ['Fruits', 'Vegetables', 'Dairy', 'Grains', 'Herbs', 'Honey', 'Others'];
 const units = ['kg', 'gram', 'piece', 'bundle', 'litre', 'dozen'];
 
-const FarmerAddProduct = () => {
+const AdminAddProduct = () => {
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [categories, setCategories] = useState([]);
+  
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     originalPrice: '',
     price: '',
     stock: '',
-    category: 'Vegetables',
+    category: '',
     unit: 'kg',
     imageUrl: '',
     isFeatured: false
   });
+
+  useEffect(() => {
+    const fetchCats = async () => {
+      try {
+        const cats = await getCategories();
+        if (cats && cats.length > 0) {
+          setCategories(cats);
+          setFormData(prev => ({ ...prev, category: cats[0].name }));
+        } else {
+          setCategories([{ name: 'General' }]);
+          setFormData(prev => ({ ...prev, category: 'General' }));
+        }
+      } catch (error) {
+         setCategories([{ name: 'General' }]);
+         setFormData(prev => ({ ...prev, category: 'General' }));
+      }
+    };
+    fetchCats();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -79,59 +96,55 @@ const FarmerAddProduct = () => {
         originalPrice: parseFloat(formData.originalPrice || formData.price),
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock),
-        farmerId: currentUser.uid,
-        farmerName: currentUser.displayName || 'The Farm',
         rating: 0,
-        reviewsCount: 0,
-        createdAt: serverTimestamp()
+        reviewsCount: 0
       };
 
-      await createSupplyOffer(productData);
-      toast.success('Product added successfully!');
-      navigate('/farmer/products');
+      await createProduct(productData);
+      toast.success('Retail product created successfully!');
+      navigate('/admin/products');
     } catch (error) {
-      toast.error('Failed to add product');
+      toast.error('Failed to create product');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
+    <div className="p-6 lg:p-10 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
       <div className="flex items-center justify-between">
         <div>
-          <Link to="/farmer/products" className="inline-flex items-center text-sm font-bold text-gray-400 hover:text-emerald-600 transition-colors mb-2">
-            <ArrowLeft size={16} className="mr-1" /> Back to Products
+          <Link to="/admin/products" className="inline-flex items-center text-sm font-bold text-slate-400 hover:text-emerald-600 transition-colors mb-2">
+            <ArrowLeft size={16} className="mr-1" /> Back to Storefront Catalog
           </Link>
-          <h2 className="text-4xl font-black text-gray-900 tracking-tight">Submit Produce Offer</h2>
-          <p className="text-gray-500 font-medium mt-1">Send your produce details to Admin for review &amp; listing</p>
+          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Add Retail Product</h2>
+          <p className="text-slate-500 font-medium mt-1">Create a new item for the public storefront</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Side: Product Details */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm space-y-6">
-            <h3 className="text-lg font-black text-gray-900 pb-4 border-b border-gray-50">General Information</h3>
+          <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm space-y-6">
+            <h3 className="text-lg font-black text-slate-900 pb-4 border-b border-slate-50">General Information</h3>
             
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-black text-gray-400 uppercase tracking-widest pl-1">Product Name</label>
+              <label className="text-xs font-black text-slate-400 uppercase tracking-widest pl-1">Product Name</label>
               <input 
                 type="text" required name="name"
                 placeholder="e.g. Organic Red Tomatoes"
-                className="input-field w-full"
+                className="input-field w-full rounded-2xl bg-slate-50 border-none py-3.5 px-4 focus:ring-2 focus:ring-emerald-500 font-medium text-sm text-slate-700"
                 value={formData.name}
                 onChange={handleChange}
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-black text-gray-400 uppercase tracking-widest pl-1">Description</label>
+              <label className="text-xs font-black text-slate-400 uppercase tracking-widest pl-1">Description</label>
               <textarea 
                 required name="description"
                 rows="4"
                 placeholder="Tell customers what's special about this product..."
-                className="input-field resize-none h-32 w-full"
+                className="resize-none h-32 w-full rounded-2xl bg-slate-50 border-none py-3.5 px-4 focus:ring-2 focus:ring-emerald-500 font-medium text-sm text-slate-700"
                 value={formData.description}
                 onChange={handleChange}
               />
@@ -139,21 +152,21 @@ const FarmerAddProduct = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-black text-gray-400 uppercase tracking-widest pl-1">Category</label>
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest pl-1">Category</label>
                 <select 
                   name="category"
-                  className="input-field w-full"
+                  className="w-full rounded-2xl bg-slate-50 border-none py-3.5 px-4 focus:ring-2 focus:ring-emerald-500 font-bold text-sm text-slate-700"
                   value={formData.category}
                   onChange={handleChange}
                 >
-                  {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                  {categories.map(cat => <option key={cat.name} value={cat.name}>{cat.name}</option>)}
                 </select>
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-black text-gray-400 uppercase tracking-widest pl-1">Base Unit</label>
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest pl-1">Base Unit</label>
                 <select 
                   name="unit"
-                  className="input-field w-full"
+                  className="w-full rounded-2xl bg-slate-50 border-none py-3.5 px-4 focus:ring-2 focus:ring-emerald-500 font-bold text-sm text-slate-700"
                   value={formData.unit}
                   onChange={handleChange}
                 >
@@ -163,32 +176,32 @@ const FarmerAddProduct = () => {
             </div>
           </div>
 
-          <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm space-y-6">
-            <h3 className="text-lg font-black text-gray-900 pb-4 border-b border-gray-50 flex items-center gap-2">
+          <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm space-y-6">
+            <h3 className="text-lg font-black text-slate-900 pb-4 border-b border-slate-50 flex items-center gap-2">
               <Plus size={20} className="text-emerald-500" />
               Pricing & Inventory
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-black text-gray-400 uppercase tracking-widest pl-1">MRP/Actual Price (₹)</label>
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest pl-1">MRP Price (₹)</label>
                 <div className="relative">
                   <input 
                     type="number" name="originalPrice"
                     placeholder="0.00"
-                    className="input-field pl-9 w-full"
+                    className="w-full rounded-2xl bg-slate-50 border-none py-3.5 pl-9 pr-4 focus:ring-2 focus:ring-emerald-500 font-medium text-sm text-slate-700"
                     value={formData.originalPrice}
                     onChange={handleChange}
                   />
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">₹</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">₹</span>
                 </div>
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-black text-gray-400 uppercase tracking-widest pl-1">Selling Price (₹)</label>
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest pl-1">Selling Price (₹)</label>
                 <div className="relative">
                   <input 
                     type="number" required name="price"
                     placeholder="0.00"
-                    className="input-field pl-9 w-full border-emerald-100 bg-emerald-50/10"
+                    className="w-full rounded-2xl bg-emerald-50/10 border border-emerald-100 py-3.5 pl-9 pr-4 focus:ring-2 focus:ring-emerald-500 font-medium text-sm text-emerald-900"
                     value={formData.price}
                     onChange={handleChange}
                   />
@@ -196,11 +209,11 @@ const FarmerAddProduct = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-black text-gray-400 uppercase tracking-widest pl-1">Stock</label>
+                <label className="text-xs font-black text-slate-400 uppercase tracking-widest pl-1">Warehouse Stock</label>
                 <input 
                   type="number" required name="stock"
                   placeholder="0"
-                  className="input-field w-full"
+                  className="w-full rounded-2xl bg-slate-50 border-none py-3.5 px-4 focus:ring-2 focus:ring-emerald-500 font-medium text-sm text-slate-700"
                   value={formData.stock}
                   onChange={handleChange}
                 />
@@ -220,10 +233,9 @@ const FarmerAddProduct = () => {
           </div>
         </div>
 
-        {/* Right Side: Media & Settings */}
         <div className="space-y-6">
-          <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm space-y-6">
-            <h3 className="text-lg font-black text-gray-900 pb-4 border-b border-gray-50 flex items-center gap-2">
+          <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm space-y-6">
+            <h3 className="text-lg font-black text-slate-900 pb-4 border-b border-slate-50 flex items-center gap-2">
               <Camera size={20} className="text-emerald-500" />
               Product Photo
             </h3>
@@ -231,7 +243,7 @@ const FarmerAddProduct = () => {
             <div className="space-y-4">
               <div 
                 className={`relative group aspect-square rounded-[2rem] overflow-hidden border-2 border-dashed transition-all duration-300 ${
-                  formData.imageUrl ? 'border-emerald-500' : 'border-gray-200 bg-gray-50 hover:border-emerald-300'
+                  formData.imageUrl ? 'border-emerald-500' : 'border-slate-200 bg-slate-50 hover:border-emerald-300'
                 }`}
               >
                 {formData.imageUrl ? (
@@ -256,8 +268,8 @@ const FarmerAddProduct = () => {
                     <div className="w-16 h-16 bg-white rounded-2xl shadow-sm aria-hidden flex items-center justify-center text-emerald-500 mb-4 transition-transform group-hover:scale-110">
                       {uploadingImage ? <Loader2 className="animate-spin" size={32} /> : <Upload size={32} />}
                     </div>
-                    <span className="text-sm font-black text-gray-900">Upload Photo</span>
-                    <span className="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-widest">PNG, JPG up to 5MB</span>
+                    <span className="text-sm font-black text-slate-900">Upload Photo</span>
+                    <span className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-widest">PNG, JPG up to 5MB</span>
                     <input 
                       type="file" 
                       className="hidden" 
@@ -272,12 +284,12 @@ const FarmerAddProduct = () => {
               <div className="relative">
                 <input 
                   type="url" name="imageUrl"
-                  className="input-field pl-10 pt-3 pb-3 h-auto"
+                  className="w-full rounded-2xl bg-slate-50 border-none py-3.5 pl-10 pr-4 focus:ring-2 focus:ring-emerald-500 font-medium text-sm text-slate-700"
                   placeholder="Or paste image URL"
                   value={formData.imageUrl}
                   onChange={handleChange}
                 />
-                <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               </div>
             </div>
           </div>
@@ -291,7 +303,7 @@ const FarmerAddProduct = () => {
                  <span className="font-bold text-sm">Feature Tip</span>
                </div>
                <p className="text-xs text-emerald-100 leading-relaxed font-medium">
-                 Featured items appear at the top of category pages. Perfect for highlighting seasonal crops!
+                 Featured items appear at the top of category pages. Perfect for highlighting fresh stock!
                </p>
                <label className="flex items-center gap-3 cursor-pointer group">
                  <div className={`w-10 h-6 rounded-full p-1 transition-all ${formData.isFeatured ? 'bg-white' : 'bg-emerald-800'}`}>
@@ -311,10 +323,10 @@ const FarmerAddProduct = () => {
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full btn-primary !py-5 text-lg flex items-center justify-center gap-2 shadow-xl shadow-emerald-100 rounded-3xl"
+            className="w-full flex items-center justify-center gap-2 px-8 py-5 bg-emerald-600 text-white rounded-[2rem] font-black text-sm uppercase tracking-widest shadow-xl shadow-emerald-200 hover:bg-emerald-700 transition-all active:scale-[0.98]"
           >
             {loading ? <Loader2 className="animate-spin" /> : (
-              <>Submit Offer to Admin <CheckCircle2 size={20} /></>
+              <>Publish Product <CheckCircle2 size={18} /></>
             )}
           </button>
         </div>
@@ -323,4 +335,4 @@ const FarmerAddProduct = () => {
   );
 };
 
-export default FarmerAddProduct;
+export default AdminAddProduct;

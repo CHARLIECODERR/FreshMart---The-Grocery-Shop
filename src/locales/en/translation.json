@@ -1,0 +1,347 @@
+{
+  "farmer": {
+    "dashboard": "Dashboard Overview",
+    "total_orders": "Logistics Logs",
+    "active_products": "Harvest Catalog",
+    "total_earnings": "Net Proceeds",
+    "recent_activity": "Recent Activity",
+    "add_product": "List New Product",
+    "view_all": "View All",
+    "loading": "Synchronizing Farm Intelligence...",
+    "no_data": "Searching for updates...",
+    "welcome": "Welcome back,",
+    "insight_logs": "Insight Logs",
+    "entity": "Entity",
+    "reference": "Reference",
+    "yield_total": "Yield Total",
+    "channel_status": "Channel Status",
+    "authorized_store": "Authorized Store",
+    "farmer_access": "Farmer Access",
+    "farmer_profile": "Farmer Profile",
+    "logout_session": "Logout Session",
+    "logout_access": "Logout Access",
+    "back_to_home": "Back to Homepage",
+    "navigation": {
+      "dashboard": "Dashboard",
+      "products": "Products",
+      "orders": "Orders"
+    },
+    "logout_modal": {
+      "title": "Logout",
+      "desc": "Are you sure you want to log out of your account?",
+      "stay": "No, Stay",
+      "confirm": "Yes, Logout"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "unread_alerts": "Unread Alerts",
+      "mark_all_read": "Mark all read",
+      "empty": "Your harvest is quiet... for now.",
+      "view_history": "View All History",
+      "just_now": "Just now"
+    },
+    "products": {
+      "title": "Farm Inventory",
+      "subtitle": "Manage your active products",
+      "search_placeholder": "Search your harvest catalog...",
+      "filter": "Filter",
+      "no_products": "No products found",
+      "add_first": "List First Product",
+      "table": {
+        "detail": "Harvest Detail",
+        "category": "Category",
+        "pricing": "Pricing",
+        "inventory": "Inventory",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "stock": {
+        "low": "Low Stock",
+        "optimal": "Optimal"
+      },
+      "actions": {
+        "edit": "Edit Details",
+        "view": "View Live",
+        "delete": "Remove Product"
+      }
+    },
+    "orders": {
+      "title": "Logistics Management",
+      "subtitle": "Process and track your harvest fulfillment",
+      "tabs": {
+        "all": "All",
+        "placed": "Placed",
+        "shipped": "Shipped",
+        "delivered": "Delivered"
+      },
+      "empty": "Awaiting new orders",
+      "empty_desc": "When customers purchase your harvest, the logistics logs will appear here.",
+      "receipt": {
+        "title": "Invoice Details",
+        "invoice_details": "Invoice Details",
+        "bill_to": "Bill To",
+        "order_id": "Order ID",
+        "date": "Date",
+        "time": "Time",
+        "item": "Item Description",
+        "item_description": "Item Description",
+        "qty": "Qty",
+        "price": "Price",
+        "total": "Total",
+        "subtotal": "Subtotal",
+        "tax": "Tax (0%)",
+        "grand_total": "Grand Total",
+        "print": "Print Manifest",
+        "slogan": "Premium Farm-to-Table Logistics",
+        "support": "Support",
+        "thank_you": "Thank you for your business!"
+      },
+      "update_status": {
+        "placed": "Update: Placed",
+        "shipped": "Update: Shipped",
+        "delivered": "Update: Delivered",
+        "cancelled": "Update: Cancelled"
+      }
+    },
+    "inventory": {
+      "title": "Stock Intelligence",
+      "subtitle": "Real-time inventory monitoring",
+      "low_stock": "Low Stock",
+      "search": "Search inventory...",
+      "table": {
+        "asset": "Asset",
+        "quantum": "Quantum",
+        "health": "Health"
+      },
+      "status": {
+        "out": "Stock Out",
+        "soon": "Restock Soon",
+        "healthy": "Healthy"
+      }
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "shop": "Shop",
+    "categories": "Categories",
+    "offers": "Offers",
+    "about": "About"
+  },
+  "home": {
+    "hero": {
+      "badge": "India's #1 Fresh Grocery Delivery",
+      "title_1": "Fresh from Farm to",
+      "title_2": "Your Kitchen",
+      "subtitle": "Experience the authentic taste of India's finest local produce. Handpicked, chemical-free, and delivered within 2 hours.",
+      "shop_now": "Shop Now",
+      "explore": "Explore Categories",
+      "happy_families": "10k+ Happy Families",
+      "freshness": "Freshness",
+      "guaranteed": "100% Guaranteed",
+      "tomatoes": "Fresh Tomatoes"
+    },
+    "benefits": {
+      "swift": { "title": "Swift Logistics", "desc": "Direct-to-door fulfillment within 24 hours." },
+      "organic": { "title": "Purely Organic", "desc": "Zero-pesticide certification on every harvest." },
+      "trust": { "title": "Secured Trust", "desc": "Military-grade encryption for every transaction." },
+      "returns": { "title": "Fresh Returns", "desc": "No-questions-asked freshness guarantee." }
+    },
+    "category": {
+      "badge": "Handpicked Selections",
+      "title": "Curated By Nature",
+      "view_all": "View Collections",
+      "explore_all": "Explore All Categories",
+      "loading": "Harvesting Categories..."
+    },
+    "featured": {
+      "title": "Featured Products",
+      "subtitle": "Handpicked organic produce for you",
+      "view_all": "View All",
+      "no_products": "No amazing deals available right now. Check back soon!",
+      "browse_all": "Browse All Products"
+    }
+  },
+  "product": {
+    "add_to_cart": "Add to Cart",
+    "sold_out": "Sold Out",
+    "wishlist_add": "Add to Wishlist",
+    "wishlist_remove": "Remove from Wishlist",
+    "quick_view": "Quick View",
+    "save": "SAVE",
+    "no_image": "No Image"
+  },
+  "categories": {
+    "fruits": "Fresh Fruits",
+    "fresh_fruits": "Fresh Fruits",
+    "vegetables": "Vegetables",
+    "dairy": "Dairy & Eggs",
+    "dairy_eggs": "Dairy & Eggs",
+    "meat": "Meat & Poultry",
+    "meat_poultry": "Meat & Poultry",
+    "bakery": "Bakery",
+    "organic": "Organic"
+  },
+  "auth": {
+    "sign_in": "Sign In",
+    "sign_up": "Sign Up",
+    "sign_out": "Sign Out",
+    "dont_have_account": "Don't have an account?",
+    "my_account": "My Account"
+  },
+  "common": {
+    "wishlist": "Wishlist",
+    "cart": "Cart",
+    "search": "Search"
+  },
+  "shop": {
+    "title": "Shop All Products",
+    "showing": "Showing {{count}} fresh products",
+    "search_placeholder": "Search products...",
+    "all_categories": "All Categories",
+    "error": "Failed to load products.",
+    "no_results_title": "No products found",
+    "no_results_desc": "We couldn't find any products matching your current filters. Try adjusting your search term or category.",
+    "clear_filters": "Clear All Filters"
+  },
+  "categories_page": {
+    "title": "All Categories",
+    "subtitle": "Browse our wide selection of fresh produce and groceries. We partner with local farmers to bring you the best quality everyday.",
+    "fallback_desc": "Explore our fresh selection of {{name}}"
+  },
+  "category_details": {
+    "back_to_categories": "Back to Categories",
+    "empty_desc": "Showing all fresh products from the {{name}} category.",
+    "no_products": "No products found",
+    "no_products_desc": "We don't have any active products in the {{name}} category right now. Check back later!",
+    "continue_shopping": "Continue Shopping"
+  },
+  "product_details": {
+    "not_found_title": "Harvest Not Found",
+    "not_found_desc": "This product might have been unlisted or moved to another category.",
+    "back_to_shop": "Back to Shop",
+    "breadcrumb_home": "Home",
+    "breadcrumb_shop": "Shop",
+    "no_ratings": "No ratings",
+    "reviews_count": "({{count}} reviews)",
+    "sold_by": "Sold by {{name}}",
+    "verified_farmer": "Verified Farmer",
+    "per_unit": "per {{unit}}",
+    "add_to_bag": "Add to Harvest Bag",
+    "safety_title": "Safety First",
+    "safety_desc": "Pesticide Free",
+    "cold_chain_title": "Cold Chain",
+    "cold_chain_desc": "Farm to Door",
+    "tab_details": "Harvest Details",
+    "tab_farmer": "About Farmer",
+    "tab_reviews": "Reviews ({{count}})",
+    "produce_info": "Produce Info",
+    "field_category": "Category",
+    "field_unit": "Unit Weight",
+    "field_shelf_life": "Shelf Life",
+    "shelf_life_val": "3-5 Days",
+    "stats_sustainable": "Sustainable Growth",
+    "stats_sustainable_desc": "100% Organic methods focused on long-term soil health.",
+    "stats_quality": "Quality Guaranteed",
+    "stats_quality_desc": "Rigorous quality checks before every dispatch.",
+    "merchant_badge": "★ Merchant",
+    "contact_farmer": "Contact Farmer",
+    "send_message": "Send Message",
+    "loading_feedback": "Cataloging Harvest Feedback...",
+    "related_badge": "Harvest Recommendations",
+    "related_title": "Wait, Check These Too!",
+    "related_link": "Explore Full Collection"
+  },
+  "about": {
+    "hero": {
+      "badge": "Our Harvest Story",
+      "title_1": "Rooted in",
+      "title_2": "Pure Nature",
+      "subtitle": "We're redefining the journey from soil to soul, bringing the untamed freshness of local farms directly to your modern kitchen.",
+      "cta": "Explore the Harvest",
+      "journey_btn": "Our Journey"
+    },
+    "journey": {
+      "step": "Step {{current}} of {{total}}",
+      "next": "Next Stage",
+      "start": "Start Shopping",
+      "steps": {
+        "sowing": {
+          "title": "The Sowing",
+          "desc": "Every great harvest begins with a single seed, nurtured in nutrient-rich, organic soil under the morning sun."
+        },
+        "harvest": {
+          "title": "The Harvest",
+          "desc": "Our farmers hand-pick each vegetable at the peak of its natural goodness, ensuring maximum flavor and nutrients."
+        },
+        "curation": {
+          "title": "The Curation",
+          "desc": "Each box is carefully packed with eco-friendly materials, maintaining a strict quality check from soil to crate."
+        },
+        "arrival": {
+          "title": "The Arrival",
+          "desc": "Freshness delivered. From our local farms directly to your kitchen, bridging the gap between nature and you."
+        }
+      }
+    },
+    "stats": {
+      "farmers": "Local Farmers",
+      "families": "Happy Families",
+      "organic": "Organic Certified",
+      "delivery": "Farm to Door"
+    },
+    "story": {
+      "badge": "The Beginning",
+      "title": "Freshness was being traditionally lost.",
+      "desc_1": "FreshMart was born from a simple realization: the produce we buy in supermarkets was often weeks old and stripped of its natural nutrients. We wanted better for our families, and we knew local farmers were growing exactly what we needed.",
+      "desc_2": "By cutting out the middlemen and massive distribution centers, we created a direct marketplace. Farmers get a fair price for their hard work, and you get the freshest, healthiest food possible.",
+      "award_title": "Award Winning",
+      "award_subtitle": "Sustainability 2024"
+    },
+    "values": {
+      "badge": "Our DNA",
+      "title": "Everything happens for a Green Purpose.",
+      "subtitle": "We're building a sustainable ecosystem where quality meets transparency.",
+      "organic": { "title": "Pure Organic", "desc": "100% Pesticide-free farming methods that honor the earth." },
+      "farmer": { "title": "Farmer First", "desc": "Ensuring fair trade and higher margins for our local heroes." },
+      "guaranteed": { "title": "Guaranteed", "desc": "Rigorous 24-point quality check from farm to your door." },
+      "delivery": { "title": "Eco Delivery", "desc": "Optimized routes and sustainable packaging for every order." }
+    }
+  },
+  "offers": {
+    "title": "Special Offers",
+    "subtitle": "Grab the freshest deals on your favorite farm produce. Use these codes at checkout!",
+    "loading": "Loading freshest deals...",
+    "empty_title": "No active offers right now",
+    "empty_desc": "Check back soon for seasonal discounts!",
+    "shop_all": "Shop all products",
+    "active_badge": "Active Offer",
+    "expires": "Expires: {{date}}",
+    "default_desc": "Get {{discount}}% off on your next purchase across all farm categories.",
+    "coupon_code": "Coupon Code",
+    "shop_deal": "Shop with this deal",
+    "help": "Need help?",
+    "support": "Contact Support",
+    "how_it_works": "How it works",
+    "copy_success": "Code {{code}} copied!"
+  },
+  "footer": {
+    "description": "Your neighborhood's freshest farm produce delivered directly to your doorstep. We connect local farmers with conscious consumers.",
+    "quick_links": "Quick Links",
+    "about_us": "About Us",
+    "shop_all": "Shop All",
+    "categories": "Categories",
+    "special_offers": "Special Offers",
+    "become_farmer": "Become a Farmer",
+    "customer_service": "Customer Service",
+    "my_account": "My Account",
+    "track_order": "Track Order",
+    "contact_support": "Contact Support",
+    "faqs": "FAQs",
+    "privacy_policy": "Privacy Policy",
+    "contact_us": "Contact Us",
+    "all_rights": "All rights reserved.",
+    "secure_delivery": "Secure Delivery",
+    "quality_guaranteed": "Quality Guaranteed",
+    "farm_fresh": "Farm Fresh"
+  }
+}

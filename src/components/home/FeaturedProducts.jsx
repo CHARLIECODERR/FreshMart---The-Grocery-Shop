@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { getActiveProducts } from '../../services/productService';
 import ProductCard from '../product/ProductCard';
+import { getActiveProducts } from '../../services/productService';
+import { useTranslation } from 'react-i18next';
 
 const FeaturedProducts = () => {
+  const { t } = useTranslation();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -31,11 +33,11 @@ const FeaturedProducts = () => {
     <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-gray-50 rounded-3xl my-12">
       <div className="flex justify-between items-end mb-10">
         <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Featured Products</h2>
-          <p className="text-gray-500">Handpicked organic produce for you</p>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{t('home.featured.title')}</h2>
+          <p className="text-gray-500">{t('home.featured.subtitle')}</p>
         </div>
         <Link to="/shop" className="hidden sm:flex items-center text-primary-600 font-medium hover:text-primary-700 transition-colors">
-          View All <ArrowRight size={16} className="ml-1" />
+          {t('home.featured.view_all')} <ArrowRight size={16} className="ml-1" />
         </Link>
       </div>
 
@@ -62,16 +64,16 @@ const FeaturedProducts = () => {
         </div>
       ) : (
         <div className="text-center py-12 bg-white rounded-xl border border-gray-200 shadow-sm">
-          <p className="text-gray-500 mb-4">No amazing deals available right now. Check back soon!</p>
+          <p className="text-gray-500 mb-4">{t('home.featured.no_products')}</p>
           <Link to="/shop" className="btn-primary inline-flex">
-            Browse All Products
+            {t('home.featured.browse_all')}
           </Link>
         </div>
       )}
 
       <div className="mt-8 sm:hidden flex justify-center">
         <Link to="/shop" className="btn-secondary inline-flex items-center w-full justify-center">
-          View All Products <ArrowRight size={16} className="ml-2" />
+          {t('home.featured.view_all')} <ArrowRight size={16} className="ml-2" />
         </Link>
       </div>
     </section>

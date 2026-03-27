@@ -1,8 +1,9 @@
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LogOut, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const LogoutConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
+  const { t } = useTranslation();
   return (
     <AnimatePresence>
       {isOpen && (
@@ -28,10 +29,10 @@ const LogoutConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
 
             {/* Text */}
             <h2 className="text-xl font-black text-slate-900 text-center mb-2">
-              Logout
+              {t('farmer.logout_modal.title')}
             </h2>
             <p className="text-sm text-slate-500 font-medium text-center mb-8">
-              Are you sure you want to log out of your account?
+              {t('farmer.logout_modal.desc')}
             </p>
 
             {/* Actions */}
@@ -40,13 +41,13 @@ const LogoutConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
                 onClick={onCancel}
                 className="flex-1 py-3.5 rounded-2xl border-2 border-slate-200 text-slate-700 font-bold text-sm hover:border-slate-300 hover:bg-slate-50 transition-all"
               >
-                No, Stay
+                {t('farmer.logout_modal.stay')}
               </button>
               <button
                 onClick={onConfirm}
                 className="flex-1 py-3.5 rounded-2xl bg-red-500 text-white font-bold text-sm hover:bg-red-600 active:scale-95 transition-all shadow-lg shadow-red-100"
               >
-                Yes, Logout
+                {t('farmer.logout_modal.confirm')}
               </button>
             </div>
           </motion.div>

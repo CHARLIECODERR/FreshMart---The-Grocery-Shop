@@ -19,11 +19,14 @@ import LogoutConfirmModal from './LogoutConfirmModal';
 import NotificationCenter from './NotificationCenter';
 import toast from 'react-hot-toast';
 import { useSettings } from '../hooks/useSettings';
+import LanguageSelector from './common/LanguageSelector';
+import { useTranslation } from 'react-i18next';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const { t } = useTranslation();
   const { currentUser, role, logout } = useAuth();
   const { settings } = useSettings();
   const location = useLocation();
@@ -68,11 +71,11 @@ const Header = () => {
   };
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Shop', path: '/shop' },
-    { name: 'Categories', path: '/categories' },
-    { name: 'Offers', path: '/offers' },
-    { name: 'About', path: '/about' },
+    { name: t('nav.home'), path: '/' },
+    { name: t('nav.shop'), path: '/shop' },
+    { name: t('nav.categories'), path: '/categories' },
+    { name: t('nav.offers'), path: '/offers' },
+    { name: t('nav.about'), path: '/about' },
   ];
 
   const isActive = (path) => {
@@ -113,6 +116,9 @@ const Header = () => {
             ))}
           </nav>
           <div className="flex items-center gap-2 sm:gap-4">
+            <div className="hidden sm:block">
+              <LanguageSelector />
+            </div>
             {currentUser && <NotificationCenter />}
             <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors hidden sm:block"><Search size={20} /></button>
             <Link to="/account/wishlist" className="p-2 text-gray-600 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors hidden sm:block relative">
@@ -132,13 +138,13 @@ const Header = () => {
                 <button 
                   onClick={() => setShowLogoutModal(true)}
                   className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all"
-                  title="Logout"
+                  title={t('auth.sign_out')}
                 >
                   <LogOut size={20} />
                 </button>
               </div>
             ) : (
-              <Link to="/login" className="btn-primary !py-2 !px-4 sm:!px-5 text-xs sm:text-sm whitespace-nowrap">Sign In</Link>
+              <Link to="/login" className="btn-primary !py-2 !px-4 sm:!px-5 text-xs sm:text-sm whitespace-nowrap">{t('auth.sign_in')}</Link>
             )}
             <button className="md:hidden p-1.5 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors border border-gray-100" onClick={() => setIsMobileMenuOpen(true)}>
               <Menu size={22} />
@@ -174,12 +180,15 @@ const Header = () => {
                   </div>
                   <span className="font-bold text-lg text-slate-900">{storeName}</span>
                 </Link>
-                <button 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
-                >
-                  <X size={24} />
-                </button>
+                <div className="flex items-center gap-2">
+                  <LanguageSelector />
+                  <button 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
+                  >
+                    <X size={24} />
+                  </button>
+                </div>
               </div>
 
               <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-1">
@@ -205,7 +214,7 @@ const Header = () => {
                     className="flex items-center gap-3 py-3 text-gray-600 hover:text-emerald-600 transition-colors"
                   >
                     <Heart size={20} />
-                    <span className="font-medium">Wishlist</span>
+                    <span className="font-medium">{t('common.wishlist')}</span>
                     {wishlistCount > 0 && (
                       <span className="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                         {wishlistCount}
@@ -228,7 +237,7 @@ const Header = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-bold text-gray-900 truncate">
-                          {currentUser.displayName || 'My Account'}
+                          {currentUser.displayName || t('auth.my_account')}
                         </p>
                         <p className="text-xs text-gray-500 truncate capitalize">{role}</p>
                       </div>
@@ -251,10 +260,10 @@ const Header = () => {
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="w-full flex items-center justify-center py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-lg shadow-emerald-200 transition-all text-lg"
                     >
-                      Sign In
+                      {t('auth.sign_in')}
                     </Link>
                     <p className="text-center text-sm text-gray-500">
-                      Don't have an account? <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)} className="text-emerald-600 font-bold hover:underline">Sign Up</Link>
+                      {t('auth.dont_have_account')} <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)} className="text-emerald-600 font-bold hover:underline">{t('auth.sign_up')}</Link>
                     </p>
                   </div>
                 )}

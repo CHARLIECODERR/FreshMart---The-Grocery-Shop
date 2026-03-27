@@ -47,10 +47,10 @@ const AdminDashboard = () => {
   }
 
   const statCards = [
-    { label: 'Total Revenue', value: `₹${stats?.totalRevenue || 0}`, icon: TrendingUp, color: 'text-emerald-600', bg: 'bg-emerald-50', trend: '+12.5%', isUp: true },
+    { label: 'Consumer Revenue', value: `₹${stats?.totalRevenue || 0}`, icon: TrendingUp, color: 'text-emerald-600', bg: 'bg-emerald-50', trend: '+12.5%', isUp: true },
+    { label: 'Wholesale Payouts', value: `₹${stats?.totalWholesalePayout || 0}`, icon: Package, color: 'text-orange-600', bg: 'bg-orange-50', trend: '+8.4%', isUp: false },
     { label: 'Active Customers', value: stats?.totalUsers || 0, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', trend: '+5.2%', isUp: true },
-    { label: 'Total Farmers', value: stats?.totalFarmers || 0, icon: UserPlus, color: 'text-purple-600', bg: 'bg-purple-50', trend: '+2.1%', isUp: true },
-    { label: 'Global Orders', value: stats?.totalOrders || 0, icon: ShoppingBag, color: 'text-orange-600', bg: 'bg-orange-50', trend: '-1.4%', isUp: false },
+    { label: 'Active Suppliers', value: stats?.totalFarmers || 0, icon: UserPlus, color: 'text-purple-600', bg: 'bg-purple-50', trend: '+2.1%', isUp: true },
   ];
 
   return (
@@ -195,8 +195,8 @@ const AdminDashboard = () => {
       <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
          <div className="p-10 border-b border-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div>
-              <h3 className="text-2xl font-black text-slate-900 tracking-tight">Recent Activity</h3>
-              <p className="text-sm font-medium text-slate-400 mt-1">Latest transactions across the platform</p>
+              <h3 className="text-2xl font-black text-slate-900 tracking-tight">Recent Consumer Sales</h3>
+              <p className="text-sm font-medium text-slate-400 mt-1">Latest storefront transactions from customers</p>
             </div>
             <Link to="/admin/orders" className="btn-secondary !rounded-2xl flex items-center gap-2 group">
                Full Audit Log <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
@@ -267,8 +267,77 @@ const AdminDashboard = () => {
          
          <div className="p-8 bg-slate-50/50 text-center">
             <Link to="/admin/orders" className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] hover:text-slate-900 transition-colors">
-               Load Additional Records
+               Load Additional Client Records
             </Link>
+         </div>
+      </div>
+      
+      {/* Recent Wholesale Activity Table */}
+      <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col mt-10">
+         <div className="p-10 border-b border-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div>
+              <h3 className="text-2xl font-black text-slate-900 tracking-tight">Recent Wholesale Purchases</h3>
+              <p className="text-sm font-medium text-slate-400 mt-1">Latest supply inventory acquired from farmers</p>
+            </div>
+            <Link to="/admin/supply" className="btn-secondary !rounded-2xl flex items-center gap-2 group">
+               View Supply Queue <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            </Link>
+         </div>
+
+         <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+               <thead>
+                  <tr className="bg-slate-50/50">
+                     <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Transaction</th>
+                     <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Supplier</th>
+                     <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Product Supplied</th>
+                     <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Date</th>
+                     <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">Acquisition Cost</th>
+                  </tr>
+               </thead>
+               <tbody className="divide-y divide-slate-50">
+                  {stats?.recentWholesale?.length > 0 ? stats.recentWholesale.map((offer) => (
+                    <tr key={offer.id} className="group hover:bg-slate-50/50 transition-colors">
+                       <td className="px-10 py-6">
+                          <div className="flex items-center gap-4">
+                             <div className="w-12 h-12 bg-white border border-slate-100 rounded-xl flex items-center justify-center text-[10px] font-black text-slate-400 group-hover:border-emerald-200 group-hover:text-emerald-500 transition-all">
+                                #{offer.id.slice(-4).toUpperCase()}
+                             </div>
+                             <div>
+                                <p className="font-bold text-slate-900 text-sm">Wholesale Inv.</p>
+                                <p className="text-xs text-slate-400 font-medium">B2B Purchase</p>
+                             </div>
+                          </div>
+                       </td>
+                       <td className="px-10 py-6">
+                          <p className="font-bold text-slate-900 text-sm">{offer.farmerName || 'Direct Farm'}</p>
+                       </td>
+                       <td className="px-10 py-6">
+                          <span className="font-bold text-slate-900 text-sm">{offer.name}</span>
+                          <span className="block text-xs text-slate-500">{offer.stock} {offer.unit}</span>
+                       </td>
+                       <td className="px-10 py-6">
+                          <div className="flex items-center gap-2 text-slate-400">
+                             <Clock size={14} />
+                             <span className="text-xs font-bold">{offer.approvedAt?.toDate ? offer.approvedAt.toDate().toLocaleDateString() : 'Recently'}</span>
+                          </div>
+                       </td>
+                       <td className="px-10 py-6 text-right">
+                          <p className="font-black text-slate-900 text-lg">₹{(offer.price || 0) * (offer.stock || 0)}</p>
+                       </td>
+                    </tr>
+                  )) : (
+                    <tr>
+                      <td colSpan="5" className="px-10 py-20 text-center">
+                         <div className="flex flex-col items-center gap-4 opacity-30">
+                            <Package size={48} />
+                            <p className="font-black uppercase tracking-widest text-xs">No wholesale purchases yet</p>
+                         </div>
+                      </td>
+                    </tr>
+                  )}
+               </tbody>
+            </table>
          </div>
       </div>
       </div>

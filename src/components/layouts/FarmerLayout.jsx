@@ -17,19 +17,28 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import LogoutConfirmModal from '../LogoutConfirmModal';
+import { useTranslation } from 'react-i18next';
+import FarmerVerification from '../../pages/farmer/FarmerVerification';
 
 const FarmerLayout = () => {
-  const { currentUser, logout } = useAuth();
+  const { t } = useTranslation();
+  const { currentUser, userData, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
+  const isVerified = userData?.status === 'active';
+
   const menuItems = [
-    { name: 'Back to Homepage', path: '/', icon: Store },
-    { name: 'Dashboard', path: '/farmer', icon: LayoutDashboard },
-    { name: 'Products', path: '/farmer/products', icon: Package },
-    { name: 'Orders', path: '/farmer/orders', icon: ShoppingBag },
+    { name: t('farmer.back_to_home'), path: '/', icon: Store },
+    ...(isVerified ? [
+      { name: t('farmer.navigation.dashboard'), path: '/farmer', icon: LayoutDashboard },
+      { name: t('farmer.navigation.products'), path: '/farmer/products', icon: Package },
+      { name: t('farmer.navigation.orders'), path: '/farmer/orders', icon: ShoppingBag },
+    ] : [
+      { name: 'Business KYC', path: '/farmer', icon: LayoutDashboard }
+    ])
   ];
 
   const handleLogoutClick = () => setShowLogoutModal(true);
@@ -111,8 +120,8 @@ const FarmerLayout = () => {
                     <User size={24} />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest leading-none mb-1.5">Authorized Store</p>
-                    <p className="text-sm font-bold text-white truncate">{currentUser?.displayName || 'Farmer Access'}</p>
+                    <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest leading-none mb-1.5">{t('farmer.authorized_store')}</p>
+                    <p className="text-sm font-bold text-white truncate">{currentUser?.displayName || t('farmer.farmer_access')}</p>
                   </div>
                 </div>
               </div>
@@ -135,7 +144,7 @@ const FarmerLayout = () => {
                   onClick={handleLogoutClick}
                   className="w-full flex items-center gap-3 px-6 py-4 rounded-2xl text-sm font-bold text-red-400 hover:bg-red-500/10 transition-all"
                 >
-                  <LogOut size={20} /> Logout Session
+                  <LogOut size={20} /> {t('farmer.logout_session')}
                 </button>
               </div>
             </motion.aside>
@@ -152,7 +161,7 @@ const FarmerLayout = () => {
             </div>
             <div className="min-w-0">
               <span className="text-2xl font-black text-white leading-none block">FM <span className="text-emerald-500">Farmer</span></span>
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block mt-1">Authorized Access</span>
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block mt-1">{t('farmer.authorized_store')}</span>
             </div>
           </Link>
         </div>
@@ -163,9 +172,9 @@ const FarmerLayout = () => {
               <User size={24} />
             </div>
             <div className="min-w-0 overflow-hidden">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] leading-none mb-1.5">Authorized Store</p>
-              <p className="text-sm font-bold text-white truncate max-w-full" title={currentUser?.displayName || 'Farmer'}>
-                {currentUser?.displayName || 'Farmer Profile'}
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] leading-none mb-1.5">{t('farmer.authorized_store')}</p>
+              <p className="text-sm font-bold text-white truncate max-w-full" title={currentUser?.displayName || t('farmer.farmer_profile')}>
+                {currentUser?.displayName || t('farmer.farmer_profile')}
               </p>
             </div>
           </div>
@@ -189,7 +198,7 @@ const FarmerLayout = () => {
             onClick={handleLogoutClick}
             className="w-full flex items-center justify-center gap-3 px-4 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-red-500 hover:bg-red-500/10 hover:text-red-400 transition-all"
           >
-            <LogOut size={16} /> Logout Access
+            <LogOut size={16} /> {t('farmer.logout_access')}
           </button>
         </div>
       </aside>
@@ -197,7 +206,7 @@ const FarmerLayout = () => {
       {/* Main Content Area */}
       <div className="flex-grow flex flex-col min-w-0 min-h-screen">
         <main className="p-6 sm:p-10 max-w-[1600px] w-full mx-auto">
-          <Outlet />
+          {!isVerified ? <FarmerVerification /> : <Outlet />}
         </main>
       </div>
     </div>

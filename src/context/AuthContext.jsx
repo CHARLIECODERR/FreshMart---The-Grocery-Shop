@@ -54,14 +54,15 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
-  const signup = async (email, password, name) => {
+  const signup = async (email, password, name, role = 'customer') => {
     const user = await signUp(email, password, name);
     // Create user document in Firestore
     const newUserData = {
       uid: user.uid,
       name,
       email,
-      role: 'customer', // Default role
+      role: role,
+      status: role === 'farmer' ? 'pending_verification' : 'active',
       isActive: true,
       createdAt: new Date().toISOString()
     };
@@ -74,7 +75,7 @@ export const AuthProvider = ({ children }) => {
     return logIn(email, password);
   };
 
-  const loginWithGoogle = async () => {
+  const loginWithGoogle = async (requestedRole = 'customer') => {
     const user = await logInWithGoogle();
     
     // Check if user document exists for this UID
@@ -96,7 +97,8 @@ export const AuthProvider = ({ children }) => {
           uid: user.uid,
           name: user.displayName || 'User',
           email: user.email,
-          role: 'customer',
+          role: requestedRole,
+          status: requestedRole === 'farmer' ? 'pending_verification' : 'active',
           isActive: true,
           createdAt: new Date().toISOString()
         };

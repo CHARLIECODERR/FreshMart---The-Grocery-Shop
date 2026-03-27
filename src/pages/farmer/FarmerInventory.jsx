@@ -12,8 +12,10 @@ import {
   Filter
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const FarmerInventory = () => {
+  const { t } = useTranslation();
   const { currentUser } = useAuth();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -46,14 +48,14 @@ const FarmerInventory = () => {
     <div className="p-6 lg:p-10 space-y-10 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Stock Intelligence</h1>
-          <p className="text-slate-500 font-medium mt-1">Real-time inventory monitoring and alerts</p>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">{t('farmer.inventory.title')}</h1>
+          <p className="text-slate-500 font-medium mt-1">{t('farmer.inventory.subtitle')}</p>
         </div>
         <div className="flex items-center gap-4">
            <div className="bg-orange-50 px-6 py-3 rounded-2xl border border-orange-100 flex items-center gap-3">
               <AlertTriangle className="text-orange-500" size={20} />
               <div>
-                 <p className="text-[10px] font-black text-orange-400 uppercase tracking-widest leading-none">Low Stock</p>
+                 <p className="text-[10px] font-black text-orange-400 uppercase tracking-widest leading-none">{t('farmer.inventory.low_stock')}</p>
                  <p className="text-lg font-black text-orange-900">{lowStockProducts.length}</p>
               </div>
            </div>
@@ -95,7 +97,7 @@ const FarmerInventory = () => {
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
                     <input 
                       type="text" 
-                      placeholder="Search inventory..." 
+                      placeholder={t('farmer.inventory.search')} 
                       className="w-full bg-slate-50 border-none rounded-xl py-3 pl-11 pr-4 shadow-sm focus:ring-2 focus:ring-emerald-500 text-sm font-medium"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
@@ -107,11 +109,11 @@ const FarmerInventory = () => {
                  <table className="w-full text-left border-collapse">
                     <thead>
                        <tr className="bg-slate-50/50">
-                          <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Asset</th>
-                          <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Category</th>
-                          <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Quantum</th>
-                          <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Health</th>
-                          <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">Action</th>
+                          <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('farmer.inventory.table.asset')}</th>
+                          <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('farmer.products.table.category')}</th>
+                          <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('farmer.inventory.table.quantum')}</th>
+                          <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('farmer.inventory.table.health')}</th>
+                          <th className="px-10 py-6 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">{t('farmer.products.table.actions')}</th>
                        </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-50">
@@ -135,11 +137,11 @@ const FarmerInventory = () => {
                             </td>
                             <td className="px-10 py-6">
                                {p.stock <= 0 ? (
-                                 <span className="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-red-100">Stock Out</span>
+                                 <span className="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-red-100">{t('farmer.inventory.status.out')}</span>
                                ) : p.stock <= 10 ? (
-                                 <span className="px-3 py-1 bg-orange-50 text-orange-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-orange-100">Restock Soon</span>
+                                 <span className="px-3 py-1 bg-orange-50 text-orange-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-orange-100">{t('farmer.inventory.status.soon')}</span>
                                ) : (
-                                 <span className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-emerald-100">Healthy</span>
+                                 <span className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-emerald-100">{t('farmer.inventory.status.healthy')}</span>
                                )}
                             </td>
                             <td className="px-10 py-6 text-right">

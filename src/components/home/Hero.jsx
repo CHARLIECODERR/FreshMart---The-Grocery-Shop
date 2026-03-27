@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Leaf, Star, Sparkles, TrendingUp } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Sparkles, ArrowRight, TrendingUp, Star } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Hero = () => {
+  const { t } = useTranslation();
   return (
     <section className="relative bg-emerald-50 overflow-hidden rounded-[2.5rem] mx-4 sm:mx-6 lg:mx-8 my-6 px-6 py-16 lg:py-24 lg:px-12 flex flex-col lg:flex-row items-center gap-12 border border-emerald-100 shadow-sm">
       
@@ -20,7 +22,7 @@ const Hero = () => {
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-sm border border-emerald-100 text-emerald-800 text-sm font-bold mb-8"
         >
           <Sparkles size={16} className="text-yellow-500" />
-          <span>India's #1 Fresh Grocery Delivery</span>
+          <span>{t('home.hero.badge')}</span>
         </motion.div>
         
         <motion.h1 
@@ -29,8 +31,8 @@ const Hero = () => {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 tracking-tight mb-6 leading-[1.1]"
         >
-          Fresh from Farm to <br className="hidden md:block" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-emerald-400">Your Kitchen</span>
+          {t('home.hero.title_1')} <br className="hidden md:block" />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-emerald-400">{t('home.hero.title_2')}</span>
         </motion.h1>
         
         <motion.p 
@@ -39,7 +41,7 @@ const Hero = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-lg md:text-xl text-gray-600 mb-10 max-w-xl leading-relaxed"
         >
-          Experience the authentic taste of India's finest local produce. Handpicked, chemical-free, and delivered within 2 hours.
+          {t('home.hero.subtitle')}
         </motion.p>
         
         <motion.div 
@@ -52,14 +54,14 @@ const Hero = () => {
             to="/shop" 
             className="bg-emerald-600 text-white hover:bg-emerald-700 px-8 py-4 rounded-2xl font-bold text-lg transition-all shadow-xl shadow-emerald-600/20 flex items-center justify-center group"
           >
-            Shop Now
+            {t('home.hero.shop_now')}
             <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
           </Link>
           <Link 
             to="/categories" 
             className="bg-white text-emerald-900 hover:bg-emerald-50 border-2 border-emerald-100 px-8 py-4 rounded-2xl font-bold text-lg transition-all flex items-center justify-center"
           >
-            Explore Categories
+            {t('home.hero.explore')}
           </Link>
         </motion.div>
 
@@ -79,7 +81,7 @@ const Hero = () => {
             <div className="flex items-center text-yellow-500 mb-1">
               {[1, 2, 3, 4, 5].map((i) => <Star key={i} size={14} fill="currentColor" />)}
             </div>
-            <p className="text-xs font-bold text-gray-800">10k+ Happy Families</p>
+            <p className="text-xs font-bold text-gray-800">{t('home.hero.happy_families')}</p>
           </div>
         </motion.div>
       </div>
@@ -112,8 +114,8 @@ const Hero = () => {
               <TrendingUp size={24} />
             </div>
             <div>
-              <p className="text-xs text-gray-500 font-medium">Freshness</p>
-              <p className="text-sm font-bold text-gray-900">100% Guaranteed</p>
+              <p className="text-xs text-gray-500 font-medium">{t('home.hero.freshness')}</p>
+              <p className="text-sm font-bold text-gray-900">{t('home.hero.guaranteed')}</p>
             </div>
           </motion.div>
 
@@ -125,7 +127,7 @@ const Hero = () => {
           >
             <img src="https://images.unsplash.com/photo-1590779033100-9f60a05a013d?auto=format&fit=crop&w=150&q=100" alt="Tomato" className="w-12 h-12 rounded-xl object-cover" />
             <div>
-              <p className="text-sm font-bold text-gray-900">Fresh Tomatoes</p>
+              <p className="text-sm font-bold text-gray-900">{t('home.hero.tomatoes')}</p>
               <p className="text-xs text-emerald-600 font-bold mt-0.5">₹40 / kg</p>
             </div>
           </motion.div>

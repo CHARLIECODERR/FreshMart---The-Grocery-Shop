@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getActiveCategories } from '../../services/categoryService';
-import { Loader2, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { ArrowRight, Loader2 } from 'lucide-react';
+import { getActiveCategories } from '../../services/categoryService';
+import { useTranslation } from 'react-i18next';
 
 const CategorySection = () => {
+  const { t } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,10 +28,18 @@ const CategorySection = () => {
     return (
       <div className="py-24 flex flex-col items-center justify-center gap-4">
         <Loader2 className="animate-spin text-emerald-500" size={32} />
-        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Harvesting Categories...</p>
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">{t('home.category.loading')}</p>
       </div>
     );
   }
+
+  // Category Translation Mapping
+  const getLocalizedCategory = (catName) => {
+    if (!catName) return "";
+    const key = catName.toLowerCase().replace(/ & /g, '_').replace(/ /g, '_');
+    const translated = t(`categories.${key}`, { defaultValue: catName });
+    return translated;
+  };
 
   const displayCategories = categories.length > 0 ? categories : [
     { id: '1', name: 'Fresh Fruits', slug: 'fresh-fruits', imageUrl: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=500&q=80', color: 'bg-orange-50', accent: 'text-orange-600' },
@@ -43,11 +53,11 @@ const CategorySection = () => {
     <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
         <div>
-          <span className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.3em] mb-3 block">Handpicked Selections</span>
-          <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">Curated By Nature</h2>
+          <span className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.3em] mb-3 block">{t('home.category.badge')}</span>
+          <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">{t('home.category.title')}</h2>
         </div>
         <Link to="/categories" className="hidden sm:flex items-center gap-3 text-slate-900 font-black text-xs uppercase tracking-widest group border-b-2 border-slate-900 pb-2 transition-all hover:gap-5">
-          View Collections <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+          {t('home.category.view_all')} <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
 
@@ -81,7 +91,7 @@ const CategorySection = () => {
                 <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/10 transition-colors duration-500" />
               </div>
               <h3 className={`font-black text-slate-900 text-center transition-all duration-300 group-hover:scale-105 ${cat.accent || ''}`}>
-                {cat.name}
+                {getLocalizedCategory(cat.name)}
               </h3>
             </Link>
           </motion.div>
@@ -90,7 +100,7 @@ const CategorySection = () => {
       
       <div className="mt-12 sm:hidden flex justify-center">
         <Link to="/categories" className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-xs uppercase tracking-widest flex items-center justify-center gap-3">
-          Explore All Categories <ArrowRight size={18} />
+          {t('home.category.explore_all')} <ArrowRight size={18} />
         </Link>
       </div>
     </section>

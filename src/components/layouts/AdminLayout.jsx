@@ -18,7 +18,8 @@ import {
   ShieldCheck,
   ChevronRight,
   Bell,
-  Search
+  Search,
+  CheckCircle2
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import LogoutConfirmModal from '../LogoutConfirmModal';
@@ -35,9 +36,10 @@ const AdminLayout = () => {
     { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
     { name: 'Customers', path: '/admin/users', icon: Users },
     { name: 'Farmers', path: '/admin/farmers', icon: UserPlus },
-    { name: 'Global Catalog', path: '/admin/products', icon: Package },
+    { name: 'Supplier Offers', path: '/admin/supply', icon: ShoppingBag },
+    { name: 'Storefront Products', path: '/admin/products', icon: Package },
     { name: 'All Categories', path: '/admin/categories', icon: Layers },
-    { name: 'All Orders', path: '/admin/orders', icon: ShoppingBag },
+    { name: 'Customer Orders', path: '/admin/orders', icon: CheckCircle2 },
     { name: 'Home Banners', path: '/admin/banners', icon: ImageIcon },
     { name: 'Coupons', path: '/admin/coupons', icon: Tag },
     { name: 'System Settings', path: '/admin/settings', icon: Settings },

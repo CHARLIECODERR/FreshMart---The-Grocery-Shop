@@ -102,18 +102,18 @@ export const getFarmerProducts = async (farmerId) => {
   }
 };
 
-// Create new product
+// Create new product (Admin creating a retail product)
 export const createProduct = async (productData) => {
   try {
     const docRef = await addDoc(collection(db, COLLECTION_NAME), {
       ...productData,
       status: 'active',
-      isActive: true, // Crucial for visibility to customers
-      categorySlug: productData.category?.toLowerCase(), // Crucial for shop filtering
+      isActive: true,
+      categorySlug: productData.category?.toLowerCase(),
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     });
-    return { id: docRef.id, ...productData, isActive: true, categorySlug: productData.category?.toLowerCase() };
+    return { id: docRef.id, ...productData, status: 'active', isActive: true, categorySlug: productData.category?.toLowerCase() };
   } catch (error) {
     console.error("Error creating product:", error);
     throw error;

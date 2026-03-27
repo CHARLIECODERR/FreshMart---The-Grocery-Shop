@@ -1,31 +1,33 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldCheck, Truck, Sprout, HeartHandshake, ArrowRight, Award, Users, Leaf, X, Play } from 'lucide-react';
+import { ShieldCheck, Truck, Sprout, HeartHandshake, ArrowRight, Award, Leaf, X, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const About = () => {
+  const { t } = useTranslation();
   const [showJourney, setShowJourney] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
   const journeySteps = [
     {
-      title: "The Sowing",
-      desc: "Every great harvest begins with a single seed, nurtured in nutrient-rich, organic soil under the morning sun.",
+      title: t('about.journey.steps.sowing.title'),
+      desc: t('about.journey.steps.sowing.desc'),
       image: "/images/journey_1.png"
     },
     {
-      title: "The Harvest",
-      desc: "Our farmers hand-pick each vegetable at the peak of its natural goodness, ensuring maximum flavor and nutrients.",
+      title: t('about.journey.steps.harvest.title'),
+      desc: t('about.journey.steps.harvest.desc'),
       image: "/images/journey_2.png"
     },
     {
-      title: "The Curation",
-      desc: "Each box is carefully packed with eco-friendly materials, maintaining a strict quality check from soil to crate.",
+      title: t('about.journey.steps.curation.title'),
+      desc: t('about.journey.steps.curation.desc'),
       image: "/images/journey_3.png"
     },
     {
-      title: "The Arrival",
-      desc: "Freshness delivered. From our local farms directly to your kitchen, bridging the gap between nature and you.",
+      title: t('about.journey.steps.arrival.title'),
+      desc: t('about.journey.steps.arrival.desc'),
       image: "/images/journey_4.png"
     }
   ];
@@ -110,7 +112,9 @@ const About = () => {
               {/* Text Side */}
               <div className="lg:w-2/5 p-8 lg:p-16 flex flex-col justify-center bg-white relative">
                  <div className="mb-10">
-                    <span className="text-emerald-600 font-black text-[10px] uppercase tracking-[0.4em] mb-4 block">Step {currentStep + 1} of {journeySteps.length}</span>
+                    <span className="text-emerald-600 font-black text-[10px] uppercase tracking-[0.4em] mb-4 block">
+                      {t('about.journey.step', { current: currentStep + 1, total: journeySteps.length })}
+                    </span>
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={currentStep}
@@ -138,7 +142,7 @@ const About = () => {
                   onClick={currentStep === journeySteps.length - 1 ? () => setShowJourney(false) : nextStep}
                   className="btn-primary w-full py-5 rounded-[2rem] text-sm"
                  >
-                   {currentStep === journeySteps.length - 1 ? 'Start Shopping' : 'Next Stage'}
+                   {currentStep === journeySteps.length - 1 ? t('about.journey.start') : t('about.journey.next')}
                  </button>
               </div>
             </motion.div>
@@ -154,7 +158,7 @@ const About = () => {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1.5 }}
             src="/images/about_hero.png" 
-            alt="Farm landscape" 
+            alt={t('about.hero.badge')} 
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
@@ -168,16 +172,16 @@ const About = () => {
             transition={{ duration: 0.8, delay: 0.5 }}
           >
             <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-[0.3em] backdrop-blur-md border border-emerald-500/30 mb-6">
-              Our Harvest Story
+              {t('about.hero.badge')}
             </span>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-8 tracking-tighter leading-none">
-              Rooted in <br/> <span className="text-emerald-400">Pure Nature</span>
+              {t('about.hero.title_1')} <br/> <span className="text-emerald-400">{t('about.hero.title_2')}</span>
             </h1>
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-200 leading-relaxed font-medium mb-10">
-              We're redefining the journey from soil to soul, bringing the untamed freshness of local farms directly to your modern kitchen.
+              {t('about.hero.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-               <Link to="/shop" className="btn-primary px-10 py-4 h-auto text-sm">Explore the Harvest</Link>
+               <Link to="/shop" className="btn-primary px-10 py-4 h-auto text-sm">{t('about.hero.cta')}</Link>
                <button 
                   onClick={() => setShowJourney(true)}
                   className="text-white font-black text-sm uppercase tracking-widest flex items-center gap-2 hover:text-emerald-400 transition-colors group"
@@ -185,7 +189,7 @@ const About = () => {
                   <div className="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center group-hover:border-emerald-400 transition-colors">
                      <Play size={16} fill="currentColor" />
                   </div>
-                  Our Journey
+                  {t('about.hero.journey_btn')}
                </button>
             </div>
           </motion.div>
@@ -197,19 +201,19 @@ const About = () => {
          <div className="bg-white rounded-[3rem] shadow-2xl shadow-emerald-100 p-8 md:p-12 border border-gray-100 grid grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center space-y-2">
                <p className="text-4xl font-black text-gray-900 tracking-tighter">500+</p>
-               <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Local Farmers</p>
+               <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">{t('about.stats.farmers')}</p>
             </div>
             <div className="text-center space-y-2">
                <p className="text-4xl font-black text-gray-900 tracking-tighter">10k+</p>
-               <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Happy Families</p>
+               <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">{t('about.stats.families')}</p>
             </div>
             <div className="text-center space-y-2">
                <p className="text-4xl font-black text-gray-900 tracking-tighter">100%</p>
-               <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Organic Certified</p>
+               <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">{t('about.stats.organic')}</p>
             </div>
             <div className="text-center space-y-2">
                <p className="text-4xl font-black text-gray-900 tracking-tighter">24h</p>
-               <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Farm to Door</p>
+               <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">{t('about.stats.delivery')}</p>
             </div>
          </div>
       </section>
@@ -225,16 +229,19 @@ const About = () => {
             className="space-y-8"
           >
             <motion.div variants={itemVariants}>
-              <span className="text-emerald-600 font-black text-[10px] uppercase tracking-[0.4em] mb-4 block">The Beginning</span>
+              <span className="text-emerald-600 font-black text-[10px] uppercase tracking-[0.4em] mb-4 block">{t('about.story.badge')}</span>
               <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight leading-tight">
-                Freshness was being <br/> <span className="text-emerald-500 italic">traditionally lost.</span>
+                {t('about.story.title', { 
+                  defaultValue: "Freshness was being traditionally lost.",
+                  interpolation: { escapeValue: false }
+                })}
               </h2>
             </motion.div>
             <motion.p variants={itemVariants} className="text-lg text-gray-600 leading-relaxed font-medium">
-              FreshMart was born from a simple realization: the produce we buy in supermarkets was often weeks old and stripped of its natural nutrients. We wanted better for our families, and we knew local farmers were growing exactly what we needed.
+              {t('about.story.desc_1')}
             </motion.p>
             <motion.p variants={itemVariants} className="text-lg text-gray-600 leading-relaxed font-medium">
-              By cutting out the middlemen and massive distribution centers, we created a direct marketplace. Farmers get a fair price for their hard work, and you get the freshest, healthiest food possible.
+              {t('about.story.desc_2')}
             </motion.p>
             <motion.div variants={itemVariants} className="pt-6">
                <div className="flex items-center gap-4 p-6 bg-emerald-50 rounded-[2.5rem] border border-emerald-100 max-w-sm">
@@ -242,8 +249,8 @@ const About = () => {
                      <Award className="text-emerald-600" size={28} />
                   </div>
                   <div>
-                     <p className="text-sm font-black text-gray-900">Award Winning</p>
-                     <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">Sustainability 2024</p>
+                     <p className="text-sm font-black text-gray-900">{t('about.story.award_title')}</p>
+                     <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">{t('about.story.award_subtitle')}</p>
                   </div>
                </div>
             </motion.div>
@@ -259,7 +266,7 @@ const About = () => {
             <div className="aspect-[4/5] rounded-[4rem] overflow-hidden shadow-2xl relative z-10 border-[12px] border-white">
               <img 
                 src="/images/about_story.png" 
-                alt="Farmer holding fresh produce" 
+                alt={t('about.story.badge')} 
                 className="w-full h-full object-cover"
               />
             </div>
@@ -274,17 +281,17 @@ const About = () => {
       <section className="bg-gray-50/50 py-24 lg:py-32 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-20">
-            <span className="text-emerald-600 font-black text-[10px] uppercase tracking-[0.4em] mb-4 block">Our DNA</span>
-            <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight">Everything happens for a <span className="text-emerald-500">Green Purpose.</span></h2>
-            <p className="text-gray-500 text-lg font-medium">We're building a sustainable ecosystem where quality meets transparency.</p>
+            <span className="text-emerald-600 font-black text-[10px] uppercase tracking-[0.4em] mb-4 block">{t('about.values.badge')}</span>
+            <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight">{t('about.values.title')}</h2>
+            <p className="text-gray-500 text-lg font-medium">{t('about.values.subtitle')}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: Sprout, label: 'Pure Organic', desc: '100% Pesticide-free farming methods that honor the earth.', bg: 'bg-emerald-50', color: 'text-emerald-600' },
-              { icon: HeartHandshake, label: 'Farmer First', desc: 'Ensuring fair trade and higher margins for our local heroes.', bg: 'bg-blue-50', color: 'text-blue-600' },
-              { icon: ShieldCheck, label: 'Guaranteed', desc: 'Rigorous 24-point quality check from farm to your door.', bg: 'bg-orange-50', color: 'text-orange-600' },
-              { icon: Truck, label: 'Eco Delivery', desc: 'Optimized routes and sustainable packaging for every order.', bg: 'bg-slate-50', color: 'text-slate-600' }
+              { icon: Sprout, key: 'organic', bg: 'bg-emerald-50', color: 'text-emerald-600' },
+              { icon: HeartHandshake, key: 'farmer', bg: 'bg-blue-50', color: 'text-blue-600' },
+              { icon: ShieldCheck, key: 'guaranteed', bg: 'bg-orange-50', color: 'text-orange-600' },
+              { icon: Truck, key: 'delivery', bg: 'bg-slate-50', color: 'text-slate-600' }
             ].map((value, idx) => (
               <motion.div 
                 key={idx}
@@ -294,8 +301,8 @@ const About = () => {
                 <div className={`w-16 h-16 ${value.bg} ${value.color} rounded-[1.5rem] flex items-center justify-center mb-8 group-hover:scale-110 transition-transform`}>
                   <value.icon size={32} />
                 </div>
-                <h3 className="text-xl font-black text-gray-900 mb-4">{value.label}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed font-medium">{value.desc}</p>
+                <h3 className="text-xl font-black text-gray-900 mb-4">{t(`about.values.${value.key}.title`)}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed font-medium">{t(`about.values.${value.key}.desc`)}</p>
               </motion.div>
             ))}
           </div>

@@ -95,7 +95,7 @@ const AdminFarmers = () => {
           />
         </div>
         <div className="lg:col-span-2 bg-white p-2 rounded-2xl border border-slate-100 shadow-sm flex gap-2">
-           {['All', 'active', 'pending', 'blocked'].map((f) => (
+           {['All', 'active', 'under_review', 'rejected', 'blocked'].map((f) => (
              <button
                key={f}
                onClick={() => setFilter(f)}
@@ -105,7 +105,7 @@ const AdminFarmers = () => {
                  : 'text-slate-400 hover:bg-slate-50 hover:text-slate-900'
                }`}
              >
-               {f}
+               {f.replace('_', ' ')}
              </button>
            ))}
         </div>
@@ -148,17 +148,18 @@ const AdminFarmers = () => {
                       </div>
                       <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${
                         farmer.status === 'active' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 
-                        farmer.status === 'pending' ? 'bg-orange-50 text-orange-600 border-orange-100' :
-                        'bg-red-50 text-red-600 border-red-100'
+                        farmer.status === 'under_review' ? 'bg-amber-50 text-amber-600 border-amber-100' :
+                        farmer.status === 'rejected' ? 'bg-red-50 text-red-600 border-red-100' :
+                        'bg-slate-50 text-slate-600 border-slate-100'
                       }`}>
-                         {farmer.status || 'pending'}
+                         {(farmer.status || 'pending').replace('_', ' ')}
                       </span>
                    </div>
 
-                   <h3 className="text-xl font-black text-slate-900 mb-1 group-hover:text-emerald-600 transition-colors uppercase tracking-tight">{farmer.businessName || 'Unnamed Farm'}</h3>
+                   <h3 className="text-xl font-black text-slate-900 mb-1 group-hover:text-emerald-600 transition-colors uppercase tracking-tight">{farmer.businessName || farmer.farmName || 'Unnamed Farm'}</h3>
                    <p className="text-sm font-bold text-slate-400 mb-6 flex items-center gap-2">
                      <ShieldCheck size={16} className="text-emerald-500" />
-                     {farmer.displayName}
+                     {farmer.legalName || farmer.displayName}
                    </p>
 
                    <div className="space-y-3 pt-6 border-t border-slate-50">
@@ -184,13 +185,21 @@ const AdminFarmers = () => {
                 </div>
 
                 <div className="px-8 py-6 bg-slate-50 flex items-center gap-3">
-                   {farmer.status === 'pending' ? (
-                      <button 
-                        onClick={() => handleStatusChange(farmer.id, 'active')}
-                        className="flex-1 bg-emerald-600 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-emerald-100 hover:bg-emerald-700 transition-all"
-                      >
-                         Approve Partner
-                      </button>
+                   {farmer.status === 'under_review' ? (
+                      <>
+                        <button 
+                          onClick={() => handleStatusChange(farmer.id, 'active')}
+                          className="flex-1 bg-emerald-600 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-emerald-100 hover:bg-emerald-700 transition-all"
+                        >
+                           Approve
+                        </button>
+                        <button 
+                          onClick={() => handleStatusChange(farmer.id, 'rejected')}
+                          className="flex-1 bg-red-50 text-red-600 py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-red-100 transition-all"
+                        >
+                           Reject
+                        </button>
+                      </>
                    ) : farmer.status === 'active' ? (
                       <button 
                         onClick={() => handleStatusChange(farmer.id, 'blocked')}
@@ -217,13 +226,25 @@ const AdminFarmers = () => {
                 {expandedId === farmer.id && (
                   <div className="px-8 pb-8 bg-slate-50 animate-in slide-in-from-top duration-300">
                     <div className="p-6 bg-white rounded-2xl border border-slate-100 space-y-4">
+                      {farmer.documentUrl && (
+                        <div className="mb-6">
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">KYC Document Uploaded</p>
+                            <a href={farmer.documentUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-blue-100 transition-colors">
+                                <Briefcase size={16} /> View Submitted ID Proof
+                            </a>
+                        </div>
+                      )}
                       <div>
                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Company Detail</p>
-                        <p className="text-sm font-bold text-slate-900">{farmer.farmCategory || 'General'} Producer</p>
+                        <p className="text-sm font-bold text-slate-900">{farmer.farmCategory || 'General Producer'}</p>
                       </div>
                       <div>
                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Email</p>
                         <p className="text-sm font-bold text-slate-900">{farmer.email || 'N/A'}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Pincode</p>
+                        <p className="text-sm font-bold text-slate-900">{farmer.pincode || 'N/A'}</p>
                       </div>
                       <div>
                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">UID</p>

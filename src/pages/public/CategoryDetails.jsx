@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { getCategoryBySlug } from '../../services/categoryService';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getActiveProducts } from '../../services/productService';
+import { getCategoryBySlug } from '../../services/categoryService';
 import { Loader2, ArrowLeft, Search } from 'lucide-react';
 import ProductCard from '../../components/product/ProductCard';
+import { useTranslation } from 'react-i18next';
 
 const CategoryDetails = () => {
+  const { t } = useTranslation();
   const { slug } = useParams();
   const navigate = useNavigate();
   const [category, setCategory] = useState(null);
@@ -68,16 +70,16 @@ const CategoryDetails = () => {
         className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-primary-600 mb-8 transition-colors"
       >
         <ArrowLeft size={16} className="mr-2" />
-        Back to Categories
+        {t('category_details.back_to_categories')}
       </button>
 
       <div className="bg-primary-50 rounded-3xl p-8 mb-12 flex items-center justify-between">
         <div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 capitalize">
-            {category?.name || slug.replace('-', ' ')}
+            {t(`categories.${(category?.name || slug).toLowerCase().replace(/ & /g, '_').replace(/ /g, '_')}`, { defaultValue: category?.name || slug.replace('-', ' ') })}
           </h1>
           <p className="text-gray-600 max-w-xl">
-            {category?.description || `Showing all fresh products from the ${category?.name || slug} category.`}
+            {category?.description || t('category_details.empty_desc', { name: t(`categories.${(category?.name || slug).toLowerCase().replace(/ & /g, '_').replace(/ /g, '_')}`, { defaultValue: category?.name || slug.replace('-', ' ') }) })}
           </p>
         </div>
       </div>
@@ -93,13 +95,12 @@ const CategoryDetails = () => {
           <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400 shadow-sm border border-gray-200">
             <Search size={24} />
           </div>
-          <h3 className="text-lg font-bold text-gray-900 mb-2">No products found</h3>
+          <h3 className="text-lg font-bold text-gray-900 mb-2">{t('category_details.no_products')}</h3>
           <p className="text-gray-500 max-w-md mx-auto mb-6">
-            We don't have any active products in the {category?.name || slug} category right now. 
-            Check back later!
+            {t('category_details.no_products_desc', { name: t(`categories.${(category?.name || slug).toLowerCase().replace(/ & /g, '_').replace(/ /g, '_')}`, { defaultValue: category?.name || slug.replace('-', ' ') }) })}
           </p>
           <Link to="/shop" className="btn-primary inline-flex">
-            Continue Shopping
+            {t('category_details.continue_shopping')}
           </Link>
         </div>
       )}

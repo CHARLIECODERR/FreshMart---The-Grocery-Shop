@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getActiveCategories } from '../../services/categoryService';
 import { Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Categories = () => {
+  const { t } = useTranslation();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,10 +41,10 @@ const Categories = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="mb-10 text-center">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">All Categories</h1>
-        <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-          Browse our wide selection of fresh produce and groceries. We partner with local farmers to bring you the best quality everyday.
+      <div className="text-center mb-16">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">{t('categories_page.title')}</h1>
+        <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+          {t('categories_page.subtitle')}
         </p>
       </div>
 
@@ -71,11 +73,13 @@ const Categories = () => {
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
-            <div className="p-5">
-              <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-primary-600 transition-colors">{cat.name}</h3>
-              <p className="text-sm text-gray-500 line-clamp-2">
-                {cat.description || `Explore our fresh selection of ${cat.name.toLowerCase()}`}
-              </p>
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-2 capitalize">
+                  {t(`categories.${cat.name.toLowerCase().replace(/ & /g, '_').replace(/ /g, '_')}`, { defaultValue: cat.name })}
+                </h3>
+                <p className="text-gray-600 mb-6 line-clamp-2">
+                  {cat.description || t('categories_page.fallback_desc', { name: t(`categories.${cat.name.toLowerCase().replace(/ & /g, '_').replace(/ /g, '_')}`, { defaultValue: cat.name }) })}
+                </p>
             </div>
           </Link>
         ))}

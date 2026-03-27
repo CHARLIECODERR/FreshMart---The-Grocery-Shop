@@ -3,8 +3,10 @@ import { Tag, ArrowRight, Copy, Loader2, PartyPopper } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getActiveCoupons } from '../../services/couponService';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const Offers = () => {
+  const { t } = useTranslation();
   const [coupons, setCoupons] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,7 +28,7 @@ const Offers = () => {
 
   const copyToClipboard = (code) => {
     navigator.clipboard.writeText(code);
-    toast.success(`Code ${code} copied!`, {
+    toast.success(t('offers.copy_success', { code }), {
       icon: '🎁',
       style: {
         borderRadius: '1rem',
@@ -44,26 +46,26 @@ const Offers = () => {
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-[2rem] bg-emerald-100 text-emerald-600 mb-8 border-4 border-white shadow-xl rotate-3">
             <Tag size={40} />
           </div>
-          <h1 className="text-5xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight">Special Offers</h1>
+          <h1 className="text-5xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight">{t('offers.title')}</h1>
           <p className="text-xl text-slate-500 font-medium">
-            Grab the freshest deals on your favorite farm produce. Use these codes at checkout!
+            {t('offers.subtitle')}
           </p>
         </div>
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4 text-slate-400">
             <Loader2 className="animate-spin text-emerald-500" size={48} />
-            <p className="font-black uppercase tracking-widest text-xs">Loading freshest deals...</p>
+            <p className="font-black uppercase tracking-widest text-xs">{t('offers.loading')}</p>
           </div>
         ) : coupons.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-[3rem] border border-slate-100 shadow-sm">
              <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-200">
                 <Tag size={48} />
              </div>
-             <h3 className="text-2xl font-black text-slate-900">No active offers right now</h3>
-             <p className="text-slate-400 font-medium mt-2">Check back soon for seasonal discounts!</p>
+             <h3 className="text-2xl font-black text-slate-900">{t('offers.empty_title')}</h3>
+             <p className="text-slate-400 font-medium mt-2">{t('offers.empty_desc')}</p>
              <Link to="/shop" className="inline-flex items-center mt-8 text-emerald-600 font-black uppercase tracking-widest text-xs hover:gap-2 transition-all">
-                Shop all products <ArrowRight size={16} />
+                {t('offers.shop_all')} <ArrowRight size={16} />
              </Link>
           </div>
         ) : (
@@ -77,11 +79,11 @@ const Offers = () => {
                 <div className="p-10 flex-1">
                   <div className="flex items-center gap-2 mb-6">
                     <span className="bg-emerald-50 text-emerald-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-emerald-100">
-                      Active Offer
+                      {t('offers.active_badge')}
                     </span>
                     {coupon.expiry && (
                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                        Expires: {new Date(coupon.expiry).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                        {t('offers.expires', { date: new Date(coupon.expiry).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) })}
                       </span>
                     )}
                   </div>
@@ -90,7 +92,7 @@ const Offers = () => {
                     {coupon.discount}<span className="text-2xl ml-1 text-emerald-500">%</span>
                   </h3>
                   <p className="text-slate-500 font-bold text-sm mb-8 leading-relaxed">
-                    {coupon.description || `Get ${coupon.discount}% off on your next purchase across all farm categories.`}
+                    {coupon.description || t('offers.default_desc', { discount: coupon.discount })}
                   </p>
 
                   <div className="relative group/btn mt-auto">
@@ -99,7 +101,7 @@ const Offers = () => {
                       className="w-full bg-slate-900 text-white rounded-[1.5rem] p-5 flex items-center justify-between group-active:scale-95 transition-all shadow-xl shadow-slate-200"
                     >
                       <div className="flex flex-col items-start translate-x-2">
-                        <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">Coupon Code</span>
+                        <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('offers.coupon_code')}</span>
                         <span className="text-xl font-black tracking-tighter">{coupon.code}</span>
                       </div>
                       <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center group-hover/btn:bg-white/20 transition-all">
@@ -113,7 +115,7 @@ const Offers = () => {
                 </div>
 
                 <Link to="/shop" className="bg-slate-50 p-6 text-center text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] group-hover:bg-emerald-500 group-hover:text-white transition-all">
-                  Shop with this deal
+                  {t('offers.shop_deal')}
                 </Link>
               </div>
             ))}
@@ -121,10 +123,10 @@ const Offers = () => {
         )}
 
         <div className="mt-20 text-center">
-           <p className="text-slate-400 font-bold text-xs uppercase tracking-[0.3em] mb-4">Need help?</p>
+           <p className="text-slate-400 font-bold text-xs uppercase tracking-[0.3em] mb-4">{t('offers.help')}</p>
            <div className="flex justify-center gap-8">
-              <Link to="/contact" className="text-slate-900 font-black hover:text-emerald-500 transition-colors">Contact Support</Link>
-              <Link to="/about" className="text-slate-900 font-black hover:text-emerald-500 transition-colors">How it works</Link>
+              <Link to="/contact" className="text-slate-900 font-black hover:text-emerald-500 transition-colors">{t('offers.support')}</Link>
+              <Link to="/about" className="text-slate-900 font-black hover:text-emerald-500 transition-colors">{t('offers.how_it_works')}</Link>
            </div>
         </div>
         

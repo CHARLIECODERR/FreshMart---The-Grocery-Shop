@@ -1,38 +1,40 @@
 import React from 'react';
-import { Truck, ShieldCheck, Leaf, Clock, RefreshCw, Smartphone } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Truck, Leaf, ShieldCheck, RefreshCw } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const BenefitsSection = () => {
+  const { t } = useTranslation();
   const benefits = [
     {
       id: 1,
       icon: <Truck size={32} />,
-      title: "Swift Logistics",
-      description: "Direct-to-door fulfillment within 24 hours.",
+      title: t('home.benefits.swift.title'),
+      description: t('home.benefits.swift.desc'),
       color: "from-blue-500/10 to-blue-500/5 text-blue-600",
       accent: "bg-blue-600"
     },
     {
       id: 2,
       icon: <Leaf size={32} />,
-      title: "Purely Organic",
-      description: "Zero-pesticide certification on every harvest.",
+      title: t('home.benefits.organic.title'),
+      description: t('home.benefits.organic.desc'),
       color: "from-emerald-500/10 to-emerald-500/5 text-emerald-600",
       accent: "bg-emerald-600"
     },
     {
       id: 3,
       icon: <ShieldCheck size={32} />,
-      title: "Secured Trust",
-      description: "Military-grade encryption for every transaction.",
+      title: t('home.benefits.trust.title'),
+      description: t('home.benefits.trust.desc'),
       color: "from-amber-500/10 to-amber-500/5 text-amber-600",
       accent: "bg-amber-600"
     },
     {
       id: 4,
       icon: <RefreshCw size={32} />,
-      title: "Fresh Returns",
-      description: "No-questions-asked freshness guarantee.",
+      title: t('home.benefits.returns.title'),
+      description: t('home.benefits.returns.desc'),
       color: "from-rose-500/10 to-rose-500/5 text-rose-600",
       accent: "bg-rose-600"
     }

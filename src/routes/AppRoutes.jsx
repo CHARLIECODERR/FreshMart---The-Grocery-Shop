@@ -35,11 +35,13 @@ const About = lazy(() => import('../pages/public/About'));
 const Contact = lazy(() => import('../pages/public/Contact'));
 const NotFound = lazy(() => import('../pages/public/NotFound'));
 const Unauthorized = lazy(() => import('../pages/public/Unauthorized'));
+const BecomeAFarmer = lazy(() => import('../pages/public/BecomeAFarmer'));
 
 // Lazy Loaded Auth Pages
 const Login = lazy(() => import('../pages/auth/Login'));
 const Signup = lazy(() => import('../pages/auth/Signup'));
 const ForgotPassword = lazy(() => import('../pages/auth/ForgotPassword'));
+const FarmerSignup = lazy(() => import('../pages/auth/FarmerSignup'));
 
 // Lazy Loaded Customer Pages
 const Account = lazy(() => import('../pages/customer/Account'));
@@ -69,6 +71,8 @@ const AdminDashboard = lazy(() => import('../pages/admin/AdminDashboard'));
 const AdminUsers = lazy(() => import('../pages/admin/AdminUsers'));
 const AdminFarmers = lazy(() => import('../pages/admin/AdminFarmers'));
 const AdminProducts = lazy(() => import('../pages/admin/AdminProducts'));
+const AdminAddProduct = lazy(() => import('../pages/admin/AdminAddProduct'));
+const AdminSupplyOffers = lazy(() => import('../pages/admin/AdminSupplyOffers'));
 const AdminCategories = lazy(() => import('../pages/admin/AdminCategories'));
 const AdminOrders = lazy(() => import('../pages/admin/AdminOrders'));
 const AdminBanners = lazy(() => import('../pages/admin/AdminBanners'));
@@ -90,6 +94,7 @@ const AppRoutes = () => {
             <Route path="/offers" element={<Offers />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/become-a-farmer" element={<BecomeAFarmer />} />
             
             <Route path="/cart" element={<Cart />} />
             
@@ -111,6 +116,9 @@ const AppRoutes = () => {
             <Route path="/forgot-password" element={<ForgotPassword />} />
           </Route>
 
+          {/* Standalone Farmer Signup (has its own layout) */}
+          <Route path="/farmer-signup" element={<FarmerSignup />} />
+
           {/* Farmer Routes */}
           <Route path="/farmer" element={<FarmerRoute><FarmerLayout /></FarmerRoute>}>
             <Route index element={<FarmerDashboard />} />
@@ -131,6 +139,8 @@ const AppRoutes = () => {
             <Route path="users" element={<AdminUsers />} />
             <Route path="farmers" element={<AdminFarmers />} />
             <Route path="products" element={<AdminProducts />} />
+            <Route path="products/new" element={<AdminAddProduct />} />
+            <Route path="supply" element={<AdminSupplyOffers />} />
             <Route path="categories" element={<AdminCategories />} />
             <Route path="orders" element={<AdminOrders />} />
             <Route path="banners" element={<AdminBanners />} />

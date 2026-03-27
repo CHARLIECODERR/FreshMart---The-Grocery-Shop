@@ -2,19 +2,24 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import ProductCard from '../ProductCard';
+import { useTranslation } from 'react-i18next';
 
-const RelatedProductsGrid = ({ products, loading }) => {
-  if (!loading && products.length === 0) return null;
+const RelatedProductsGrid = ({ products = [] }) => {
+  const { t } = useTranslation();
+  if (products.length === 0) return null;
 
   return (
-    <div className="mt-20 pt-20 border-t border-gray-100 mb-20 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+    <section className="py-12 border-t border-gray-100">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
         <div>
-          <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.4em] mb-3">Harvest Recommendations</p>
-          <h2 className="text-4xl font-black text-gray-900 tracking-tight">Wait, Check These Too!</h2>
+          <span className="bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase mb-3 inline-block">
+            {t('product_details.related_badge')}
+          </span>
+          <h2 className="text-3xl font-bold text-gray-900">{t('product_details.related_title')}</h2>
         </div>
-        <Link to="/shop" className="group flex items-center gap-3 text-xs font-black uppercase tracking-widest text-gray-400 hover:text-emerald-600 transition-colors">
-          Explore Full Collection <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+        <Link to="/shop" className="text-primary-600 font-bold hover:text-primary-700 transition-colors flex items-center group">
+          {t('product_details.related_link')}
+          <span className="ml-2 transition-transform group-hover:translate-x-1">→</span>
         </Link>
       </div>
       
@@ -23,7 +28,7 @@ const RelatedProductsGrid = ({ products, loading }) => {
           <ProductCard key={p.id} product={p} />
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 

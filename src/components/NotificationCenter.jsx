@@ -14,12 +14,17 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
-const formatTimeAgo = (date) => {
-  if (!date) return 'Just now';
+const formatTimeAgo = (date, t) => {
+  if (!date) return t('farmer.notifications.just_now');
   const now = new Date();
   const diffInSeconds = Math.floor((now - date) / 1000);
-  const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+  
+  if (diffInSeconds < 60) return t('farmer.notifications.just_now');
+  
+  // Simplified for now, or could use i18next relative time if setup
+  const rtf = new Intl.RelativeTimeFormat(window.localStorage.getItem('i18nextLng') || 'en', { numeric: 'auto' });
 
   if (diffInSeconds < 60) return 'Just now';
   if (diffInSeconds < 3600) return rtf.format(-Math.floor(diffInSeconds / 60), 'minute');
@@ -29,6 +34,7 @@ const formatTimeAgo = (date) => {
 };
 
 const NotificationCenter = () => {
+  const { t } = useTranslation();
   const { currentUser } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -136,9 +142,9 @@ const NotificationCenter = () => {
           >
             <div className="p-6 border-b border-gray-50 flex items-center justify-between">
               <div>
-                <h3 className="font-black text-gray-900">Notifications</h3>
+                <h3 className="font-black text-gray-900">{t('farmer.notifications.title')}</h3>
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">
-                  {unreadCount} Unread Alerts
+                  {unreadCount} {t('farmer.notifications.unread_alerts')}
                 </p>
               </div>
               {unreadCount > 0 && (
@@ -146,7 +152,7 @@ const NotificationCenter = () => {
                   onClick={markAllRead}
                   className="text-[10px] font-black text-emerald-600 uppercase tracking-widest hover:text-emerald-700 underline underline-offset-4"
                 >
-                  Mark all read
+                  {t('farmer.notifications.mark_all_read')}
                 </button>
               )}
             </div>
@@ -157,7 +163,7 @@ const NotificationCenter = () => {
                   <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-300 mx-auto mb-4">
                     <Bell size={32} />
                   </div>
-                  <p className="text-sm text-gray-400 font-medium">Your harvest is quiet... for now.</p>
+                  <p className="text-sm text-gray-400 font-medium">{t('farmer.notifications.empty')}</p>
                 </div>
               ) : (
                 notifications.map((notif) => (
@@ -179,7 +185,7 @@ const NotificationCenter = () => {
                         {notif.message}
                       </p>
                       <p className="text-[10px] text-gray-300 font-bold mt-2">
-                        {notif.createdAt?.toDate ? formatTimeAgo(notif.createdAt.toDate()) : 'Just now'}
+                        {notif.createdAt?.toDate ? formatTimeAgo(notif.createdAt.toDate(), t) : t('farmer.notifications.just_now')}
                       </p>
                     </div>
                     <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -200,7 +206,7 @@ const NotificationCenter = () => {
             {notifications.length > 0 && (
               <div className="p-4 bg-gray-50 text-center">
                  <button className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-gray-600 transition-colors">
-                    View All History
+                    {t('farmer.notifications.view_history')}
                  </button>
               </div>
             )}
