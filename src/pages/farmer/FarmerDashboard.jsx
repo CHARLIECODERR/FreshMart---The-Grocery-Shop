@@ -148,7 +148,7 @@ const FarmerDashboard = () => {
     );
   }
 
-  if (userData?.status === 'pending') {
+  if (userData?.status === 'under_review') {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 animate-in fade-in duration-700">
         <div className="w-24 h-24 bg-orange-50 rounded-[2.5rem] flex items-center justify-center text-orange-500 mb-8 shadow-inner border border-orange-100">

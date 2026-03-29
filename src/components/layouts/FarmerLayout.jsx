@@ -28,6 +28,7 @@ const FarmerLayout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
+  const isUnderReview = userData?.status === 'under_review';
   const isVerified = userData?.status === 'active';
 
   const menuItems = [
@@ -36,6 +37,8 @@ const FarmerLayout = () => {
       { name: t('farmer.navigation.dashboard'), path: '/farmer', icon: LayoutDashboard },
       { name: t('farmer.navigation.products'), path: '/farmer/products', icon: Package },
       { name: t('farmer.navigation.orders'), path: '/farmer/orders', icon: ShoppingBag },
+    ] : isUnderReview ? [
+      { name: 'Dashboard', path: '/farmer', icon: LayoutDashboard }
     ] : [
       { name: 'Business KYC', path: '/farmer', icon: LayoutDashboard }
     ])
@@ -120,7 +123,7 @@ const FarmerLayout = () => {
                     <User size={24} />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest leading-none mb-1.5">{t('farmer.authorized_store')}</p>
+                    <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest leading-none mb-1.5">Farmer Profile</p>
                     <p className="text-sm font-bold text-white truncate">{currentUser?.displayName || t('farmer.farmer_access')}</p>
                   </div>
                 </div>
@@ -161,7 +164,7 @@ const FarmerLayout = () => {
             </div>
             <div className="min-w-0">
               <span className="text-2xl font-black text-white leading-none block">FM <span className="text-emerald-500">Farmer</span></span>
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block mt-1">{t('farmer.authorized_store')}</span>
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block mt-1">Farmer Partner</span>
             </div>
           </Link>
         </div>
@@ -172,7 +175,7 @@ const FarmerLayout = () => {
               <User size={24} />
             </div>
             <div className="min-w-0 overflow-hidden">
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] leading-none mb-1.5">{t('farmer.authorized_store')}</p>
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] leading-none mb-1.5">Farmer Profile</p>
               <p className="text-sm font-bold text-white truncate max-w-full" title={currentUser?.displayName || t('farmer.farmer_profile')}>
                 {currentUser?.displayName || t('farmer.farmer_profile')}
               </p>
@@ -206,7 +209,7 @@ const FarmerLayout = () => {
       {/* Main Content Area */}
       <div className="flex-grow flex flex-col min-w-0 min-h-screen">
         <main className="p-6 sm:p-10 max-w-[1600px] w-full mx-auto">
-          {!isVerified ? <FarmerVerification /> : <Outlet />}
+          {(!isVerified && !isUnderReview) ? <FarmerVerification /> : <Outlet />}
         </main>
       </div>
     </div>
