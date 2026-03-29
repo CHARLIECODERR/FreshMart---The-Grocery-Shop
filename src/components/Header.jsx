@@ -144,7 +144,10 @@ const Header = () => {
                 </button>
               </div>
             ) : (
-              <Link to="/login" className="btn-primary !py-2 !px-4 sm:!px-5 text-xs sm:text-sm whitespace-nowrap">{t('auth.sign_in')}</Link>
+              <div className="flex items-center gap-2">
+                <Link to="/farmer-signup" className="hidden sm:inline-flex items-center justify-center py-2 px-4 rounded-xl border border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-xs sm:text-sm font-bold whitespace-nowrap transition-colors">Become a Farmer</Link>
+                <Link to="/login" className="btn-primary !py-2 !px-4 sm:!px-5 text-xs sm:text-sm whitespace-nowrap">{t('auth.sign_in')}</Link>
+              </div>
             )}
             <button className="md:hidden p-1.5 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors border border-gray-100" onClick={() => setIsMobileMenuOpen(true)}>
               <Menu size={22} />
@@ -261,6 +264,13 @@ const Header = () => {
                       className="w-full flex items-center justify-center py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-lg shadow-emerald-200 transition-all text-lg"
                     >
                       {t('auth.sign_in')}
+                    </Link>
+                    <Link 
+                      to="/farmer-signup"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="w-full flex items-center justify-center py-4 border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 font-bold rounded-2xl transition-all text-lg"
+                    >
+                      Become a Farmer
                     </Link>
                     <p className="text-center text-sm text-gray-500">
                       {t('auth.dont_have_account')} <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)} className="text-emerald-600 font-bold hover:underline">{t('auth.sign_up')}</Link>

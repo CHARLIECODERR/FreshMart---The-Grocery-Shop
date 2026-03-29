@@ -9,14 +9,14 @@ import toast from 'react-hot-toast';
 import {
   Sprout, User, Phone, MapPin, Landmark,
   FileText, Upload, ShieldCheck, Loader2, CheckCircle2,
-  ArrowRight, ArrowLeft, Eye, EyeOff, Smartphone
+  ArrowRight, ArrowLeft, Eye, EyeOff, Smartphone, Mail
 } from 'lucide-react';
 
 const STEPS = [
   { id: 1, label: 'Account',      icon: User },
   { id: 2, label: 'Farm Info',    icon: Landmark },
   { id: 3, label: 'Documents',    icon: ShieldCheck },
-  { id: 4, label: 'Verify OTP',   icon: Smartphone },
+  { id: 4, label: 'Verify Email',   icon: Mail },
 ];
 
 const inputCls = (err) =>
@@ -34,7 +34,7 @@ const FarmerSignup = () => {
   const [showPass, setShowPass] = useState(false);
   const [idFile, setIdFile] = useState(null);
   const [idPreview, setIdPreview] = useState(null);
-  const [mobileVerified, setMobileVerified] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
 
   const [form, setForm] = useState({
     // Step 1 — Account
@@ -113,8 +113,8 @@ const FarmerSignup = () => {
   };
 
   const handleSubmit = async () => {
-    if (!mobileVerified) {
-      toast.error('Please verify your mobile number to proceed.');
+    if (!isVerified) {
+      toast.error('Please verify your email to proceed.');
       return;
     }
     try {
@@ -139,7 +139,7 @@ const FarmerSignup = () => {
         pincode: form.pincode,
         address: form.address,
         documentUrl,
-        mobileVerified: true,
+        emailVerified: true,
         status: 'under_review',
         submittedAt: new Date().toISOString(),
       });
@@ -372,14 +372,12 @@ const FarmerSignup = () => {
             {/* ── STEP 4: OTP Verification ── */}
             {step === 4 && (
               <div className="space-y-6">
-                <div>
-                  <h2 className="text-xl font-black text-slate-900 mb-1 flex items-center gap-2"><Smartphone size={20} className="text-emerald-500" /> Verify Mobile Number</h2>
-                  <p className="text-slate-400 text-sm font-medium">We need to confirm <span className="font-black text-slate-700">+91{form.phone}</span> belongs to you.</p>
-                </div>
+                  <h2 className="text-xl font-black text-slate-900 mb-1 flex items-center gap-2"><Mail size={20} className="text-emerald-500" /> Verify Email Address</h2>
+                  <p className="text-slate-400 text-sm font-medium">We need to confirm <span className="font-black text-slate-700">{form.email}</span> belongs to you.</p>
 
                 <OTPVerification
-                  phone={`+91${form.phone}`}
-                  onVerified={() => setMobileVerified(true)}
+                  email={form.email}
+                  onVerified={() => setIsVerified(true)}
                 />
               </div>
             )}
@@ -387,7 +385,7 @@ const FarmerSignup = () => {
 
           {/* Footer Buttons */}
           <div className="px-8 lg:px-10 pb-8 flex items-center gap-3">
-            {step > 1 && !mobileVerified && (
+            {step > 1 && !isVerified && (
               <button
                 onClick={() => { setErrors({}); setStep(s => s - 1); }}
                 disabled={loading}
@@ -403,7 +401,7 @@ const FarmerSignup = () => {
               >
                 Continue <ArrowRight size={16} />
               </button>
-            ) : mobileVerified ? (
+            ) : isVerified ? (
               <button
                 onClick={handleSubmit}
                 disabled={loading}

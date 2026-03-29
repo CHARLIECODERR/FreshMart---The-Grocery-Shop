@@ -29,7 +29,7 @@ const Signup = () => {
   const [phone, setPhone] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [showOTP, setShowOTP] = useState(false);
-  const [createdUser, setCreatedUser] = useState(null);
+  const [pendingData, setPendingData] = useState(null);
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(signupSchema)
@@ -44,39 +44,47 @@ const Signup = () => {
   }, [currentUser, role, navigate]);
 
   const onSubmit = async (data) => {
-    // Validate phone before submitting
-    if (!/^[6-9]\d{9}$/.test(phone)) {
+    // Validate phone before submitting (optional)
+    if (phone && !/^[6-9]\d{9}$/.test(phone)) {
       setPhoneError('Enter a valid 10-digit Indian mobile number');
       return;
     }
     setPhoneError('');
-    try {
-      setIsLoading(true);
-      const user = await signup(data.email, data.password, data.name, selectedRole);
-      setCreatedUser(user);
-      setShowOTP(true); // Show OTP step
-      toast.success('Account created! Please verify your mobile number.');
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message || 'Registration failed. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+    
+    // ⚠️ DO NOT create user yet. Just save data and show OTP.
+    setPendingData(data);
+    setShowOTP(true);
+    toast.success('Please verify your email to complete registration.');
   };
 
   // Called when OTP is confirmed
   const handleOTPVerified = async () => {
     try {
-      if (createdUser) {
-        const userRef = doc(db, 'users', createdUser.uid);
-        await updateDoc(userRef, {
-          phone: `+91${phone}`,
-          mobileVerified: true,
-        });
-      }
-      toast.success(selectedRole === 'farmer' ? 'Verified! Redirecting to farmer portal...' : 'Welcome to the FreshMart family!');
+      if (!pendingData) return;
+      setIsLoading(true);
+      
+      // 1. Create the Firebase Auth account
+      const user = await signup(pendingData.email, pendingData.password, pendingData.name, 'customer');
+      
+      // 2. Mark as verified in Firestore
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, {
+        phone: phone ? `+91${phone}` : '',
+        emailVerified: true,
+      });
+
+      toast.success('Welcome to the FreshMart family!');
+      
+      // Navigate after a short delay
+      setTimeout(() => {
+        navigate('/');
+      }, 1500);
     } catch (err) {
       console.error(err);
+      toast.error(err.message || 'Registration failed.');
+      setShowOTP(false); // Back to form if it failed
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -84,7 +92,7 @@ const Signup = () => {
     try {
       setIsGoogleLoading(true);
       await loginWithGoogle(selectedRole);
-      toast.success(selectedRole === 'farmer' ? 'Google Sign Up (Farmer)! Verification required.' : 'Successfully established Google identity!');
+      toast.success(selectedRole === 'farmer' ? 'Google Sign Up (Farmer)!' : 'Successfully established Google identity!');
     } catch (error) {
       console.error(error);
       toast.error('Google synchronization failed');
@@ -107,10 +115,10 @@ const Signup = () => {
             </div>
           </Link>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight drop-shadow-sm">
-            {showOTP ? 'Verify Your Number' : 'Create Account'}
+            {showOTP ? 'Verify Your Email' : 'Create Account'}
           </h1>
           <p className="text-slate-500 font-bold text-[9px] uppercase tracking-[0.2em] mt-0.5">
-            {showOTP ? 'OTP sent to your mobile' : 'Join the FreshMart Community'}
+            {showOTP ? 'OTP sent to your email' : 'Join the FreshMart Community'}
           </p>
         </div>
 
@@ -119,22 +127,6 @@ const Signup = () => {
 
             {!showOTP ? (
               <>
-                {/* Role Selection Toggle */}
-                <div className="flex bg-slate-50 p-1 rounded-2xl mb-8 border border-slate-100">
-                  <button
-                    onClick={() => setSelectedRole('customer')}
-                    className={`flex-1 py-2.5 text-[11px] font-black uppercase tracking-widest rounded-xl transition-all ${selectedRole === 'customer' ? 'bg-white text-emerald-600 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
-                  >
-                    Customer
-                  </button>
-                  <button
-                    onClick={() => setSelectedRole('farmer')}
-                    className={`flex-1 py-2.5 text-[11px] font-black uppercase tracking-widest rounded-xl transition-all ${selectedRole === 'farmer' ? 'bg-white text-emerald-600 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
-                  >
-                    Farmer / Supplier
-                  </button>
-                </div>
-
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Full Name</label>
@@ -184,7 +176,7 @@ const Signup = () => {
 
                   {/* Mobile Number */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Mobile Number *</label>
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Mobile Number (Optional)</label>
                     <div className="relative">
                       <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={16} />
                       <span className="absolute left-10 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">+91</span>
@@ -206,7 +198,7 @@ const Signup = () => {
                     className="w-full bg-emerald-500 text-white flex justify-center items-center py-4 mt-1 text-xs font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl shadow-emerald-200 hover:bg-emerald-600 hover:-translate-y-0.5 active:translate-y-0 transition-all"
                   >
                     {isLoading ? <Loader2 className="animate-spin mr-2" size={16} /> : <ShieldPlus className="mr-2" size={16} />}
-                    {isLoading ? 'Creating Account...' : 'Sign Up & Verify'}
+                    {isLoading ? 'Creating Account...' : 'Sign Up & Verify Email'}
                   </button>
                 </form>
 
@@ -241,13 +233,19 @@ const Signup = () => {
                     <Link to="/login" className="text-emerald-600 font-black hover:underline underline-offset-4 ml-1">Sign In</Link>
                   </p>
                 </div>
+                
+                <div className="mt-4 p-4 border-2 border-dashed border-emerald-100 bg-emerald-50/50 rounded-2xl text-center hover:border-emerald-200 transition-colors">
+                  <p className="text-xs font-bold text-slate-600 mb-1">Are you a Farmer/Supplier?</p>
+                  <Link to="/farmer-signup" className="text-emerald-600 font-black text-sm hover:underline">
+                    Register as a Farmer Partner
+                  </Link>
+                </div>
               </>
             ) : (
               /* ── OTP Verification Screen ── */
               <OTPVerification
-                phone={`+91${phone}`}
+                email={pendingData?.email}
                 onVerified={handleOTPVerified}
-                linkedMode={true}
               />
             )}
 
