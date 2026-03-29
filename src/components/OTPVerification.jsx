@@ -74,15 +74,15 @@ const OTPVerification = ({ email, onVerified, className = '' }) => {
       const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
       if (!serviceId || !templateId || !publicKey) {
-          throw new Error('EmailJS configuration missing in .env');
+        throw new Error('EmailJS configuration missing in .env');
       }
 
       // 3. Send Email (Enhanced Parameters)
       const response = await emailjs.send(
         serviceId,
         templateId,
-        { 
-          to_email: email, 
+        {
+          to_email: email,
           otp: freshOtp,
           verification_code: freshOtp,
           passcode: freshOtp,
@@ -104,8 +104,8 @@ const OTPVerification = ({ email, onVerified, className = '' }) => {
       }
     } catch (err) {
       console.log('OTP Sending failed:', err);
-      setError('OTP delivery failed. Please check your credentials.');
-      toast.error('Verification email failed');
+      setError(`OTP delivery failed: ${err.message || 'Check credentials'}`);
+      toast.error(err.text || err.message || 'Verification email failed');
     } finally {
       setSending(false);
     }
@@ -144,7 +144,7 @@ const OTPVerification = ({ email, onVerified, className = '' }) => {
       } else {
         const newAttempts = otpAttempts + 1;
         setOtpAttempts(newAttempts);
-        
+
         if (newAttempts >= OTP_MAX_ATTEMPTS) {
           setError('Too many failed attempts. Please resend a new OTP.');
           setSent(false);
