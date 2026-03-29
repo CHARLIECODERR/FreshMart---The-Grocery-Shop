@@ -56,9 +56,13 @@ const AdminFarmers = () => {
   const toggleExpand = (id) => setExpandedId(expandedId === id ? null : id);
 
   const filteredFarmers = farmers.filter(f => {
-    const matchesSearch = f.displayName?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-                         f.businessName?.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
-    const matchesFilter = filter === 'All' || f.status === filter;
+    const searchLow = debouncedSearchTerm.toLowerCase();
+    const name = f.displayName || f.name || '';
+    const business = f.businessName || f.farmName || '';
+    const matchesSearch = name.toLowerCase().includes(searchLow) ||
+                         business.toLowerCase().includes(searchLow) ||
+                         f.email?.toLowerCase().includes(searchLow);
+    const matchesFilter = filter === 'All' || f.status === filter || (filter === 'under_review' && f.status === 'pending_verification');
     return matchesSearch && matchesFilter;
   });
 
@@ -156,10 +160,12 @@ const AdminFarmers = () => {
                       </span>
                    </div>
 
-                   <h3 className="text-xl font-black text-slate-900 mb-1 group-hover:text-emerald-600 transition-colors uppercase tracking-tight">{farmer.businessName || farmer.farmName || 'Unnamed Farm'}</h3>
+                   <h3 className="text-xl font-black text-slate-900 mb-1 group-hover:text-emerald-600 transition-colors uppercase tracking-tight">
+                     {farmer.businessName || farmer.farmName || 'Unnamed Farm'}
+                   </h3>
                    <p className="text-sm font-bold text-slate-400 mb-6 flex items-center gap-2">
                      <ShieldCheck size={16} className="text-emerald-500" />
-                     {farmer.legalName || farmer.displayName}
+                     {farmer.legalName || farmer.displayName || farmer.name}
                    </p>
 
                    <div className="space-y-3 pt-6 border-t border-slate-50">
