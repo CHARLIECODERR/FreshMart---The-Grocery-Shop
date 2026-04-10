@@ -176,6 +176,13 @@ const AdminProducts = () => {
                   </div>
 
                   <div className="flex items-center gap-2 lg:w-40 lg:justify-end">
+                    <Link
+                      to={`/admin/products/edit/${product.id}`}
+                      className="p-2.5 rounded-xl bg-slate-50 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all"
+                      title="Edit Product"
+                    >
+                      <Edit3 size={16} />
+                    </Link>
                     <button
                       onClick={() => handleToggleVisibility(product)}
                       className="p-2.5 rounded-xl bg-slate-50 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-all"

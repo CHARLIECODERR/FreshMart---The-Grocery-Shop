@@ -122,7 +122,11 @@ const Orders = () => {
                 <div className="hidden lg:flex items-center gap-2 pr-6 border-r border-gray-50">
                   {order.items.slice(0, 3).map((item, i) => (
                     <div key={i} className="w-12 h-12 rounded-xl border border-gray-100 overflow-hidden shrink-0">
-                      <img src={item.imageUrl} alt="" className="w-full h-full object-cover" />
+                      <img 
+                        src={item.imageUrl || item.image || item.prodImage || item.thumbnail} 
+                        alt="" 
+                        className="w-full h-full object-cover" 
+                      />
                     </div>
                   ))}
                   {order.items.length > 3 && (
