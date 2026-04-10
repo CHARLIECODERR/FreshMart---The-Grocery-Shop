@@ -125,7 +125,8 @@
     "shop": "Shop",
     "categories": "Categories",
     "offers": "Offers",
-    "about": "About"
+    "about": "About",
+    "recipes": "Recipes"
   },
   "home": {
     "hero": {
@@ -167,6 +168,8 @@
     "wishlist_add": "Add to Wishlist",
     "wishlist_remove": "Remove from Wishlist",
     "quick_view": "Quick View",
+    "share": "Share Product",
+    "share_success": "Link copied to clipboard!",
     "save": "SAVE",
     "no_image": "No Image"
   },

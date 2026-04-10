@@ -1,10 +1,11 @@
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Eye, ShoppingCart } from 'lucide-react';
+import { Heart, Eye, ShoppingCart, Share2 } from 'lucide-react';
 import { useCartStore } from '../../store/useCartStore';
 import { useWishlistStore } from '../../store/useWishlistStore';
 import StarRating from '../common/StarRating';
 import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
 
 const ProductCard = memo(({ product }) => {
   const { t } = useTranslation();
@@ -47,6 +48,35 @@ const ProductCard = memo(({ product }) => {
     toggleWishlist(product);
   };
 
+  const handleShare = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const url = `${window.location.origin}/product/${id}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: name,
+        text: t('product.share_text', { defaultValue: `Check out this ${name} on FreshMart!` }),
+        url: url
+      }).catch((err) => {
+        if (err.name !== 'AbortError') {
+          copyToClipboard(url);
+        }
+      });
+    } else {
+      copyToClipboard(url);
+    }
+  };
+
+  const copyToClipboard = (url) => {
+    navigator.clipboard.writeText(url).then(() => {
+      toast.success(t('product.share_success'));
+    }).catch(() => {
+      toast.error(t('common.error', { defaultValue: 'Failed to copy link' }));
+    });
+  };
+
   return (
     <div className="card bg-white p-4 group flex flex-col h-full transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl relative w-full border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:border-emerald-100">
       {/* Image & Quick Actions */}
@@ -62,8 +92,6 @@ const ProductCard = memo(({ product }) => {
               className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ${isOutOfStock ? 'opacity-50 grayscale' : ''}`}
               loading="lazy"
               decoding="async"
-              crossOrigin="anonymous"
-              referrerPolicy="no-referrer"
             />
           ) : (
             <div className="text-gray-400">{t('product.no_image')}</div>
@@ -82,6 +110,13 @@ const ProductCard = memo(({ product }) => {
           <Link to={`/product/${id}`} className="w-8 h-8 rounded-full bg-white shadow flex items-center justify-center text-gray-600 hover:text-primary-600 transition-colors" title={t('product.quick_view')}>
             <Eye size={16} />
           </Link>
+          <button 
+            onClick={handleShare}
+            className="w-8 h-8 rounded-full bg-white shadow flex items-center justify-center text-gray-600 hover:text-emerald-600 transition-colors"
+            title={t('product.share')}
+          >
+            <Share2 size={16} />
+          </button>
         </div>
 
         {/* Badges */}

@@ -7,10 +7,12 @@ import {
   Star,
   Heart, 
   ShieldCheck, 
-  Truck 
+  Truck,
+  Share2
 } from 'lucide-react';
 import StarRating from '../../common/StarRating';
 import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
 
 const ProductInfo = ({ 
   product, 
@@ -29,6 +31,29 @@ const ProductInfo = ({
 
   // Calculate discounted price if needed, based on the new price display
   const discountedPrice = product.price; // Assuming product.price is already the final price
+
+  const handleShare = () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      navigator.share({
+        title: product.name,
+        text: t('product.share_text', { defaultValue: `Check out this ${product.name} on FreshMart!` }),
+        url: url
+      }).catch((err) => {
+        if (err.name !== 'AbortError') copyToClipboard(url);
+      });
+    } else {
+      copyToClipboard(url);
+    }
+  };
+
+  const copyToClipboard = (url) => {
+    navigator.clipboard.writeText(url).then(() => {
+      toast.success(t('product.share_success'));
+    }).catch(() => {
+      toast.error(t('common.error', { defaultValue: 'Failed to copy link' }));
+    });
+  };
 
   return (
     <div className="w-full lg:w-1/2 flex flex-col">
@@ -78,7 +103,7 @@ const ProductInfo = ({
         {product.description || "Experience the authentic taste of farm-fresh produce..."}
       </p>
 
-      <div className="flex flex-col sm:flex-row gap-6 mb-8">
+      <div className="flex flex-col sm:flex-row gap-4 mb-8">
         <div className="flex items-center h-16 bg-gray-50 rounded-2xl border border-gray-100 p-2 shrink-0">
           <button 
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -95,25 +120,36 @@ const ProductInfo = ({
           </button>
         </div>
 
-          <button
-            onClick={onAddToCart}
-            disabled={isOutOfStock}
-            className={`flex-grow h-16 flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-white font-bold transition-all transform active:scale-95 shadow-lg shadow-primary-200 ${
-              isOutOfStock 
-              ? 'bg-gray-400 cursor-not-allowed shadow-none' 
-              : 'bg-emerald-600 hover:bg-emerald-700'
-            }`}
+        <button
+          onClick={onAddToCart}
+          disabled={isOutOfStock}
+          className={`flex-grow h-16 flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-white font-bold transition-all transform active:scale-95 shadow-lg shadow-primary-200 ${
+            isOutOfStock 
+            ? 'bg-gray-400 cursor-not-allowed shadow-none' 
+            : 'bg-emerald-600 hover:bg-emerald-700'
+          }`}
+        >
+          <ShoppingBag size={20} />
+          {isOutOfStock ? t('product.sold_out') : t('product_details.add_to_bag')}
+        </button>
+
+        <div className="flex gap-2">
+          <button 
+            onClick={() => toggleWishlist(product.id)}
+            className={`w-16 h-16 rounded-2xl border flex items-center justify-center transition-all shrink-0 ${isInWishlist ? 'bg-red-50 border-red-100 text-red-500' : 'bg-white border-gray-100 text-gray-400 hover:border-red-500 hover:text-red-500'}`}
+            title={isInWishlist ? t('product.wishlist_remove') : t('product.wishlist_add')}
           >
-            <ShoppingBag size={20} />
-            {isOutOfStock ? t('product.sold_out') : t('product_details.add_to_bag')}
+            <Heart size={24} fill={isInWishlist ? "currentColor" : "none"} />
           </button>
 
-        <button 
-          onClick={() => toggleWishlist(product.id)}
-          className={`w-16 h-16 rounded-2xl border flex items-center justify-center transition-all shrink-0 ${isInWishlist ? 'bg-red-50 border-red-100 text-red-500' : 'bg-white border-gray-100 text-gray-400 hover:border-red-500 hover:text-red-500'}`}
-        >
-          <Heart size={24} fill={isInWishlist ? "currentColor" : "none"} />
-        </button>
+          <button 
+            onClick={handleShare}
+            className="w-16 h-16 rounded-2xl border flex items-center justify-center transition-all shrink-0 bg-white border-gray-100 text-gray-400 hover:border-emerald-500 hover:text-emerald-500"
+            title={t('product.share')}
+          >
+            <Share2 size={24} />
+          </button>
+        </div>
       </div>
       
       <div className="grid grid-cols-2 gap-4 mt-8 pt-8 border-t border-gray-100">
