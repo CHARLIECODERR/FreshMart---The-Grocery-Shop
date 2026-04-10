@@ -33,10 +33,10 @@ const Categories = () => {
 
   // Fallback UI
   const displayCategories = categories.length > 0 ? categories : [
-    { id: '1', name: 'Fresh Fruits', slug: 'fresh-fruits', imageUrl: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=500&q=80', description: 'Handpicked seasonal fruits directly from orchards.' },
-    { id: '2', name: 'Vegetables', slug: 'vegetables', imageUrl: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=500&q=80', description: 'Daily fresh vegetables from local farms.' },
-    { id: '3', name: 'Dairy & Eggs', slug: 'dairy-eggs', imageUrl: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=500&q=80', description: 'Fresh milk, cheese, and farm-raised eggs.' },
-    { id: '4', name: 'Meat & Poultry', slug: 'meat-poultry', imageUrl: 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=500&q=80', description: 'Premium cuts of meat and fresh poultry.' },
+    { id: '1', name: 'Fresh Fruits', slug: 'fruits', imageUrl: '/images/products/f_f.png', description: 'Handpicked seasonal fruits directly from orchards.' },
+    { id: '2', name: 'Vegetables', slug: 'vegetables', imageUrl: '/images/products/tomato.png', description: 'Daily fresh vegetables from local farms.' },
+    { id: '3', name: 'Dairy & Eggs', slug: 'dairy-eggs', imageUrl: '/images/products/milk.jpg', description: 'Fresh milk, cheese, and farm-raised eggs.' },
+    { id: '4', name: 'Organic Products', slug: 'organic', imageUrl: '/images/products/palak.jpg', description: 'Pure organic produce for a healthy lifestyle.' },
   ];
 
   return (
@@ -63,8 +63,6 @@ const Categories = () => {
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   loading="lazy"
                   decoding="async"
-                  crossOrigin="anonymous"
-                  referrerPolicy="no-referrer"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-primary-50">

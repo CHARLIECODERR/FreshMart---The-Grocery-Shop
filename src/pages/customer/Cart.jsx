@@ -53,7 +53,11 @@ const Cart = () => {
                   {/* Product Info */}
                   <div className="col-span-3 flex items-center gap-4">
                     <div className="w-20 h-20 rounded-2xl bg-gray-50 flex-shrink-0 overflow-hidden border border-gray-100">
-                      <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+                      <img 
+                        src={item.imageUrl || item.image || item.prodImage || item.thumbnail} 
+                        alt={item.name} 
+                        className="w-full h-full object-cover" 
+                      />
                     </div>
                     <div>
                       <Link to={`/product/${item.id}`} className="font-bold text-gray-900 hover:text-emerald-600 transition-colors line-clamp-1">

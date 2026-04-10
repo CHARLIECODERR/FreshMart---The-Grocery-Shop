@@ -19,6 +19,7 @@ import ProductGallery from '../../components/product/details/ProductGallery';
 import ProductInfo from '../../components/product/details/ProductInfo';
 import ProductTabs from '../../components/product/details/ProductTabs';
 import RelatedProductsGrid from '../../components/product/details/RelatedProductsGrid';
+import RecipeSection from '../../components/recipe/RecipeSection';
 
 const ProductDetails = () => {
   const { t: translate } = useTranslation();
@@ -163,6 +164,8 @@ const ProductDetails = () => {
         reviews={reviews}
         reviewsLoading={reviewsLoading}
       />
+      
+      <RecipeSection productName={product.name} />
 
       <RelatedProductsGrid products={relatedProducts} loading={relatedLoading} />
     </div>

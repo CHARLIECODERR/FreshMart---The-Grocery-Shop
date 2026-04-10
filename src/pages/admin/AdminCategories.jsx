@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getCategories, addCategory, updateCategory, deleteCategory, getProductCountByCategory } from '../../services/adminService';
-import { 
-  Layers, Plus, Search, Edit3, Trash2, X, Loader2, Inbox, Check, RefreshCw 
+import {
+  Layers, Plus, Search, Edit3, Trash2, X, Loader2, Inbox, Check, RefreshCw
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useDebounce from '../../hooks/useDebounce';
@@ -78,11 +78,11 @@ const AdminCategories = () => {
 
   const handleSeedDefaults = async () => {
     const defaults = [
-      { name: 'Fresh Fruits', slug: 'fresh-fruits', imageUrl: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=500&q=80', order: 1, isActive: true },
-      { name: 'Vegetables', slug: 'vegetables', imageUrl: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=500&q=80', order: 2, isActive: true },
-      { name: 'Dairy & Eggs', slug: 'dairy-eggs', imageUrl: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=500&q=80', order: 3, isActive: true },
-      { name: 'Meat & Poultry', slug: 'meat-poultry', imageUrl: 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=500&q=80', order: 4, isActive: true },
-      { name: 'Bakery', slug: 'bakery', imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=500&q=80', order: 5, isActive: true }
+      { name: 'Fresh Fruits', slug: 'fruits', imageUrl: '/images/products/f_f.png', order: 1, isActive: true },
+      { name: 'Vegetables', slug: 'vegetables', imageUrl: '/images/products/tomato.png', order: 2, isActive: true },
+      { name: 'Dairy & Eggs', slug: 'dairy-eggs', imageUrl: '/images/products/milk.jpg', order: 3, isActive: true },
+      { name: 'Meat & Poultry', slug: 'meat-poultry', imageUrl: '/images/products/palak.jpg', order: 4, isActive: false },
+      { name: 'Bakery', slug: 'bakery', imageUrl: '/images/products/carrot.png', order: 5, isActive: false }
     ];
 
     try {
@@ -124,7 +124,7 @@ const AdminCategories = () => {
       ) : filtered.length === 0 ? (
         <div className="bg-white rounded-[2.5rem] p-32 text-center border border-slate-100 flex flex-col items-center gap-6">
           <div className="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-500">
-             <Inbox size={48} />
+            <Inbox size={48} />
           </div>
           <div>
             <h3 className="text-2xl font-black text-slate-900">No Categories Found</h3>

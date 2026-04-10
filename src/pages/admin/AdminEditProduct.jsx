@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { createProduct, uploadToCloudinary } from '../../services/productService';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import { getProductById, updateProduct, uploadToCloudinary } from '../../services/productService';
 import { getCategories } from '../../services/adminService';
 import { 
   ArrowLeft, 
@@ -8,19 +8,21 @@ import {
   Loader2,
   Info,
   CheckCircle2,
-  Plus,
   Trash2,
   Camera,
-  Upload
+  Upload,
+  Save
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 const units = ['kg', 'gram', 'piece', 'bundle', 'litre', 'dozen'];
 
-const AdminAddProduct = () => {
+const AdminEditProduct = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
+  
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [categories, setCategories] = useState([]);
   
@@ -37,23 +39,41 @@ const AdminAddProduct = () => {
   });
 
   useEffect(() => {
-    const fetchCats = async () => {
+    const fetchData = async () => {
       try {
+        setFetching(true);
+        
+        // Fetch categories first
         const cats = await getCategories();
-        if (cats && cats.length > 0) {
-          setCategories(cats);
-          setFormData(prev => ({ ...prev, category: cats[0].name }));
+        setCategories(cats && cats.length > 0 ? cats : [{ name: 'General' }]);
+
+        // Fetch product
+        const product = await getProductById(id);
+        if (product) {
+          setFormData({
+            name: product.name || '',
+            description: product.description || '',
+            originalPrice: (product.originalPrice || product.price || '').toString(),
+            price: (product.price || '').toString(),
+            stock: (product.stock || '0').toString(),
+            category: product.category || (cats && cats.length > 0 ? cats[0].name : 'General'),
+            unit: product.unit || 'kg',
+            imageUrl: product.image || product.imageUrl || '',
+            isFeatured: !!product.isFeatured
+          });
         } else {
-          setCategories([{ name: 'General' }]);
-          setFormData(prev => ({ ...prev, category: 'General' }));
+          toast.error('Product not found');
+          navigate('/admin/products');
         }
       } catch (error) {
-         setCategories([{ name: 'General' }]);
-         setFormData(prev => ({ ...prev, category: 'General' }));
+        console.error(error);
+        toast.error('Failed to load product data');
+      } finally {
+        setFetching(false);
       }
     };
-    fetchCats();
-  }, []);
+    fetchData();
+  }, [id, navigate]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -75,7 +95,7 @@ const AdminAddProduct = () => {
       setUploadingImage(true);
       const url = await uploadToCloudinary(file);
       setFormData(prev => ({ ...prev, imageUrl: url }));
-      toast.success('Image uploaded successfully!');
+      toast.success('Image updated successfully!');
     } catch (error) {
       toast.error('Image upload failed. Please try again.');
     } finally {
@@ -101,19 +121,27 @@ const AdminAddProduct = () => {
         originalPrice: parseFloat(formData.originalPrice || formData.price),
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock),
-        rating: 0,
-        reviewsCount: 0
+        image: formData.imageUrl // Ensure field matches public expected field if inconsistent
       };
 
-      await createProduct(productData);
-      toast.success('Retail product created successfully!');
+      await updateProduct(id, productData);
+      toast.success('Retail product updated successfully!');
       navigate('/admin/products');
     } catch (error) {
-      toast.error('Failed to create product');
+      toast.error('Failed to update product');
     } finally {
       setLoading(false);
     }
   };
+
+  if (fetching) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 text-slate-400">
+        <Loader2 size={48} className="animate-spin text-emerald-500" />
+        <p className="text-[10px] font-black uppercase tracking-[0.3em]">Fetching Product Detail...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 lg:p-10 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-20">
@@ -122,8 +150,8 @@ const AdminAddProduct = () => {
           <Link to="/admin/products" className="inline-flex items-center text-sm font-bold text-slate-400 hover:text-emerald-600 transition-colors mb-2">
             <ArrowLeft size={16} className="mr-1" /> Back to Storefront Catalog
           </Link>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Add Retail Product</h2>
-          <p className="text-slate-500 font-medium mt-1">Create a new item for the public storefront</p>
+          <h2 className="text-3xl font-black text-slate-900 tracking-tight">Edit Retail Product</h2>
+          <p className="text-slate-500 font-medium mt-1">Modify details for <span className="text-emerald-600">ID: {id.slice(0, 8).toUpperCase()}</span></p>
         </div>
       </div>
 
@@ -183,7 +211,7 @@ const AdminAddProduct = () => {
 
           <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm space-y-6">
             <h3 className="text-lg font-black text-slate-900 pb-4 border-b border-slate-50 flex items-center gap-2">
-              <Plus size={20} className="text-emerald-500" />
+              <Save size={20} className="text-emerald-500" />
               Pricing & Inventory
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -331,7 +359,7 @@ const AdminAddProduct = () => {
             className="w-full flex items-center justify-center gap-2 px-8 py-5 bg-emerald-600 text-white rounded-[2rem] font-black text-sm uppercase tracking-widest shadow-xl shadow-emerald-200 hover:bg-emerald-700 transition-all active:scale-[0.98]"
           >
             {loading ? <Loader2 className="animate-spin" /> : (
-              <>Publish Product <CheckCircle2 size={18} /></>
+              <>Save Changes <Save size={18} /></>
             )}
           </button>
         </div>
@@ -340,4 +368,4 @@ const AdminAddProduct = () => {
   );
 };
 
-export default AdminAddProduct;
+export default AdminEditProduct;

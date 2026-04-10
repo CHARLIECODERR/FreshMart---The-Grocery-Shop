@@ -198,7 +198,11 @@ const OrderDetail = () => {
                   <div key={idx} className="py-6 first:pt-0 last:pb-0 space-y-4">
                     <div className="flex items-center gap-4">
                       <div className="w-20 h-20 rounded-2xl bg-gray-50 border border-gray-100 overflow-hidden shrink-0">
-                        <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+                        <img 
+                          src={item.imageUrl || item.image || item.prodImage || item.thumbnail} 
+                          alt={item.name} 
+                          className="w-full h-full object-cover" 
+                        />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-bold text-gray-900 text-lg line-clamp-1">{item.name}</p>

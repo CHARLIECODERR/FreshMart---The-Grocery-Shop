@@ -4,6 +4,7 @@ import { getActiveProducts } from '../../services/productService';
 import { getCategoryBySlug } from '../../services/categoryService';
 import { Loader2, ArrowLeft, Search } from 'lucide-react';
 import ProductCard from '../../components/product/ProductCard';
+import RecipeSection from '../../components/recipe/RecipeSection';
 import { useTranslation } from 'react-i18next';
 
 const CategoryDetails = () => {
@@ -104,6 +105,8 @@ const CategoryDetails = () => {
           </Link>
         </div>
       )}
+
+      <RecipeSection productName={category?.name || slug} />
     </div>
   );
 };

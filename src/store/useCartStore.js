@@ -11,6 +11,12 @@ export const useCartStore = create(
         const { items } = get();
         const existingItem = items.find(item => item.id === product.id);
 
+        // Normalize image URL
+        const normalizedProduct = {
+          ...product,
+          imageUrl: product.imageUrl || product.image || product.prodImage || product.thumbnail
+        };
+
         if (existingItem) {
           // Check stock limit before adding more
           if (existingItem.quantity + quantity > product.stock) {
@@ -33,7 +39,7 @@ export const useCartStore = create(
             return;
           }
           
-          set({ items: [...items, { ...product, quantity }] });
+          set({ items: [...items, { ...normalizedProduct, quantity }] });
           toast.success(`Added ${product.name} to cart!`);
         }
       },
