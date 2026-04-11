@@ -64,13 +64,13 @@ const PaymentSimulationModal = ({ isOpen, onClose, onPaymentSuccess, amount }) =
         className="relative w-full max-w-lg bg-white shadow-2xl overflow-hidden border border-gray-200 font-sans"
         style={{ borderRadius: '8px' }} // Amazon uses slightly rounded corners, not massive ones
       >
-        {/* Amazon Header */}
-        <div className="bg-[#f3f3f3] px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+        {/* FreshMart Header */}
+        <div className="bg-[#fbfcff] px-6 py-4 border-b border-gray-100 flex items-center justify-between">
             <div className="flex items-center gap-2">
-                <div className="bg-[#232f3e] text-white px-2 py-1 rounded text-[10px] font-bold">Amazon Pay</div>
-                <h3 className="text-sm font-bold text-gray-700">Secure Checkout</h3>
+                <div className="bg-emerald-600 text-white px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest shadow-sm">FreshMart Pay</div>
+                <h3 className="text-sm font-black text-gray-800 tracking-tight">Secure Payment Gateway</h3>
             </div>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
+            <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-full transition-all"><X size={18} /></button>
         </div>
 
         <div className="p-0">
@@ -78,51 +78,54 @@ const PaymentSimulationModal = ({ isOpen, onClose, onPaymentSuccess, amount }) =
                 {step === 1 && (
                     <motion.div key="selector" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-8 space-y-6">
                         <div className="flex justify-between items-center border-b border-gray-100 pb-4">
-                            <span className="text-sm font-medium text-gray-600">Order Total:</span>
-                            <span className="text-xl font-bold text-red-700 font-serif">₹{amount}.00</span>
+                            <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">Order Amount:</span>
+                            <span className="text-2xl font-black text-emerald-600">₹{amount}.00</span>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <button 
                                 onClick={() => setPaymentType('qr')}
-                                className={`p-4 border-2 rounded-lg flex flex-col items-center gap-2 transition-all ${paymentType === 'qr' ? 'border-orange-400 bg-orange-50/30' : 'border-gray-100'}`}
+                                className={`p-4 border-2 rounded-2xl flex flex-col items-center gap-2 transition-all ${paymentType === 'qr' ? 'border-emerald-500 bg-emerald-50/30' : 'border-gray-100'}`}
                             >
-                                <div className="text-[10px] font-bold text-gray-400 uppercase">Option 1</div>
-                                <span className="font-bold text-sm">Scan QR Code</span>
+                                <div className="text-[10px] font-black text-gray-300 uppercase">Step 1</div>
+                                <span className="font-black text-xs text-gray-700">Scan QR Code</span>
                             </button>
                             <button 
                                 onClick={() => setPaymentType('id')}
-                                className={`p-4 border-2 rounded-lg flex flex-col items-center gap-2 transition-all ${paymentType === 'id' ? 'border-orange-400 bg-orange-50/30' : 'border-gray-100'}`}
+                                className={`p-4 border-2 rounded-2xl flex flex-col items-center gap-2 transition-all ${paymentType === 'id' ? 'border-emerald-500 bg-emerald-50/30' : 'border-gray-100'}`}
                             >
-                                <div className="text-[10px] font-bold text-gray-400 uppercase">Option 2</div>
-                                <span className="font-bold text-sm">Use UPI ID</span>
+                                <div className="text-[10px] font-black text-gray-300 uppercase">Step 2</div>
+                                <span className="font-black text-xs text-gray-700">Use UPI ID</span>
                             </button>
                         </div>
 
                         {paymentType === 'qr' ? (
-                            <div className="flex flex-col items-center p-6 bg-gray-50 rounded-lg space-y-4">
-                                <img src="/freshmart_upi_qr.png" alt="QR" className="w-40 h-40 border-4 border-white shadow-sm" />
+                            <div className="flex flex-col items-center p-6 bg-slate-50 rounded-3xl space-y-4 border border-slate-100">
+                                <img src="/freshmart_upi_qr.png" alt="QR" className="w-40 h-40 border-4 border-white shadow-xl rounded-2xl" />
                                 <div className="text-center">
-                                    <p className="text-xs font-bold text-gray-600">Scan this QR code with any UPI App</p>
-                                    <p className="text-[10px] text-gray-400 mt-1">GPay, PhonePe, Paytm, Amazon Pay</p>
+                                    <p className="text-xs font-black text-gray-600 uppercase tracking-tight">Scan with any UPI App</p>
+                                    <p className="text-[10px] text-gray-400 mt-1 font-bold">GPay | PhonePe | Paytm | Any Bank App</p>
                                 </div>
                                 <button 
                                     onClick={() => setStep(2)}
-                                    className="w-full bg-[#f0c14b] hover:bg-[#ebae12] text-gray-900 py-3 rounded border border-[#a88734] font-medium text-sm shadow-sm"
+                                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-black text-sm shadow-lg shadow-emerald-100 transition-all uppercase tracking-widest"
                                 >
                                     Verify Payment
                                 </button>
                             </div>
                         ) : (
                             <div className="space-y-4">
-                                <input 
-                                    type="text" placeholder="Enter UPI ID (e.g. mobile@upi)" 
-                                    className="w-full border border-gray-300 px-4 py-3 rounded focus:ring-1 focus:ring-orange-500 outline-none text-sm"
-                                    defaultValue="customer@okaxis"
-                                />
+                                <div className="space-y-1">
+                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Your UPI ID</label>
+                                    <input 
+                                        type="text" placeholder="mobile@upi" 
+                                        className="w-full border-2 border-gray-100 px-4 py-4 rounded-2xl focus:border-emerald-500 outline-none text-sm font-bold text-gray-700"
+                                        defaultValue="customer@okaxis"
+                                    />
+                                </div>
                                 <button 
                                     onClick={() => setStep(2)}
-                                    className="w-full bg-[#f0c14b] hover:bg-[#ebae12] text-gray-900 py-3 rounded border border-[#a88734] font-medium text-sm shadow-sm"
+                                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-black text-sm shadow-lg shadow-emerald-100 transition-all uppercase tracking-widest"
                                 >
                                     Verify and Pay
                                 </button>
@@ -137,34 +140,33 @@ const PaymentSimulationModal = ({ isOpen, onClose, onPaymentSuccess, amount }) =
                             <motion.div 
                                 animate={{ rotate: 360 }}
                                 transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-                                className="w-full h-full border-4 border-gray-100 border-t-orange-400 rounded-full"
+                                className="w-full h-full border-4 border-gray-100 border-t-emerald-500 rounded-full"
                             />
                         </div>
                         
                         <div className="space-y-4">
-                            <h4 className="text-lg font-bold text-gray-800 tracking-tight">Waiting for your approval</h4>
-                            <div className="flex items-center justify-center gap-2 text-red-600 font-bold text-sm">
+                            <h4 className="text-xl font-black text-gray-800 tracking-tight">Waiting for your approval</h4>
+                            <div className="flex items-center justify-center gap-2 text-red-500 font-black text-sm bg-red-50 py-1 px-3 rounded-full w-fit mx-auto">
                                 <Clock size={16} /> {formatTime(timer)}
                             </div>
-                            <p className="text-sm text-gray-500 leading-relaxed max-w-xs mx-auto">
-                                Please open your <span className="font-bold text-gray-700">UPI Mobile App</span> and approve the payment request of <span className="font-bold text-red-700">₹{amount}</span>.
+                            <p className="text-sm text-gray-400 font-medium leading-relaxed max-w-xs mx-auto">
+                                Please open your <span className="font-black text-gray-700">UPI Mobile App</span> and approve the payment request of <span className="font-black text-emerald-600">₹{amount}.00</span>
                             </p>
                         </div>
 
                         <div className="w-full space-y-4">
-                            <div className="p-4 bg-blue-50 border border-blue-100 rounded text-left flex gap-3">
-                                <AlertCircle className="text-blue-500 shrink-0" size={18} />
-                                <p className="text-[11px] text-blue-700 font-medium">
-                                    Do not close this window or click back button until the payment is complete.
+                            <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl text-left flex gap-3">
+                                <AlertCircle className="text-emerald-500 shrink-0" size={18} />
+                                <p className="text-[11px] text-emerald-700 font-bold leading-normal">
+                                    Do not close this window or click back button until the payment is verified.
                                 </p>
                             </div>
                             
-                            {/* MOCK CONTROL FOR ADMIN/USER TO FEEL THE MAGIC */}
                             <button 
                                 onClick={handleSimulateApproval}
-                                className="w-full bg-white text-[10px] font-black text-gray-300 uppercase tracking-widest hover:text-gray-400 transition-colors py-2 border border-dashed border-gray-200"
+                                className="w-full bg-white text-[10px] font-black text-gray-300 uppercase tracking-widest hover:text-gray-400 transition-colors py-2 border border-dashed border-gray-200 rounded-xl"
                             >
-                                [ Simulation: Mock App Approval ]
+                                [ Simulation: Confirm Mobile Approval ]
                             </button>
                         </div>
                     </motion.div>
@@ -172,26 +174,26 @@ const PaymentSimulationModal = ({ isOpen, onClose, onPaymentSuccess, amount }) =
 
                 {step === 3 && (
                     <motion.div key="success" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="p-12 flex flex-col items-center text-center space-y-6">
-                        <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center text-green-600 border border-green-100 shadow-sm">
-                            <CheckCircle2 size={32} />
+                        <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 border border-emerald-100 shadow-xl">
+                            <CheckCircle2 size={40} />
                         </div>
                         <div className="space-y-2">
-                            <h4 className="text-xl font-bold text-gray-800">Payment Successful</h4>
-                            <p className="text-sm text-gray-500">Redirecting you back to FreshMart...</p>
+                            <h4 className="text-2xl font-black text-gray-800">Order Confirmed!</h4>
+                            <p className="text-sm text-gray-400 font-medium">Thank you for your payment.</p>
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
         </div>
 
-        {/* Amazon Footer */}
-        <div className="px-8 py-6 bg-gray-50 border-t border-gray-200 flex flex-col items-center gap-3">
-            <div className="flex items-center gap-6 opacity-40 grayscale">
+        {/* FreshMart Footer */}
+        <div className="px-8 py-6 bg-slate-50 border-t border-gray-100 flex flex-col items-center gap-3">
+            <div className="flex items-center gap-8 opacity-30 grayscale">
                 <ShieldCheck size={28} />
                 <Lock size={20} />
             </div>
-            <p className="text-[10px] text-gray-400 font-medium tracking-tight">
-                Payments are processed securely via Amazon Pay 256-bit SSL encryption.
+            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                Securely Processed via FreshMart Payment Gateway
             </p>
         </div>
       </motion.div>
