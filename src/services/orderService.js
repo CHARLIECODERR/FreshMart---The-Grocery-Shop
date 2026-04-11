@@ -1,28 +1,28 @@
-import { collection, addDoc, query, where, getDocs, orderBy, doc, getDoc, updateDoc, serverTimestamp, runTransaction } from 'firebase/firestore';
+import { collection, addDoc, query, where, getDocs, orderBy, doc, getDoc, updateDoc, serverTimestamp, runTransaction, limit } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 const COLLECTION_NAME = 'orders';
 
+// Helper to remove undefined fields before sending to Firebase
+const cleanData = (obj) => {
+  const newObj = { ...obj };
+  Object.keys(newObj).forEach(key => {
+    if (newObj[key] === undefined) {
+      delete newObj[key];
+    } else if (typeof newObj[key] === 'object' && newObj[key] !== null && !Array.isArray(newObj[key])) {
+      newObj[key] = cleanData(newObj[key]);
+    }
+  });
+  return newObj;
+};
+
 // Place an order
 export const placeOrder = async (orderData) => {
   try {
-    // Basic structure for orderData:
-    // {
-    //   userId: '...',
-    //   items: [...],
-    //   subtotal: 0,
-    //   shippingFee: 0,
-    //   discount: 0,
-    //   total: 0,
-    //   shippingAddress: {...},
-    //   paymentMethod: 'COD' | 'Card',
-    //   paymentStatus: 'Pending' | 'Success',
-    //   orderStatus: 'Placed',
-    //   createdAt: serverTimestamp()
-    // }
+    const cleanedOrderData = cleanData(orderData);
 
     const docRef = await addDoc(collection(db, COLLECTION_NAME), {
-      ...orderData,
+      ...cleanedOrderData,
       status: 'Placed',
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
@@ -30,7 +30,7 @@ export const placeOrder = async (orderData) => {
 
     // In a real app, you would also decrease product stock levels here inside a transaction
     
-    return { id: docRef.id, ...orderData };
+    return { id: docRef.id, ...cleanedOrderData };
   } catch (error) {
     console.error("Error placing order:", error);
     throw error;

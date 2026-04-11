@@ -52,18 +52,22 @@ const ProductCard = memo(({ product }) => {
     e.preventDefault();
     e.stopPropagation();
     
+    // Ensure absolute URL
     const url = `${window.location.origin}/product/${id}`;
+    const shareData = {
+      title: name,
+      text: t('product.share_text', { defaultValue: `Check out this ${name} on FreshMart!` }),
+      url: url
+    };
     
-    if (navigator.share) {
-      navigator.share({
-        title: name,
-        text: t('product.share_text', { defaultValue: `Check out this ${name} on FreshMart!` }),
-        url: url
-      }).catch((err) => {
-        if (err.name !== 'AbortError') {
-          copyToClipboard(url);
-        }
-      });
+    // Check if Web Share API is available and we're in a secure context
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      navigator.share(shareData)
+        .catch((err) => {
+          if (err.name !== 'AbortError') {
+            copyToClipboard(url);
+          }
+        });
     } else {
       copyToClipboard(url);
     }
@@ -98,24 +102,32 @@ const ProductCard = memo(({ product }) => {
           )}
         </Link>
 
-        {/* Action icons - Now OUTSIDE the main Link */}
-        <div className="absolute top-2 right-2 flex flex-col gap-2 translate-x-10 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
+        {/* Action icons - Visible on mobile, hover-only on desktop */}
+        <div className="absolute top-2 right-2 flex flex-col gap-2 transition-all duration-300 pointer-events-auto z-30
+          lg:translate-x-10 lg:opacity-0 lg:group-hover:translate-x-0 lg:group-hover:opacity-100
+          translate-x-0 opacity-100">
           <button 
+            type="button"
             onClick={handleToggleWishlist}
-            className={`w-8 h-8 rounded-full shadow flex items-center justify-center transition-colors ${isInWishlist ? 'bg-red-500 text-white' : 'bg-white text-gray-600 hover:text-red-500'}`} 
+            className={`w-10 h-10 sm:w-8 sm:h-8 rounded-full shadow-lg flex items-center justify-center transition-colors z-40 ${isInWishlist ? 'bg-red-500 text-white' : 'bg-white text-gray-600 hover:text-red-500'}`} 
             title={isInWishlist ? t('product.wishlist_remove') : t('product.wishlist_add')}
           >
-            <Heart size={16} fill={isInWishlist ? "currentColor" : "none"} />
+            <Heart size={18} fill={isInWishlist ? "currentColor" : "none"} />
           </button>
-          <Link to={`/product/${id}`} className="w-8 h-8 rounded-full bg-white shadow flex items-center justify-center text-gray-600 hover:text-primary-600 transition-colors" title={t('product.quick_view')}>
-            <Eye size={16} />
+          <Link 
+            to={`/product/${id}`} 
+            className="w-10 h-10 sm:w-8 sm:h-8 rounded-full bg-white shadow-lg flex items-center justify-center text-gray-600 hover:text-emerald-600 transition-colors z-40" 
+            title={t('product.quick_view')}
+          >
+            <Eye size={18} />
           </Link>
           <button 
+            type="button"
             onClick={handleShare}
-            className="w-8 h-8 rounded-full bg-white shadow flex items-center justify-center text-gray-600 hover:text-emerald-600 transition-colors"
+            className="w-10 h-10 sm:w-8 sm:h-8 rounded-full bg-white shadow-lg flex items-center justify-center text-gray-600 hover:text-emerald-600 transition-colors z-40"
             title={t('product.share')}
           >
-            <Share2 size={16} />
+            <Share2 size={18} />
           </button>
         </div>
 

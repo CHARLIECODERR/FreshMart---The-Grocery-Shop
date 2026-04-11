@@ -34,12 +34,14 @@ const ProductInfo = ({
 
   const handleShare = () => {
     const url = window.location.href;
-    if (navigator.share) {
-      navigator.share({
-        title: product.name,
-        text: t('product.share_text', { defaultValue: `Check out this ${product.name} on FreshMart!` }),
-        url: url
-      }).catch((err) => {
+    const shareData = {
+      title: product.name,
+      text: t('product.share_text', { defaultValue: `Check out this ${product.name} on FreshMart!` }),
+      url: url
+    };
+
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      navigator.share(shareData).catch((err) => {
         if (err.name !== 'AbortError') copyToClipboard(url);
       });
     } else {
