@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+import PaymentSimulationModal from '../../components/checkout/PaymentSimulationModal';
+
 const Checkout = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
@@ -30,6 +32,8 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState('COD');
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [placedOrderId, setPlacedOrderId] = useState('');
+  const [isPaymentSimOpen, setIsPaymentSimOpen] = useState(false);
+  const [paymentPromise, setPaymentPromise] = useState(null);
   
   const [newAddress, setNewAddress] = useState({
     name: '',
@@ -114,11 +118,54 @@ const Checkout = () => {
     }
   };
 
+  // Updated Payment Handler
+  const handleRazorpayPayment = () => {
+    return new Promise((resolve, reject) => {
+      // Check for real key first
+      if (window.Razorpay && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
+        const options = {
+          key: "YOUR_REAL_KEY_HERE",
+          amount: total * 100,
+          currency: "INR",
+          name: "FreshMart",
+          description: "Grocery Order",
+          handler: (res) => resolve(res.razorpay_payment_id),
+          prefill: { email: currentUser.email },
+          theme: { color: "#10b981" },
+          modal: { ondismiss: () => reject(new Error("Payment cancelled")) }
+        };
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      } else {
+        // OPEN THE PRO SIMULATION MODAL
+        setPaymentPromise({ resolve, reject });
+        setIsPaymentSimOpen(true);
+      }
+    });
+  };
+
+  const handlePaymentSuccess = () => {
+    setIsPaymentSimOpen(false);
+    if (paymentPromise) {
+      paymentPromise.resolve("SIM_" + Math.random().toString(36).substr(2, 9).toUpperCase());
+    }
+  };
+
   const handlePlaceOrder = async () => {
     setLoading(true);
     try {
-      const address = addresses.find(a => a.id === selectedAddressId);
+      let paymentId = 'COD_PENDING';
       
+      if (paymentMethod !== 'COD') {
+        try {
+          paymentId = await handleRazorpayPayment();
+        } catch (payError) {
+          setLoading(false);
+          return;
+        }
+      }
+
+      const address = addresses.find(a => a.id === selectedAddressId);
       const farmerIds = [...new Set(items.map(item => item.farmerId).filter(id => !!id))];
 
       const orderData = {
@@ -130,16 +177,18 @@ const Checkout = () => {
           name: item.name,
           price: item.price,
           quantity: item.quantity,
-          imageUrl: item.imageUrl,
-          unit: item.unit,
-          farmerId: item.farmerId || 'SYSTEM' // Ensure it's never undefined
+          imageUrl: item.imageUrl || item.image || item.prodImage || '',
+          unit: item.unit || 'unit',
+          farmerId: item.farmerId || 'SYSTEM'
         })),
         farmerIds,
-        subtotal,
-        shippingFee: shipping,
-        total,
-        shippingAddress: address,
+        subtotal: subtotal || 0,
+        discount: discountAmount || 0,
+        shippingFee: shipping || 0,
+        total: total || 0,
+        shippingAddress: address || null,
         paymentMethod,
+        paymentId,
         paymentStatus: paymentMethod === 'COD' ? 'Pending' : 'Success',
         orderStatus: 'Placed'
       };
@@ -149,6 +198,7 @@ const Checkout = () => {
       setOrderPlaced(true);
       clearCart();
     } catch (error) {
+      console.error(error);
       toast.error('Failed to place order. Try again.');
     } finally {
       setLoading(false);
@@ -328,15 +378,15 @@ const Checkout = () => {
                 <div className="space-y-4">
                   {[
                     { id: 'COD', name: 'Cash on Delivery', desc: 'Pay when you receive the products', icon: Truck },
-                    { id: 'UPI', name: 'UPI Payment', desc: 'Coming Soon - Google Pay, PhonePe, Paytm', icon: AlertCircle, disabled: true },
-                    { id: 'Card', name: 'Credit / Debit Card', desc: 'Coming Soon - Secure online payment', icon: CreditCard, disabled: true },
+                    { id: 'UPI', name: 'UPI Payment', desc: 'Google Pay, PhonePe, Paytm, and more', icon: AlertCircle },
+                    { id: 'Card', name: 'Credit / Debit Card', desc: 'Secure payment via Visa, Mastercard, etc.', icon: CreditCard },
                   ].map((method) => (
                     <label 
                       key={method.id}
                       className={`flex items-center gap-4 p-5 rounded-2xl border-2 cursor-pointer transition-all ${
                         paymentMethod === method.id 
                         ? 'border-emerald-600 bg-emerald-50/50' 
-                        : method.disabled ? 'opacity-50 cursor-not-allowed border-gray-50 shadow-none' : 'border-gray-100 bg-white hover:border-gray-200'
+                        : 'border-gray-100 bg-white hover:border-gray-200'
                       }`}
                     >
                       <input 
@@ -345,8 +395,7 @@ const Checkout = () => {
                         value={method.id}
                         className="hidden"
                         checked={paymentMethod === method.id}
-                        onChange={() => !method.disabled && setPaymentMethod(method.id)}
-                        disabled={method.disabled}
+                        onChange={() => setPaymentMethod(method.id)}
                       />
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${paymentMethod === method.id ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-400'}`}>
                         <method.icon size={20} />
@@ -354,7 +403,7 @@ const Checkout = () => {
                       <div className="flex-1">
                         <p className="font-bold text-gray-900">{method.name}</p>
                         <p className="text-xs text-gray-500">
-                          {method.disabled ? 'Currently unavailable' : method.desc}
+                          {method.desc}
                         </p>
                       </div>
                       {paymentMethod === method.id && <CheckCircle2 size={18} className="text-emerald-600" />}
@@ -544,6 +593,16 @@ const Checkout = () => {
           </div>
         </div>
       )}
+
+      <PaymentSimulationModal 
+        isOpen={isPaymentSimOpen}
+        onClose={() => {
+          setIsPaymentSimOpen(false);
+          if (paymentPromise) paymentPromise.reject(new Error("Payment cancelled"));
+        }}
+        onPaymentSuccess={handlePaymentSuccess}
+        amount={total}
+      />
     </div>
   );
 };

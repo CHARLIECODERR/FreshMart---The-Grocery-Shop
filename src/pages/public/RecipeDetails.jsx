@@ -58,6 +58,37 @@ const RecipeDetails = () => {
     );
   }
 
+  const handleShare = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    const url = window.location.href;
+    const shareData = {
+      title: recipe.title,
+      text: translate('recipe.share_text', { defaultValue: `Check out this delicious ${recipe.title} recipe on FreshMart!` }),
+      url: url
+    };
+
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      navigator.share(shareData).catch((err) => {
+        if (err.name !== 'AbortError') copyToClipboard(url);
+      });
+    } else {
+      copyToClipboard(url);
+    }
+  };
+
+  const copyToClipboard = (url) => {
+    navigator.clipboard.writeText(url).then(() => {
+      // Assuming you have a toast library or simplified notice
+      alert(translate('product.share_success', { defaultValue: 'Link copied to clipboard!' }));
+    }).catch(() => {
+      console.error('Failed to copy');
+    });
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Breadcrumbs */}
@@ -158,10 +189,17 @@ const RecipeDetails = () => {
                    <h3 className="text-2xl font-black text-white italic">{recipe.title}</h3>
                 </div>
                 <div className="flex gap-2">
-                  <button className="w-12 h-12 bg-white/20 backdrop-blur-md shadow-lg rounded-2xl flex items-center justify-center text-white hover:bg-rose-500 transition-all border-none">
+                  <button 
+                    type="button"
+                    className="w-12 h-12 bg-white/20 backdrop-blur-md shadow-lg rounded-2xl flex items-center justify-center text-white hover:bg-rose-500 transition-all border-none"
+                  >
                     <Heart size={20} />
                   </button>
-                  <button className="w-12 h-12 bg-white/20 backdrop-blur-md shadow-lg rounded-2xl flex items-center justify-center text-white hover:bg-primary-500 transition-all border-none">
+                  <button 
+                    type="button"
+                    onClick={handleShare}
+                    className="w-12 h-12 bg-white/20 backdrop-blur-md shadow-lg rounded-2xl flex items-center justify-center text-white hover:bg-primary-500 transition-all border-none"
+                  >
                     <Share2 size={20} />
                   </button>
                 </div>

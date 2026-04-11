@@ -168,6 +168,7 @@
     "wishlist_remove": "विशलिस्ट से हटाएं",
     "quick_view": "त्वरित दृश्य",
     "share": "शेयर करें",
+    "share_text": "FreshMart पर यह {{name}} देखें!",
     "share_success": "लिंक कॉपी हो गया!",
     "save": "बचाएं",
     "no_image": "कोई चित्र नहीं"

@@ -169,6 +169,7 @@
     "wishlist_remove": "Remove from Wishlist",
     "quick_view": "Quick View",
     "share": "Share Product",
+    "share_text": "Check out this {{name}} on FreshMart!",
     "share_success": "Link copied to clipboard!",
     "save": "SAVE",
     "no_image": "No Image"
