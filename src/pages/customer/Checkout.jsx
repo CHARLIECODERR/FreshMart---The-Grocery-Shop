@@ -121,10 +121,12 @@ const Checkout = () => {
   // Updated Payment Handler
   const handleRazorpayPayment = () => {
     return new Promise((resolve, reject) => {
-      // Check for real key first
-      if (window.Razorpay && !window.location.hostname.includes('localhost') && !window.location.hostname.includes('127.0.0.1')) {
+      const REAL_KEY = "YOUR_REAL_KEY_HERE"; // Change this when ready
+      
+      // Only use real Razorpay if the key is actually set and not the placeholder
+      if (window.Razorpay && REAL_KEY !== "YOUR_REAL_KEY_HERE") {
         const options = {
-          key: "YOUR_REAL_KEY_HERE",
+          key: REAL_KEY,
           amount: total * 100,
           currency: "INR",
           name: "FreshMart",
@@ -137,7 +139,7 @@ const Checkout = () => {
         const rzp = new window.Razorpay(options);
         rzp.open();
       } else {
-        // OPEN THE PRO SIMULATION MODAL
+        // Run simulation on localhost AND Vercel for now
         setPaymentPromise({ resolve, reject });
         setIsPaymentSimOpen(true);
       }
